@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMERPAPIs", "SMERPAPIs\SMERPAPIs.csproj", "{4222ADDB-D3B7-4070-A66B-207C3972D19C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMERPUI", "SMERPUI\SMERPUI.csproj", "{6F74DAF2-2B20-4C90-9B0E-3D5592B4F6A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{4222ADDB-D3B7-4070-A66B-207C3972D19C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4222ADDB-D3B7-4070-A66B-207C3972D19C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4222ADDB-D3B7-4070-A66B-207C3972D19C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F74DAF2-2B20-4C90-9B0E-3D5592B4F6A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F74DAF2-2B20-4C90-9B0E-3D5592B4F6A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F74DAF2-2B20-4C90-9B0E-3D5592B4F6A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F74DAF2-2B20-4C90-9B0E-3D5592B4F6A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

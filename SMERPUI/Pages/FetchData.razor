@@ -1,0 +1,41 @@
+@page "/fetchdata"
+@inject HttpClient Http
+
+<PageTitle>Weather forecast</PageTitle>
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <RadzenDataGrid Data="@forecasts" TItem="WeatherForecast" AllowSorting="true">
+        <Columns>
+            <RadzenDataGridColumn TItem="WeatherForecast" Property="Date" Title="Date" />
+            <RadzenDataGridColumn TItem="WeatherForecast" Property="TemperatureC" Title="Temp. (C)" />
+            <RadzenDataGridColumn TItem="WeatherForecast" Property="TemperatureF" Title="Temp. (F)" />
+            <RadzenDataGridColumn TItem="WeatherForecast" Property="Summary" Title="Summary" />
+        </Columns>
+    </RadzenDataGrid>
+}
+
+@code {
+    private WeatherForecast[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+    }
+
+    public class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string? Summary { get; set; }
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+}
