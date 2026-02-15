@@ -8,15 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SmerpContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SmerpConnection")));
 
-void ConfigureSaasApiClient(HttpClient client)
-{
-    var baseUrl = builder.Configuration["SaasApi:BaseUrl"];
-    if (!string.IsNullOrWhiteSpace(baseUrl))
-    {
-        client.BaseAddress = new Uri(baseUrl);
-    }
-}
-
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
@@ -35,23 +26,6 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserBranchService, UserBranchService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
-builder.Services.AddHttpClient<IAuditLogApiClient, AuditLogApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IBranchApiClient, BranchApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IPermissionApiClient, PermissionApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IPosTerminalApiClient, PosTerminalApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IProductApiClient, ProductApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IProductPriceApiClient, ProductPriceApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IProductUomApiClient, ProductUomApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IRefreshTokenApiClient, RefreshTokenApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IRoleApiClient, RoleApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<ITaxCodeApiClient, TaxCodeApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<ITenantApiClient, TenantApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<ITenantSettingApiClient, TenantSettingApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IUomApiClient, UomApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IUserApiClient, UserApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IUserBranchApiClient, UserBranchApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IUserRoleApiClient, UserRoleApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IRolePermissionApiClient, RolePermissionApiClient>(ConfigureSaasApiClient);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
