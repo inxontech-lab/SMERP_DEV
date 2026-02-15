@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using Domain.SaasDBModels;
 
-namespace SMERPAPIs.Services.SaasServices;
+namespace SMERPUI.Services.SaasServices;
 
 public interface IUserRoleApiClient
 {
