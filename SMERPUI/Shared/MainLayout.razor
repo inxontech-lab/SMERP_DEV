@@ -1,10 +1,21 @@
 @inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
 
 <RadzenLayout>
     <RadzenHeader>
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.75rem" Style="padding: 0.75rem 1rem;">
-            <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
-            <RadzenText TextStyle="TextStyle.H5" Style="color: white;">SMERP UI</RadzenText>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Gap="0.75rem" Style="padding: 0.75rem 1rem;">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.75rem">
+                <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+                <RadzenText TextStyle="TextStyle.H5" Style="color: white;">SMERP UI</RadzenText>
+            </RadzenStack>
+
+            <RadzenButton
+                Icon="@(isDarkTheme ? "light_mode" : "dark_mode")"
+                Text="@(isDarkTheme ? "Light" : "Dark")"
+                Variant="Variant.Outlined"
+                Shade="Shade.Light"
+                Size="ButtonSize.Small"
+                Click="ToggleTheme" />
         </RadzenStack>
     </RadzenHeader>
     <RadzenSidebar @bind-Expanded="sidebarExpanded">
@@ -18,5 +29,34 @@
 </RadzenLayout>
 
 @code {
+    private const string LightTheme = "material3";
+    private const string DarkTheme = "material3-dark";
+
     private bool sidebarExpanded = true;
+    private bool isDarkTheme;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        var savedTheme = await JSRuntime.InvokeAsync<string>("themeManager.getTheme");
+        isDarkTheme = string.Equals(savedTheme, DarkTheme, StringComparison.OrdinalIgnoreCase);
+        await ApplyTheme();
+        StateHasChanged();
+    }
+
+    private async Task ToggleTheme()
+    {
+        isDarkTheme = !isDarkTheme;
+        await ApplyTheme();
+    }
+
+    private async Task ApplyTheme()
+    {
+        var theme = isDarkTheme ? DarkTheme : LightTheme;
+        await JSRuntime.InvokeVoidAsync("themeManager.setTheme", theme);
+    }
 }
