@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\SaaasServices\" />
+    <Folder Include="Services\SaasServices\" />
   </ItemGroup>
 
 </Project>
