@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.2.11415.280 d18.0
+VisualStudioVersion = 18.2.11415.280
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{196FBB95-C7E4-4840-9516-36DF63F79948}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{BC9FB7D6-A825-49A9-8293-18929753E427}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMERPAPIs", "SMERPAPIs\SMERPAPIs.csproj", "{4222ADDB-D3B7-4070-A66B-207C3972D19C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMERP", "SMERP\SMERP.csproj", "{A530D36D-0536-4AE7-BE35-0C5E89578766}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{4222ADDB-D3B7-4070-A66B-207C3972D19C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4222ADDB-D3B7-4070-A66B-207C3972D19C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4222ADDB-D3B7-4070-A66B-207C3972D19C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A530D36D-0536-4AE7-BE35-0C5E89578766}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A530D36D-0536-4AE7-BE35-0C5E89578766}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A530D36D-0536-4AE7-BE35-0C5E89578766}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A530D36D-0536-4AE7-BE35-0C5E89578766}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
