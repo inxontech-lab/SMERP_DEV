@@ -2,9 +2,12 @@
 
 <RadzenLayout>
     <RadzenHeader>
-        <RadzenText TextStyle="TextStyle.H5" Style="color: white; padding: 0.75rem 1rem;">SMERP UI</RadzenText>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.75rem" Style="padding: 0.75rem 1rem;">
+            <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+            <RadzenText TextStyle="TextStyle.H5" Style="color: white;">SMERP UI</RadzenText>
+        </RadzenStack>
     </RadzenHeader>
-    <RadzenSidebar>
+    <RadzenSidebar @bind-Expanded="sidebarExpanded">
         <NavMenu />
     </RadzenSidebar>
     <RadzenBody>
@@ -13,3 +16,7 @@
         </div>
     </RadzenBody>
 </RadzenLayout>
+
+@code {
+    private bool sidebarExpanded = true;
+}
