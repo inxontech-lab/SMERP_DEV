@@ -19,6 +19,7 @@ void ConfigureSaasApiClient(HttpClient client)
         : new Uri(builder.HostEnvironment.BaseAddress);
 }
 
+builder.Services.AddHttpClient<IAuthApiClient, AuthApiClient>(ConfigureSaasApiClient);
 builder.Services.AddHttpClient<IAuditLogApiClient, AuditLogApiClient>(ConfigureSaasApiClient);
 builder.Services.AddHttpClient<IBranchApiClient, BranchApiClient>(ConfigureSaasApiClient);
 builder.Services.AddHttpClient<IPermissionApiClient, PermissionApiClient>(ConfigureSaasApiClient);
