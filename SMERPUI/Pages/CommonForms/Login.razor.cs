@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using SMERPUI.Services.Auth;
 using SMERPUI.Services.SaasServices;
 
@@ -12,8 +13,14 @@ public partial class Login : ComponentBase
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
     protected LoginFormModel LoginModel { get; } = new();
+    protected EditContext LoginEditContext { get; private set; } = default!;
     protected bool IsSubmitting { get; private set; }
     protected string? ErrorMessage { get; private set; }
+
+    protected override void OnInitialized()
+    {
+        LoginEditContext = new EditContext(LoginModel);
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -23,8 +30,13 @@ public partial class Login : ComponentBase
         }
     }
 
-    protected async Task HandleLoginAsync()
+    protected async Task HandleLoginAsync(EditContext editContext)
     {
+        if (!editContext.Validate())
+        {
+            return;
+        }
+
         IsSubmitting = true;
         ErrorMessage = null;
 
