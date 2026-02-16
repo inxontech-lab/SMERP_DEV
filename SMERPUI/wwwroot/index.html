@@ -7,7 +7,6 @@
     <title>SMERPUI</title>
     <base href="/" />
     <link rel="stylesheet" href="css/app.css" />
-    <link id="radzen-theme" rel="stylesheet" href="_content/Radzen.Blazor/css/material.css">
 </head>
 
 <body>
@@ -35,18 +34,36 @@
         };
 
         window.themeManager = {
+            resolveThemeLink() {
+                return document.getElementById('radzen-theme')
+                    || document.getElementById('theme')
+                    || document.querySelector('link[href*="_content/Radzen.Blazor/css/"]');
+            },
             setTheme(themeName) {
-                const themeLink = document.getElementById('radzen-theme');
+                const themeLink = this.resolveThemeLink();
 
                 if (!themeLink) {
                     return;
                 }
 
-                themeLink.setAttribute('href', `_content/Radzen.Blazor/css/${themeName}.css`);
+                const cssPath = `_content/Radzen.Blazor/css/${themeName}.css`;
+                const fallbackPath = `_content/Radzen.Blazor/css/${themeName}-base.css`;
+
+                themeLink.dataset.fallbackApplied = 'false';
+                themeLink.onerror = () => {
+                    if (themeLink.dataset.fallbackApplied === 'true') {
+                        return;
+                    }
+
+                    themeLink.dataset.fallbackApplied = 'true';
+                    themeLink.setAttribute('href', fallbackPath);
+                };
+
+                themeLink.setAttribute('href', cssPath);
                 localStorage.setItem('smerp-theme', themeName);
             },
             getTheme() {
-                return localStorage.getItem('smerp-theme') || 'material3';
+                return localStorage.getItem('smerp-theme') || 'material';
             }
         };
     </script>
