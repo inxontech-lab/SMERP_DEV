@@ -1,8 +1,11 @@
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Radzen;
 using SMERPUI.Services.Auth;
 using SMERPUI.Services.SaasServices;
+using System.ComponentModel.DataAnnotations;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SMERPUI.Pages.CommonForms;
 
@@ -30,22 +33,31 @@ public partial class Login : ComponentBase
         }
     }
 
-    protected async Task HandleLoginAsync(EditContext editContext)
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
     {
-        if (!editContext.Validate())
-        {
-            return;
-        }
+        //Console.WriteLine($"InvalidSubmit: {Newtonsoft.Json.JsonSerializer.Serialize(args, new JsonSerializerOptions() { WriteIndented = true })}");
+    }
+
+    // Changed to parameterless handler and use LoginEditContext directly to avoid binding ambiguity.
+    protected async Task HandleLoginAsync()
+    {
+        // LoginEditContext is already set on initialization; use it to validate
+        //if (!LoginEditContext.Validate())
+        //{
+        //    return;
+        //}
 
         IsSubmitting = true;
         ErrorMessage = null;
 
         try
         {
-            var response = await AuthApiClient.LoginAsync(new LoginRequest(
-                LoginModel.TenantEmail.Trim(),
-                LoginModel.Username.Trim(),
-                LoginModel.Password));
+            var response = await AuthApiClient.LoginAsync(
+                new LoginRequest(
+                    LoginModel.TenantEmail.Trim(),
+                    LoginModel.Username.Trim(),
+                    LoginModel.Password),
+                CancellationToken.None);
 
             if (response is null)
             {
