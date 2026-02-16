@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 
-namespace SMERPWeb.Components.CommonForms;
+namespace SMERPWeb.Components.Pages.CommonForms;
 
 public partial class Login : ComponentBase
 {
