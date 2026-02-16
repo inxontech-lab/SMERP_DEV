@@ -11,7 +11,7 @@
         </div>
 
         <div class="login-body">
-            <EditForm Model="LoginModel" OnValidSubmit="HandleLoginAsync">
+            <EditForm EditContext="LoginEditContext" OnSubmit="HandleLoginAsync">
                 <DataAnnotationsValidator />
 
                 <div class="form-group">
