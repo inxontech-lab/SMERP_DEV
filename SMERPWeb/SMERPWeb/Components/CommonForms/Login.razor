@@ -1,0 +1,48 @@
+@page "/login"
+
+<PageTitle>Login</PageTitle>
+
+<div class="login-page">
+    <div class="login-card">
+        <div class="logo-wrap">
+            <img src="images/inxon-logo.png" alt="Inxon logo" class="inxon-logo" />
+        </div>
+
+        <h1>Welcome Back</h1>
+        <p class="subtitle">Sign in to continue to your workspace.</p>
+
+        <div class="form-grid">
+            <div class="field-group">
+                <label for="tenantEmail">Tenant Email</label>
+                <RadzenTextBox id="tenantEmail"
+                               Name="tenantEmail"
+                               @bind-Value="TenantEmail"
+                               Placeholder="tenant@company.com"
+                               Style="width:100%;" />
+            </div>
+
+            <div class="field-group">
+                <label for="userName">User Name</label>
+                <RadzenTextBox id="userName"
+                               Name="userName"
+                               @bind-Value="UserName"
+                               Placeholder="Enter user name"
+                               Style="width:100%;" />
+            </div>
+
+            <div class="field-group">
+                <label for="password">Password</label>
+                <RadzenPassword id="password"
+                                Name="password"
+                                @bind-Value="Password"
+                                Placeholder="Enter password"
+                                Style="width:100%;" />
+            </div>
+
+            <RadzenButton Text="Login"
+                          ButtonStyle="ButtonStyle.Primary"
+                          class="login-btn"
+                          Disabled="true" />
+        </div>
+    </div>
+</div>

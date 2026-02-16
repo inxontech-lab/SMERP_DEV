@@ -1,0 +1,81 @@
+.login-page {
+    min-height: calc(100vh - 3.5rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #f4f9ff 0%, #eef7ff 45%, #f8fcff 100%);
+    padding: 1.5rem;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 460px;
+    background-color: #ffffff;
+    border: 1px solid #e4eefb;
+    border-radius: 1.25rem;
+    box-shadow: 0 16px 42px rgba(48, 107, 196, 0.12);
+    padding: 2rem;
+}
+
+.logo-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+}
+
+.inxon-logo {
+    max-height: 52px;
+    width: auto;
+    object-fit: contain;
+}
+
+h1 {
+    margin: 0;
+    text-align: center;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #123769;
+}
+
+.subtitle {
+    margin: 0.5rem 0 1.5rem;
+    text-align: center;
+    color: #5a7294;
+    font-size: 0.95rem;
+}
+
+.form-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.field-group {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.field-group label {
+    color: #23466f;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.login-btn {
+    margin-top: 0.4rem;
+    width: 100%;
+    height: 2.75rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+@media (max-width: 576px) {
+    .login-card {
+        padding: 1.35rem;
+        border-radius: 1rem;
+    }
+
+    h1 {
+        font-size: 1.45rem;
+    }
+}
