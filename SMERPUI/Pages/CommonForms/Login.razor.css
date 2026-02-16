@@ -1,0 +1,75 @@
+.login-page {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 45%, #60a5fa 100%);
+}
+
+.login-banner {
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem;
+}
+
+.login-banner h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.login-banner p {
+    max-width: 30rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+}
+
+.login-banner ul {
+    list-style: none;
+    padding: 0;
+}
+
+.login-banner li {
+    margin-bottom: 0.75rem;
+    padding-left: 1.25rem;
+    position: relative;
+}
+
+.login-banner li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #bfdbfe;
+}
+
+.login-card {
+    margin: auto;
+    width: min(460px, 90%);
+    padding: 2rem;
+    border-radius: 18px;
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.35);
+}
+
+.form-group {
+    margin-top: 0.75rem;
+}
+
+.muted {
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.error-alert {
+    margin-top: 1rem;
+}
+
+@media (max-width: 960px) {
+    .login-page {
+        grid-template-columns: 1fr;
+    }
+
+    .login-banner {
+        min-height: 35vh;
+        padding: 2rem;
+    }
+}

@@ -20,3 +20,13 @@ html, body {
     right: 0.75rem;
     top: 0.5rem;
 }
+
+
+html, body, #app {
+    height: 100%;
+    margin: 0;
+}
+
+.auth-layout {
+    min-height: 100%;
+}

@@ -1,0 +1,66 @@
+@page "/"
+@page "/login"
+@layout AuthLayout
+
+<PageTitle>Login</PageTitle>
+
+<div class="login-page">
+    <div class="login-banner">
+        <h1>Welcome to SMERP</h1>
+        <p>Securely access your tenant workspace, operations, and insights from one place.</p>
+        <ul>
+            <li>Multi-tenant ready</li>
+            <li>Fast and secure authentication</li>
+            <li>Modern UI with seamless navigation</li>
+        </ul>
+    </div>
+
+    <RadzenCard class="login-card">
+        <h2>Sign in</h2>
+        <p class="muted">Use your tenant credentials to continue.</p>
+
+        <EditForm Model="LoginModel" OnValidSubmit="HandleLoginAsync">
+            <DataAnnotationsValidator />
+
+            <div class="form-group">
+                <RadzenLabel Text="Tenant" Component="TenantDropDown" />
+                <RadzenDropDown id="TenantDropDown"
+                                Name="TenantDropDown"
+                                TValue="int?"
+                                Data="Tenants"
+                                TextProperty="Name"
+                                ValueProperty="Id"
+                                @bind-Value="LoginModel.TenantId"
+                                Placeholder="Select tenant"
+                                Style="width: 100%;" />
+                <ValidationMessage For="@(() => LoginModel.TenantId)" />
+            </div>
+
+            <div class="form-group">
+                <RadzenLabel Text="Username" Component="Username" />
+                <RadzenTextBox id="Username" Name="Username" @bind-Value="LoginModel.Username" Style="width: 100%;" />
+                <ValidationMessage For="@(() => LoginModel.Username)" />
+            </div>
+
+            <div class="form-group">
+                <RadzenLabel Text="Password" Component="Password" />
+                <RadzenPassword id="Password" Name="Password" @bind-Value="LoginModel.Password" Style="width: 100%;" />
+                <ValidationMessage For="@(() => LoginModel.Password)" />
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Danger" Variant="Variant.Flat" class="error-alert">
+                    @ErrorMessage
+                </RadzenAlert>
+            }
+
+            <RadzenButton ButtonType="ButtonType.Submit"
+                          Icon="login"
+                          Text="Login"
+                          IsBusy="IsSubmitting"
+                          BusyText="Signing in..."
+                          Style="width: 100%; margin-top: 0.75rem;" />
+        </EditForm>
+    </RadzenCard>
+</div>
