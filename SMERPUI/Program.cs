@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Radzen;
 using SMERPUI;
+using SMERPUI.Services.Auth;
 using SMERPUI.Services.SaasServices;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -10,6 +11,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddRadzenComponents();
+builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 
 void ConfigureSaasApiClient(HttpClient client)
 {
