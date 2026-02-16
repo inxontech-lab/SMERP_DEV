@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMERPAPIs", "SMERPAPIs\SMER
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMERPUI", "SMERPUI\SMERPUI.csproj", "{6F74DAF2-2B20-4C90-9B0E-3D5592B4F6A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMERPWeb", "SMERPWeb\SMERPWeb\SMERPWeb.csproj", "{6336DBA8-9FBE-4E44-A61A-E014612E6F58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMERPWeb.Client", "SMERPWeb\SMERPWeb.Client\SMERPWeb.Client.csproj", "{D741E1FD-BAE4-4C03-98A9-6FC391063104}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{6F74DAF2-2B20-4C90-9B0E-3D5592B4F6A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F74DAF2-2B20-4C90-9B0E-3D5592B4F6A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F74DAF2-2B20-4C90-9B0E-3D5592B4F6A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6336DBA8-9FBE-4E44-A61A-E014612E6F58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6336DBA8-9FBE-4E44-A61A-E014612E6F58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6336DBA8-9FBE-4E44-A61A-E014612E6F58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6336DBA8-9FBE-4E44-A61A-E014612E6F58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D741E1FD-BAE4-4C03-98A9-6FC391063104}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D741E1FD-BAE4-4C03-98A9-6FC391063104}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D741E1FD-BAE4-4C03-98A9-6FC391063104}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D741E1FD-BAE4-4C03-98A9-6FC391063104}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

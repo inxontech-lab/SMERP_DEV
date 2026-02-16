@@ -1,0 +1,28 @@
+﻿<RadzenHeader Style="background-color:#193e91">
+        <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0">
+            <RadzenColumn Size="5">
+                <RadzenSidebarToggle Click="@SidebarToggleClick"></RadzenSidebarToggle>
+            </RadzenColumn>            
+            <RadzenColumn Size="7">                
+                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">                    
+                    <RadzenProfileMenu Style="background-color:#193e91">
+                        <ChildContent>
+                            <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
+                        </ChildContent>
+                        <Template>
+                        </Template>
+                    </RadzenProfileMenu>
+                </RadzenStack>                
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenHeader>
+
+@code {
+    private bool sidebarExpanded = true;
+
+    void SidebarToggleClick()
+    {
+        sidebarExpanded = !sidebarExpanded;
+    }
+
+}
