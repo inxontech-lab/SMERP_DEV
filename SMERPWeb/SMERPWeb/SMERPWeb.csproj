@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SMERPWeb.Client\SMERPWeb.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.23" />
+    <PackageReference Include="Radzen.Blazor" Version="6.2.9" />
   </ItemGroup>
 
 </Project>

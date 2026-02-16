@@ -1,23 +1,32 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
+<RadzenLayout>
+    <RadzenHeader class="top-row rz-shadow-2">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.75rem" class="h-100 px-3">
+            <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+            <RadzenText TextStyle="TextStyle.H6" class="rz-mb-0">SMERPWeb</RadzenText>
+        </RadzenStack>
+    </RadzenHeader>
+
+    <RadzenSidebar @bind-Expanded="sidebarExpanded">
         <NavMenu />
-    </div>
+    </RadzenSidebar>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
+    <RadzenBody>
+        <div class="content-container">
             @Body
-        </article>
-    </main>
-</div>
+        </div>
+    </RadzenBody>
+</RadzenLayout>
+
+<RadzenComponents />
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code {
+    private bool sidebarExpanded = true;
+}
