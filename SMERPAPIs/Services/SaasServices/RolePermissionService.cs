@@ -1,4 +1,5 @@
 using Domain.SaasDBModels;
+using Domain.SaasReqDTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace SMERPAPIs.Services.SaasServices;
@@ -22,14 +23,21 @@ public class RolePermissionService : IRolePermissionService
         return await _context.RolePermissions.FindAsync(tenantId, roleId, permissionId);
     }
 
-    public async Task<RolePermission> CreateAsync(RolePermission entity)
+    public async Task<RolePermission> CreateAsync(RolePermissionRequest request)
     {
+        var entity = new RolePermission
+        {
+            TenantId = request.TenantId,
+            RoleId = request.RoleId,
+            PermissionId = request.PermissionId
+        };
+
         _context.RolePermissions.Add(entity);
         await _context.SaveChangesAsync();
         return entity;
     }
 
-    public async Task<bool> UpdateAsync(int tenantId, int roleId, int permissionId, RolePermission entity)
+    public async Task<bool> UpdateAsync(int tenantId, int roleId, int permissionId, RolePermissionRequest request)
     {
         var existingEntity = await _context.RolePermissions.FindAsync(tenantId, roleId, permissionId);
         if (existingEntity is null)
@@ -37,7 +45,10 @@ public class RolePermissionService : IRolePermissionService
             return false;
         }
 
-        _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+        existingEntity.TenantId = request.TenantId;
+        existingEntity.RoleId = request.RoleId;
+        existingEntity.PermissionId = request.PermissionId;
+
         await _context.SaveChangesAsync();
         return true;
     }

@@ -3,15 +3,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SMERPAPIs.Services.SaasServices;
 
-public class SaasCrudService<TEntity, TKey> : ISaasCrudService<TEntity, TKey> where TEntity : class
+public class SaasCrudService<TEntity, TRequest, TKey> : ISaasCrudService<TEntity, TRequest, TKey>
+    where TEntity : class, new()
 {
     private readonly SmerpContext _context;
     private readonly DbSet<TEntity> _dbSet;
+    private readonly Action<TEntity, TRequest> _mapRequest;
 
-    public SaasCrudService(SmerpContext context)
+    public SaasCrudService(SmerpContext context, Action<TEntity, TRequest> mapRequest)
     {
         _context = context;
         _dbSet = context.Set<TEntity>();
+        _mapRequest = mapRequest;
     }
 
     public async Task<List<TEntity>> GetAllAsync()
@@ -24,14 +27,16 @@ public class SaasCrudService<TEntity, TKey> : ISaasCrudService<TEntity, TKey> wh
         return await _dbSet.FindAsync(id);
     }
 
-    public async Task<TEntity> CreateAsync(TEntity entity)
+    public async Task<TEntity> CreateAsync(TRequest request)
     {
+        var entity = new TEntity();
+        _mapRequest(entity, request);
         _dbSet.Add(entity);
         await _context.SaveChangesAsync();
         return entity;
     }
 
-    public async Task<bool> UpdateAsync(TKey id, TEntity entity)
+    public async Task<bool> UpdateAsync(TKey id, TRequest request)
     {
         var existingEntity = await _dbSet.FindAsync(id);
         if (existingEntity is null)
@@ -39,7 +44,7 @@ public class SaasCrudService<TEntity, TKey> : ISaasCrudService<TEntity, TKey> wh
             return false;
         }
 
-        _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+        _mapRequest(existingEntity, request);
         await _context.SaveChangesAsync();
         return true;
     }

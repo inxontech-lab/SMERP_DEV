@@ -1,7 +1,8 @@
 using Domain.SaasDBModels;
+using Domain.SaasReqDTO;
 
 namespace SMERPAPIs.Services.SaasServices;
 
-public interface IBranchService : ISaasCrudService<Branch, int>
+public interface IBranchService : ISaasCrudService<Branch, BranchRequest, int>
 {
 }

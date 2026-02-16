@@ -1,4 +1,5 @@
 using Domain.SaasDBModels;
+using Domain.SaasReqDTO;
 using Microsoft.AspNetCore.Mvc;
 using SMERPAPIs.Services.SaasServices;
 
@@ -29,16 +30,16 @@ public class UserBranchesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<UserBranch>> Create([FromBody] UserBranch entity)
+    public async Task<ActionResult<UserBranch>> Create([FromBody] UserBranchRequest request)
     {
-        var created = await _service.CreateAsync(entity);
+        var created = await _service.CreateAsync(request);
         return CreatedAtAction(nameof(GetById), new { created.TenantId, created.UserId, created.BranchId }, created);
     }
 
     [HttpPut("{tenantId:int}/{userId:long}/{branchId:int}")]
-    public async Task<IActionResult> Update(int tenantId, long userId, int branchId, [FromBody] UserBranch entity)
+    public async Task<IActionResult> Update(int tenantId, long userId, int branchId, [FromBody] UserBranchRequest request)
     {
-        var updated = await _service.UpdateAsync(tenantId, userId, branchId, entity);
+        var updated = await _service.UpdateAsync(tenantId, userId, branchId, request);
         return updated ? NoContent() : NotFound();
     }
 
