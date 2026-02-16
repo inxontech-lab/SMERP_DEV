@@ -22,7 +22,7 @@ public class AuthApiClient(HttpClient httpClient) : IAuthApiClient
     }
 }
 
-public record LoginRequest(int TenantId, string Username, string Password);
+public record LoginRequest(string TenantEmail, string Username, string Password);
 
 public record LoginResponse(
     long Id,

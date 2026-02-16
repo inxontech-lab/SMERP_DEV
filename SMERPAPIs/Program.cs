@@ -9,6 +9,7 @@ builder.Services.AddDbContext<SmerpContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SmerpConnection")));
 
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBranchService, BranchService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IPosTerminalService, PosTerminalService>();
