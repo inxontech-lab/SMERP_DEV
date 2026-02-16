@@ -1,4 +1,5 @@
 using Domain.SaasDBModels;
+using Domain.SaasReqDTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace SMERPAPIs.Services.SaasServices;
@@ -22,14 +23,21 @@ public class UserBranchService : IUserBranchService
         return await _context.UserBranches.FindAsync(tenantId, userId, branchId);
     }
 
-    public async Task<UserBranch> CreateAsync(UserBranch entity)
+    public async Task<UserBranch> CreateAsync(UserBranchRequest request)
     {
+        var entity = new UserBranch
+        {
+            TenantId = request.TenantId,
+            UserId = request.UserId,
+            BranchId = request.BranchId
+        };
+
         _context.UserBranches.Add(entity);
         await _context.SaveChangesAsync();
         return entity;
     }
 
-    public async Task<bool> UpdateAsync(int tenantId, long userId, int branchId, UserBranch entity)
+    public async Task<bool> UpdateAsync(int tenantId, long userId, int branchId, UserBranchRequest request)
     {
         var existingEntity = await _context.UserBranches.FindAsync(tenantId, userId, branchId);
         if (existingEntity is null)
@@ -37,7 +45,10 @@ public class UserBranchService : IUserBranchService
             return false;
         }
 
-        _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+        existingEntity.TenantId = request.TenantId;
+        existingEntity.UserId = request.UserId;
+        existingEntity.BranchId = request.BranchId;
+
         await _context.SaveChangesAsync();
         return true;
     }

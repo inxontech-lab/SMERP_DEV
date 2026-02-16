@@ -1,4 +1,5 @@
 using Domain.SaasDBModels;
+using Domain.SaasReqDTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace SMERPAPIs.Services.SaasServices;
@@ -22,14 +23,21 @@ public class UserRoleService : IUserRoleService
         return await _context.UserRoles.FindAsync(tenantId, userId, roleId);
     }
 
-    public async Task<UserRole> CreateAsync(UserRole entity)
+    public async Task<UserRole> CreateAsync(UserRoleRequest request)
     {
+        var entity = new UserRole
+        {
+            TenantId = request.TenantId,
+            UserId = request.UserId,
+            RoleId = request.RoleId
+        };
+
         _context.UserRoles.Add(entity);
         await _context.SaveChangesAsync();
         return entity;
     }
 
-    public async Task<bool> UpdateAsync(int tenantId, long userId, int roleId, UserRole entity)
+    public async Task<bool> UpdateAsync(int tenantId, long userId, int roleId, UserRoleRequest request)
     {
         var existingEntity = await _context.UserRoles.FindAsync(tenantId, userId, roleId);
         if (existingEntity is null)
@@ -37,7 +45,10 @@ public class UserRoleService : IUserRoleService
             return false;
         }
 
-        _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+        existingEntity.TenantId = request.TenantId;
+        existingEntity.UserId = request.UserId;
+        existingEntity.RoleId = request.RoleId;
+
         await _context.SaveChangesAsync();
         return true;
     }

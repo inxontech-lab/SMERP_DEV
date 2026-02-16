@@ -1,4 +1,5 @@
 using Domain.SaasDBModels;
+using Domain.SaasReqDTO;
 using Microsoft.AspNetCore.Mvc;
 using SMERPAPIs.Services.SaasServices;
 
@@ -29,16 +30,16 @@ public class UserRolesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<UserRole>> Create([FromBody] UserRole entity)
+    public async Task<ActionResult<UserRole>> Create([FromBody] UserRoleRequest request)
     {
-        var created = await _service.CreateAsync(entity);
+        var created = await _service.CreateAsync(request);
         return CreatedAtAction(nameof(GetById), new { created.TenantId, created.UserId, created.RoleId }, created);
     }
 
     [HttpPut("{tenantId:int}/{userId:long}/{roleId:int}")]
-    public async Task<IActionResult> Update(int tenantId, long userId, int roleId, [FromBody] UserRole entity)
+    public async Task<IActionResult> Update(int tenantId, long userId, int roleId, [FromBody] UserRoleRequest request)
     {
-        var updated = await _service.UpdateAsync(tenantId, userId, roleId, entity);
+        var updated = await _service.UpdateAsync(tenantId, userId, roleId, request);
         return updated ? NoContent() : NotFound();
     }
 

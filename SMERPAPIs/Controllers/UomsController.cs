@@ -1,4 +1,5 @@
 using Domain.SaasDBModels;
+using Domain.SaasReqDTO;
 using Microsoft.AspNetCore.Mvc;
 using SMERPAPIs.Services.SaasServices;
 
@@ -29,16 +30,16 @@ public class UomsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Uom>> Create([FromBody] Uom entity)
+    public async Task<ActionResult<Uom>> Create([FromBody] UomRequest request)
     {
-        var created = await _service.CreateAsync(entity);
+        var created = await _service.CreateAsync(request);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, [FromBody] Uom entity)
+    public async Task<IActionResult> Update(int id, [FromBody] UomRequest request)
     {
-        var updated = await _service.UpdateAsync(id, entity);
+        var updated = await _service.UpdateAsync(id, request);
         return updated ? NoContent() : NotFound();
     }
 

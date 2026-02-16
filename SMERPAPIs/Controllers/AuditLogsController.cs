@@ -1,4 +1,5 @@
 using Domain.SaasDBModels;
+using Domain.SaasReqDTO;
 using Microsoft.AspNetCore.Mvc;
 using SMERPAPIs.Services.SaasServices;
 
@@ -29,16 +30,16 @@ public class AuditLogsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<AuditLog>> Create([FromBody] AuditLog entity)
+    public async Task<ActionResult<AuditLog>> Create([FromBody] AuditLogRequest request)
     {
-        var created = await _service.CreateAsync(entity);
+        var created = await _service.CreateAsync(request);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpPut("{id:long}")]
-    public async Task<IActionResult> Update(long id, [FromBody] AuditLog entity)
+    public async Task<IActionResult> Update(long id, [FromBody] AuditLogRequest request)
     {
-        var updated = await _service.UpdateAsync(id, entity);
+        var updated = await _service.UpdateAsync(id, request);
         return updated ? NoContent() : NotFound();
     }
 
