@@ -1,9 +1,12 @@
+using Radzen;
 using SMERPWeb.Client.Pages;
 using SMERPWeb.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddRadzenComponents();
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
