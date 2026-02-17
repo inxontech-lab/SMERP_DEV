@@ -1,0 +1,66 @@
+@page "/RolePermission"
+
+<PageTitle>Role Permission Management</PageTitle>
+
+<RadzenRow Gap="1rem">
+    <RadzenColumn Size="12">
+        <RadzenCard>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
+                <RadzenText Text="Role Permissions" TextStyle="TextStyle.H5" />
+                <RadzenButton Text="Reload" Icon="refresh" Click="LoadRolePermissionsAsync" ButtonStyle="ButtonStyle.Light" Disabled="@IsBusy" />
+            </RadzenStack>
+
+            <RadzenRow Gap="1rem" class="rz-mb-3">
+                <RadzenColumn Size="12" SizeMD="4">
+                    <RadzenLabel Text="Tenant" Component="TenantId" />
+                    <RadzenDropDown Name="TenantId" TValue="int?" @bind-Value="SelectedTenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Change="OnTenantChanged" Style="width:100%;" Placeholder="Select tenant" Disabled="@IsBusy" />
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="4">
+                    <RadzenLabel Text="Role" Component="RoleId" />
+                    <RadzenDropDown Name="RoleId" TValue="int?" @bind-Value="SelectedRoleId" Data="FilteredRoles" TextProperty="Name" ValueProperty="Id" Change="OnRoleChanged" Style="width:100%;" Placeholder="Select role" Disabled="@(IsBusy || SelectedTenantId is null)" />
+                </RadzenColumn>
+            </RadzenRow>
+
+            @if (IsBusy)
+            {
+                <RadzenProgressBarCircular Mode="ProgressBarMode.Indeterminate" />
+            }
+            else if (SelectedTenantId is null || SelectedRoleId is null)
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Info" Variant="Variant.Flat">
+                    Select tenant and role to configure permissions.
+                </RadzenAlert>
+            }
+            else if (!Permissions.Any())
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Warning" Variant="Variant.Flat">
+                    No permissions found.
+                </RadzenAlert>
+            }
+            else
+            {
+                <RadzenDataList Data="Permissions" TItem="Domain.SaasDBModels.Permission" WrapItems="false" class="role-permission-list">
+                    <Template Context="permission">
+                        <div class="role-permission-item">
+                            <RadzenCheckBox TValue="bool" Value="@AssignedPermissionIds.Contains(permission.Id)" Change="@(value => TogglePermissionAsync(permission.Id, (bool)value))" Disabled="@UpdatingPermissionIds.Contains(permission.Id)" />
+                            <div class="rz-ml-2">
+                                <div class="rz-text-bold">@permission.Name</div>
+                                <div class="rz-text-secondary">@permission.Code (@(permission.Module ?? "General"))</div>
+                            </div>
+                        </div>
+                    </Template>
+                </RadzenDataList>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(SuccessMessage))
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Success" class="rz-mt-3">@SuccessMessage</RadzenAlert>
+            }
+        </RadzenCard>
+    </RadzenColumn>
+</RadzenRow>
