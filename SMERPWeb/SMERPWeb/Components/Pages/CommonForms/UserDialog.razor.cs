@@ -36,7 +36,7 @@ public partial class UserDialog : ComponentBase
         if (!EditingUserId.HasValue && string.IsNullOrWhiteSpace(FormModel.Password))
         {
             ErrorMessage = "Password is required for creating user.";
-            NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
+            NotifyTopRight(NotificationSeverity.Error, "Failed", ErrorMessage);
             return;
         }
 
@@ -48,7 +48,7 @@ public partial class UserDialog : ComponentBase
 
         if (confirmed != true)
         {
-            NotificationService.Notify(NotificationSeverity.Warning, "Cancelled", "User save operation cancelled.");
+            NotifyTopRight(NotificationSeverity.Warning, "Cancelled", "User save operation cancelled.");
             return;
         }
 
@@ -60,7 +60,7 @@ public partial class UserDialog : ComponentBase
                 if (!updated)
                 {
                     ErrorMessage = "Unable to update user.";
-                    NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
+                    NotifyTopRight(NotificationSeverity.Error, "Failed", ErrorMessage);
                     return;
                 }
             }
@@ -69,14 +69,27 @@ public partial class UserDialog : ComponentBase
                 await UserManagementService.CreateUserAsync(FormModel.ToCreateRequest());
             }
 
-            NotificationService.Notify(NotificationSeverity.Success, "Success", $"User {(EditingUserId.HasValue ? "updated" : "created")} successfully.");
+            NotifyTopRight(NotificationSeverity.Success, "Success", $"User {(EditingUserId.HasValue ? "updated" : "created")} successfully.");
             DialogService.Close(true);
         }
         catch (Exception ex)
         {
             ErrorMessage = ex.Message;
-            NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
+            NotifyTopRight(NotificationSeverity.Error, "Failed", ErrorMessage);
         }
+    }
+
+
+    private void NotifyTopRight(NotificationSeverity severity, string summary, string? detail)
+    {
+        NotificationService.Notify(new NotificationMessage
+        {
+            Severity = severity,
+            Summary = summary,
+            Detail = detail,
+            Duration = 4000,
+            CloseOnClick = true,
+        });
     }
 
     protected void OnTenantChanged(object value)

@@ -38,19 +38,19 @@
 @* <RadzenTooltip @rendermode="RenderMode.InteractiveServer" />
 <RadzenContextMenu @rendermode="RenderMode.InteractiveServer" />  193e91*@
 <RadzenLayout>
-    <RadzenHeader>
+    <RadzenHeader class="app-topbar">
         <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0">
             <RadzenColumn Size="10">
                 <RadzenStack AlignItems="AlignItems.Start" Orientation="Orientation.Horizontal">
                     <RadzenSidebarToggle Click="@SidebarToggleClick"></RadzenSidebarToggle>
-                    @* <h1>Easy Transport</h1> *@
+                    <RadzenText Text="SMERP" class="app-title" />
                 </RadzenStack>
             </RadzenColumn>
             <RadzenColumn Size="2">
                 <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0.5rem">
                     @if (!string.IsNullOrWhiteSpace(UserBadgeText))
                     {
-                        <RadzenText Text="@UserBadgeText" Style="color:#1f2937; font-size:0.9rem;" />
+                        <RadzenText Text="@UserBadgeText" class="app-user-badge" />
                     }
                     <RadzenProfileMenu Click="@ProfileMenuClick">
                         <ChildContent>

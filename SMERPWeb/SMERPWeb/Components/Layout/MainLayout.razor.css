@@ -21,6 +21,29 @@ main {
     align-items: center;
 }
 
+.app-topbar {
+    background: linear-gradient(90deg, #fefefe 0%, #f4f9ff 45%, #eef6ff 100%);
+    border-bottom: 1px solid #d9e7fb;
+    box-shadow: 0 6px 18px rgba(19, 54, 104, 0.08);
+    padding: 0.4rem 1rem;
+}
+
+.app-title {
+    color: #1f4f8a;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.app-user-badge {
+    color: #334155;
+    font-size: 0.9rem;
+    background-color: #eaf3ff;
+    border: 1px solid #cfe1ff;
+    border-radius: 999px;
+    padding: 0.3rem 0.75rem;
+}
+
     .top-row ::deep a, .top-row ::deep .btn-link {
         white-space: nowrap;
         margin-left: 1.5rem;
@@ -94,3 +117,11 @@ main {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+
+::deep .rz-notification {
+    top: 1rem !important;
+    right: 1rem !important;
+    left: auto !important;
+    bottom: auto !important;
+}

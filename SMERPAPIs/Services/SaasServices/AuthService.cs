@@ -70,6 +70,13 @@ public class AuthService(SmerpContext context) : IAuthService
             return true;
         }
 
+        using var sha256 = SHA256.Create();
+        var sha256Hash = sha256.ComputeHash(salted);
+        if (FixedTimeEquals(storedHash, sha256Hash))
+        {
+            return true;
+        }
+
         var pbkdf2Hash = Rfc2898DeriveBytes.Pbkdf2(passwordBytes, storedSalt, 100000, HashAlgorithmName.SHA512, storedHash.Length);
         return FixedTimeEquals(storedHash, pbkdf2Hash);
     }
