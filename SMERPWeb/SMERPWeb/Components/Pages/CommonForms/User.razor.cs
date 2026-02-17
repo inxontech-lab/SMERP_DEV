@@ -9,7 +9,7 @@ public partial class User : ComponentBase
     [Inject] private IUserOnboardingService UserOnboardingService { get; set; } = default!;
 
     protected CreateUserWithPermissionRequest FormModel { get; set; } = new();
-    protected List<Tenant> Tenants { get; set; } = [];
+    protected List<Domain.SaasDBModels.Tenant> Tenants { get; set; } = [];
     protected List<Permission> Permissions { get; set; } = [];
     protected bool IsLoading { get; set; } = true;
     protected string? ErrorMessage { get; set; }
