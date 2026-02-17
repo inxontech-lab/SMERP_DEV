@@ -1,5 +1,6 @@
 using Radzen;
 using SMERPWeb.Client.Pages;
+using SMERPWeb.Services.Auth;
 using SMERPWeb.Components;
 using SMERPWeb.Services.SaasServices;
 
@@ -33,6 +34,8 @@ builder.Services.AddHttpClient<IUserOnboardingApiClient, UserOnboardingApiClient
 builder.Services.AddScoped<IUserOnboardingService, UserOnboardingService>();
 builder.Services.AddHttpClient<IUserManagementApiClient, UserManagementApiClient>(ConfigureSaasApiClient);
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();
+builder.Services.AddHttpClient<IAuthApiClient, AuthApiClient>(ConfigureSaasApiClient);
+builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 
 var app = builder.Build();
 
