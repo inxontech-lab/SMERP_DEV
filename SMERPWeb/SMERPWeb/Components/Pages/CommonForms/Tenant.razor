@@ -10,7 +10,7 @@
                 <RadzenButton Text="New Tenant" Icon="add_circle" Click="ResetForm" ButtonStyle="ButtonStyle.Light" />
             </RadzenStack>
 
-            <RadzenDataGrid Data="Tenants" TItem="Domain.SaasDBModels.Tenant" AllowPaging="true" PageSize="10" EmptyText="No tenants found.">
+            <RadzenDataGrid Data="Tenants" TItem="Domain.SaasDBModels.Tenant" AllowPaging="true" AllowFiltering="true" PageSize="10" EmptyText="No tenants found.">
                 <Columns>
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.Tenant" Property="Id" Title="ID" Width="80px" />
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.Tenant" Property="Code" Title="Code" />
@@ -49,6 +49,16 @@
                     <div>
                         <RadzenLabel Text="Legal Name" Component="LegalName" />
                         <RadzenTextBox Name="LegalName" @bind-Value="FormModel.LegalName" Style="width:100%;" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="VAT No" Component="VatNo" />
+                        <RadzenTextBox Name="VatNo" @bind-Value="FormModel.VatNo" Style="width:100%;" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="CR Number" Component="CrNo" />
+                        <RadzenTextBox Name="CrNo" @bind-Value="FormModel.CrNo" Style="width:100%;" />
                     </div>
 
                     <div>
