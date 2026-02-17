@@ -117,3 +117,11 @@ main {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+
+::deep .rz-notification {
+    top: 1rem !important;
+    right: 1rem !important;
+    left: auto !important;
+    bottom: auto !important;
+}

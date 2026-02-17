@@ -104,7 +104,6 @@ public partial class User : ComponentBase
             Detail = detail,
             Duration = 4000,
             CloseOnClick = true,
-            Position = NotificationPosition.TopRight
         });
     }
 
