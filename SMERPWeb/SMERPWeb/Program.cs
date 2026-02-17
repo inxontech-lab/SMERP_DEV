@@ -30,6 +30,8 @@ builder.Services.AddHttpClient<IRolePermissionManagementApiClient, RolePermissio
 builder.Services.AddHttpClient<IRoleApiClient, RoleApiClient>(ConfigureSaasApiClient);
 builder.Services.AddHttpClient<IUserOnboardingApiClient, UserOnboardingApiClient>(ConfigureSaasApiClient);
 builder.Services.AddScoped<IUserOnboardingService, UserOnboardingService>();
+builder.Services.AddHttpClient<IUserManagementApiClient, UserManagementApiClient>(ConfigureSaasApiClient);
+builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 
 var app = builder.Build();
 
