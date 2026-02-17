@@ -1,0 +1,102 @@
+@page "/TenantSetting"
+
+<PageTitle>Tenant Settings Management</PageTitle>
+
+<RadzenRow Gap="1rem">
+    <RadzenColumn Size="12" SizeLG="7">
+        <RadzenCard>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
+                <RadzenText Text="Tenant Settings" TextStyle="TextStyle.H5" />
+                <RadzenButton Text="New Setting" Icon="add_circle" Click="ResetForm" ButtonStyle="ButtonStyle.Light" />
+            </RadzenStack>
+
+            <RadzenDataGrid Data="TenantSettings" TItem="Domain.SaasDBModels.TenantSetting" AllowPaging="true" PageSize="10" EmptyText="No tenant settings found.">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.TenantSetting" Property="TenantId" Title="Tenant ID" Width="120px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.TenantSetting" Property="CurrencyCode" Title="Currency" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.TenantSetting" Property="MoneyDecimals" Title="Money Dec" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.TenantSetting" Property="QtyDecimals" Title="Qty Dec" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.TenantSetting" Property="VatRateDefault" Title="Default VAT" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.TenantSetting" Title="Actions" Width="180px">
+                        <Template Context="item">
+                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => Edit(item))" class="rz-mr-2" />
+                            <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(item.TenantId))" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenCard>
+    </RadzenColumn>
+
+    <RadzenColumn Size="12" SizeLG="5">
+        <RadzenCard>
+            <RadzenText Text="@(EditingTenantId.HasValue ? "Edit Tenant Setting" : "Create Tenant Setting")" TextStyle="TextStyle.H5" class="rz-mb-3" />
+
+            <RadzenTemplateForm TItem="Domain.SaasReqDTO.TenantSettingRequest" Data="FormModel" Submit="SaveAsync">
+                <RadzenStack Gap="0.75rem">
+                    <div>
+                        <RadzenLabel Text="Tenant" Component="TenantId" />
+                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" />
+                        <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Currency Code" Component="CurrencyCode" />
+                        <RadzenTextBox Name="CurrencyCode" @bind-Value="FormModel.CurrencyCode" Style="width:100%;" />
+                        <RadzenRequiredValidator Component="CurrencyCode" Text="Currency code is required" Popup="false" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Money Decimals" Component="MoneyDecimals" />
+                        <RadzenNumeric Name="MoneyDecimals" TValue="byte" @bind-Value="FormModel.MoneyDecimals" Min="0" Max="6" Style="width:100%;" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Quantity Decimals" Component="QtyDecimals" />
+                        <RadzenNumeric Name="QtyDecimals" TValue="byte" @bind-Value="FormModel.QtyDecimals" Min="0" Max="6" Style="width:100%;" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Default VAT Rate" Component="VatRateDefault" />
+                        <RadzenNumeric Name="VatRateDefault" TValue="decimal" @bind-Value="FormModel.VatRateDefault" Min="0" Max="100" Style="width:100%;" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Receipt Prefix" Component="ReceiptPrefix" />
+                        <RadzenTextBox Name="ReceiptPrefix" @bind-Value="FormModel.ReceiptPrefix" Style="width:100%;" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Invoice Prefix" Component="InvoicePrefix" />
+                        <RadzenTextBox Name="InvoicePrefix" @bind-Value="FormModel.InvoicePrefix" Style="width:100%;" />
+                    </div>
+
+                    <div class="rz-d-flex rz-align-items-center">
+                        <RadzenCheckBox Name="PricesVatInclusive" @bind-Value="FormModel.PricesVatInclusive" TValue="bool" />
+                        <RadzenLabel Text="Prices VAT Inclusive" class="rz-ml-2" />
+                    </div>
+
+                    <div class="rz-d-flex rz-align-items-center">
+                        <RadzenCheckBox Name="AllowNegativeStock" @bind-Value="FormModel.AllowNegativeStock" TValue="bool" />
+                        <RadzenLabel Text="Allow Negative Stock" class="rz-ml-2" />
+                    </div>
+
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
+                        <RadzenButton Text="Save" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" />
+                        <RadzenButton Text="Cancel" Icon="close" Click="ResetForm" ButtonStyle="ButtonStyle.Light" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenTemplateForm>
+
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(SuccessMessage))
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Success" class="rz-mt-3">@SuccessMessage</RadzenAlert>
+            }
+        </RadzenCard>
+    </RadzenColumn>
+</RadzenRow>
