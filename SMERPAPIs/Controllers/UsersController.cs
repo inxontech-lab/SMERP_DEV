@@ -10,16 +10,24 @@ namespace SMERPAPIs.Controllers;
 public class UsersController : ControllerBase
 {
     private readonly IUserService _service;
+    private readonly IUserOnboardingService _onboardingService;
 
-    public UsersController(IUserService service)
+    public UsersController(IUserService service, IUserOnboardingService onboardingService)
     {
         _service = service;
+        _onboardingService = onboardingService;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<User>>> GetAll()
     {
         return Ok(await _service.GetAllAsync());
+    }
+
+    [HttpGet("with-role")]
+    public async Task<ActionResult<List<UserWithRoleResponse>>> GetAllWithRole()
+    {
+        return Ok(await _onboardingService.GetUsersWithRolesAsync());
     }
 
     [HttpGet("{id:long}")]
@@ -36,19 +44,39 @@ public class UsersController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
-
     [HttpPost("with-role")]
-    public async Task<ActionResult<long>> CreateWithRole([FromBody] CreateUserWithRoleRequest request, [FromServices] IUserOnboardingService onboardingService)
+    public async Task<ActionResult<long>> CreateWithRole([FromBody] CreateUserWithRoleRequest request)
     {
         try
         {
-            var userId = await onboardingService.CreateUserWithRoleAsync(request);
+            var userId = await _onboardingService.CreateUserWithRoleAsync(request);
             return Ok(userId);
         }
         catch (InvalidOperationException ex)
         {
             return BadRequest(ex.Message);
         }
+    }
+
+    [HttpPut("with-role/{id:long}")]
+    public async Task<IActionResult> UpdateWithRole(long id, [FromBody] UpdateUserWithRoleRequest request)
+    {
+        try
+        {
+            var updated = await _onboardingService.UpdateUserWithRoleAsync(id, request);
+            return updated ? NoContent() : NotFound();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpDelete("with-role/{id:long}")]
+    public async Task<IActionResult> DeleteWithRole(long id)
+    {
+        var deleted = await _onboardingService.DeleteUserWithRoleAsync(id);
+        return deleted ? NoContent() : NotFound();
     }
 
     [HttpPut("{id:long}")]
