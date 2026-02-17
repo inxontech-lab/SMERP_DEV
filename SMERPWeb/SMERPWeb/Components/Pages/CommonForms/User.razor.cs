@@ -16,7 +16,6 @@ public partial class User : ComponentBase
     protected List<Domain.SaasDBModels.Role> Roles { get; set; } = [];
     protected List<UserWithRoleResponse> Users { get; set; } = [];
     protected string? ErrorMessage { get; set; }
-    protected string? SuccessMessage { get; set; }
 
     protected override async Task OnInitializedAsync() => await LoadAsync();
 
@@ -33,7 +32,6 @@ public partial class User : ComponentBase
     protected async Task DeleteAsync(long userId)
     {
         ErrorMessage = null;
-        SuccessMessage = null;
 
         var confirmed = await DialogService.Confirm(
             "Are you sure you want to delete this user?",
@@ -42,7 +40,7 @@ public partial class User : ComponentBase
 
         if (confirmed != true)
         {
-            NotificationService.Notify(NotificationSeverity.Warning, "Cancelled", "User delete operation cancelled.");
+            NotifyTopRight(NotificationSeverity.Warning, "Cancelled", "User delete operation cancelled.");
             return;
         }
 
@@ -52,18 +50,17 @@ public partial class User : ComponentBase
             if (!deleted)
             {
                 ErrorMessage = "Unable to delete user.";
-                NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
+                NotifyTopRight(NotificationSeverity.Error, "Failed", ErrorMessage);
                 return;
             }
 
-            SuccessMessage = "User deleted successfully.";
-            NotificationService.Notify(NotificationSeverity.Success, "Success", SuccessMessage);
+            NotifyTopRight(NotificationSeverity.Success, "Success", "User deleted successfully.");
             await LoadUsersAsync();
         }
         catch (Exception ex)
         {
             ErrorMessage = ex.Message;
-            NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
+            NotifyTopRight(NotificationSeverity.Error, "Failed", ErrorMessage);
         }
     }
 
@@ -93,8 +90,22 @@ public partial class User : ComponentBase
         if (result is true)
         {
             await LoadUsersAsync();
-            SuccessMessage = editingUserId.HasValue ? "User updated successfully." : "User created successfully.";
+            NotifyTopRight(NotificationSeverity.Success, "Success", editingUserId.HasValue ? "User updated successfully." : "User created successfully.");
         }
+    }
+
+
+    private void NotifyTopRight(NotificationSeverity severity, string summary, string? detail)
+    {
+        NotificationService.Notify(new NotificationMessage
+        {
+            Severity = severity,
+            Summary = summary,
+            Detail = detail,
+            Duration = 4000,
+            CloseOnClick = true,
+            Position = NotificationPosition.TopRight
+        });
     }
 
     private async Task LoadAsync()
