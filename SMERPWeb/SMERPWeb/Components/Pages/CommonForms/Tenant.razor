@@ -1,0 +1,94 @@
+@page "/Tenant"
+
+<PageTitle>Tenant Management</PageTitle>
+
+<RadzenRow Gap="1rem">
+    <RadzenColumn Size="12" SizeLG="7">
+        <RadzenCard>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
+                <RadzenText Text="Tenants" TextStyle="TextStyle.H5" />
+                <RadzenButton Text="New Tenant" Icon="add_circle" Click="ResetForm" ButtonStyle="ButtonStyle.Light" />
+            </RadzenStack>
+
+            <RadzenDataGrid Data="Tenants" TItem="Domain.SaasDBModels.Tenant" AllowPaging="true" PageSize="10" EmptyText="No tenants found.">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.Tenant" Property="Id" Title="ID" Width="80px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.Tenant" Property="Code" Title="Code" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.Tenant" Property="Name" Title="Name" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.Tenant" Property="CountryCode" Title="Country" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.Tenant" Property="IsActive" Title="Active" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.Tenant" Title="Actions" Width="180px">
+                        <Template Context="item">
+                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => Edit(item))" class="rz-mr-2" />
+                            <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(item.Id))" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenCard>
+    </RadzenColumn>
+
+    <RadzenColumn Size="12" SizeLG="5">
+        <RadzenCard>
+            <RadzenText Text="@(EditingId.HasValue ? "Edit Tenant" : "Create Tenant")" TextStyle="TextStyle.H5" class="rz-mb-3" />
+
+            <RadzenTemplateForm TItem="Domain.SaasReqDTO.TenantRequest" Data="FormModel" Submit="SaveAsync">
+                <RadzenStack Gap="0.75rem">
+                    <div>
+                        <RadzenLabel Text="Code" Component="Code" />
+                        <RadzenTextBox Name="Code" @bind-Value="FormModel.Code" Style="width:100%;" />
+                        <RadzenRequiredValidator Component="Code" Text="Code is required" Popup="false" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Name" Component="Name" />
+                        <RadzenTextBox Name="Name" @bind-Value="FormModel.Name" Style="width:100%;" />
+                        <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="false" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Legal Name" Component="LegalName" />
+                        <RadzenTextBox Name="LegalName" @bind-Value="FormModel.LegalName" Style="width:100%;" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Country Code" Component="CountryCode" />
+                        <RadzenTextBox Name="CountryCode" @bind-Value="FormModel.CountryCode" Style="width:100%;" />
+                        <RadzenRequiredValidator Component="CountryCode" Text="Country code is required" Popup="false" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Time Zone" Component="TimeZone" />
+                        <RadzenTextBox Name="TimeZone" @bind-Value="FormModel.TimeZone" Style="width:100%;" />
+                        <RadzenRequiredValidator Component="TimeZone" Text="Time zone is required" Popup="false" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Created At" Component="CreatedAt" />
+                        <RadzenDatePicker Name="CreatedAt" @bind-Value="FormModel.CreatedAt" DateFormat="yyyy-MM-dd" Style="width:100%;" />
+                    </div>
+
+                    <div class="rz-d-flex rz-align-items-center">
+                        <RadzenCheckBox Name="IsActive" @bind-Value="FormModel.IsActive" TValue="bool" />
+                        <RadzenLabel Text="Active" class="rz-ml-2" />
+                    </div>
+
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
+                        <RadzenButton Text="Save" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" />
+                        <RadzenButton Text="Cancel" Icon="close" Click="ResetForm" ButtonStyle="ButtonStyle.Light" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenTemplateForm>
+
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(SuccessMessage))
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Success" class="rz-mt-3">@SuccessMessage</RadzenAlert>
+            }
+        </RadzenCard>
+    </RadzenColumn>
+</RadzenRow>
