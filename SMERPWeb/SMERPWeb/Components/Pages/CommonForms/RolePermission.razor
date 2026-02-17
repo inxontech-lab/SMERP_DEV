@@ -1,0 +1,75 @@
+@page "/RolePermission"
+
+<PageTitle>Role Permission Management</PageTitle>
+
+<RadzenRow Gap="1rem">
+    <RadzenColumn Size="12" SizeLG="7">
+        <RadzenCard>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
+                <RadzenText Text="Role Permissions" TextStyle="TextStyle.H5" />
+                <RadzenButton Text="New Mapping" Icon="add_circle" Click="ResetForm" ButtonStyle="ButtonStyle.Light" />
+            </RadzenStack>
+
+            <RadzenDataGrid Data="RolePermissions" TItem="Domain.SaasDBModels.RolePermission" AllowPaging="true" AllowFiltering="true" PageSize="10" EmptyText="No role permissions found.">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.RolePermission" Property="TenantId" Title="Tenant ID" Width="110px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.RolePermission" Property="RoleId" Title="Role" Width="200px">
+                        <Template Context="item">@GetRoleName(item.RoleId)</Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.RolePermission" Property="PermissionId" Title="Permission" Width="220px">
+                        <Template Context="item">@GetPermissionName(item.PermissionId)</Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.RolePermission" Title="Actions" Width="180px">
+                        <Template Context="item">
+                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => Edit(item))" class="rz-mr-2" />
+                            <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(item.TenantId, item.RoleId, item.PermissionId))" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenCard>
+    </RadzenColumn>
+
+    <RadzenColumn Size="12" SizeLG="5">
+        <RadzenCard>
+            <RadzenText Text="@(IsEditing ? "Edit Role Permission" : "Create Role Permission")" TextStyle="TextStyle.H5" class="rz-mb-3" />
+
+            <RadzenTemplateForm TItem="Domain.SaasReqDTO.RolePermissionRequest" Data="FormModel" Submit="SaveAsync">
+                <RadzenStack Gap="0.75rem">
+                    <div>
+                        <RadzenLabel Text="Tenant" Component="TenantId" />
+                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" Disabled="IsEditing" />
+                        <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Role" Component="RoleId" />
+                        <RadzenDropDown Name="RoleId" TValue="int" @bind-Value="FormModel.RoleId" Data="Roles" TextProperty="Name" ValueProperty="Id" Style="width:100%;" Disabled="IsEditing" />
+                        <RadzenRequiredValidator Component="RoleId" Text="Role is required" Popup="false" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Permission" Component="PermissionId" />
+                        <RadzenDropDown Name="PermissionId" TValue="int" @bind-Value="FormModel.PermissionId" Data="Permissions" TextProperty="Name" ValueProperty="Id" Style="width:100%;" Disabled="IsEditing" />
+                        <RadzenRequiredValidator Component="PermissionId" Text="Permission is required" Popup="false" />
+                    </div>
+
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
+                        <RadzenButton Text="Save" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" />
+                        <RadzenButton Text="Cancel" Icon="close" Click="ResetForm" ButtonStyle="ButtonStyle.Light" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenTemplateForm>
+
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(SuccessMessage))
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Success" class="rz-mt-3">@SuccessMessage</RadzenAlert>
+            }
+        </RadzenCard>
+    </RadzenColumn>
+</RadzenRow>
