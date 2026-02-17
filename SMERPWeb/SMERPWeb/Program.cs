@@ -1,6 +1,7 @@
 using Radzen;
 using SMERPWeb.Client.Pages;
 using SMERPWeb.Components;
+using SMERPWeb.Services.SaasServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,21 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddRadzenComponents();
+
+void ConfigureSaasApiClient(HttpClient client)
+{
+    var baseUrl = builder.Configuration["SaasApi:BaseUrl"];
+    client.BaseAddress = !string.IsNullOrWhiteSpace(baseUrl)
+        ? new Uri(baseUrl)
+        : new Uri("https://localhost:7029/");
+}
+
+builder.Services.AddHttpClient<ITenantApiClient, TenantApiClient>(ConfigureSaasApiClient);
+builder.Services.AddHttpClient<IPermissionApiClient, PermissionApiClient>(ConfigureSaasApiClient);
+builder.Services.AddHttpClient<IRolePermissionApiClient, RolePermissionApiClient>(ConfigureSaasApiClient);
+builder.Services.AddHttpClient<IUserRequestApiClient, UserRequestApiClient>(ConfigureSaasApiClient);
+builder.Services.AddHttpClient<IUserRoleRequestApiClient, UserRoleRequestApiClient>(ConfigureSaasApiClient);
+builder.Services.AddScoped<IUserOnboardingService, UserOnboardingService>();
 
 var app = builder.Build();
 
