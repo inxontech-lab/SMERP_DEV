@@ -1,3 +1,4 @@
+using Radzen;
 using Domain.SaasDBModels;
 using Domain.SaasReqDTO;
 using Microsoft.AspNetCore.Components;
@@ -9,6 +10,8 @@ public partial class TenantSetting : ComponentBase
 {
     [Inject] private ITenantManagementApiClient TenantApiClient { get; set; } = default!;
     [Inject] private ITenantSettingManagementApiClient TenantSettingApiClient { get; set; } = default!;
+    [Inject] private DialogService DialogService { get; set; } = default!;
+    [Inject] private NotificationService NotificationService { get; set; } = default!;
 
     protected List<Domain.SaasDBModels.Tenant> Tenants { get; set; } = [];
     protected List<Domain.SaasDBModels.TenantSetting> TenantSettings { get; set; } = [];
@@ -27,6 +30,18 @@ public partial class TenantSetting : ComponentBase
         ErrorMessage = null;
         SuccessMessage = null;
 
+        var action = EditingTenantId.HasValue ? "update" : "create";
+        var confirmed = await DialogService.Confirm(
+            $"Are you sure you want to {action} this tenant setting?",
+            "Confirm",
+            new ConfirmOptions { OkButtonText = "Yes", CancelButtonText = "No" });
+
+        if (confirmed != true)
+        {
+            NotificationService.Notify(NotificationSeverity.Warning, "Cancelled", "Tenant setting save operation cancelled.");
+            return;
+        }
+
         try
         {
             if (EditingTenantId.HasValue)
@@ -35,6 +50,7 @@ public partial class TenantSetting : ComponentBase
                 if (!updated)
                 {
                     ErrorMessage = "Unable to update tenant setting.";
+                    NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
                     return;
                 }
 
@@ -46,12 +62,14 @@ public partial class TenantSetting : ComponentBase
                 SuccessMessage = "Tenant setting created successfully.";
             }
 
+            NotificationService.Notify(NotificationSeverity.Success, "Success", SuccessMessage);
             await LoadTenantSettingsAsync();
             ResetForm();
         }
         catch (Exception ex)
         {
             ErrorMessage = ex.Message;
+            NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
         }
     }
 
@@ -77,12 +95,24 @@ public partial class TenantSetting : ComponentBase
         ErrorMessage = null;
         SuccessMessage = null;
 
+        var confirmed = await DialogService.Confirm(
+            "Are you sure you want to delete this tenant setting?",
+            "Confirm",
+            new ConfirmOptions { OkButtonText = "Yes", CancelButtonText = "No" });
+
+        if (confirmed != true)
+        {
+            NotificationService.Notify(NotificationSeverity.Warning, "Cancelled", "Tenant setting delete operation cancelled.");
+            return;
+        }
+
         try
         {
             var deleted = await TenantSettingApiClient.DeleteAsync(tenantId);
             if (!deleted)
             {
                 ErrorMessage = "Unable to delete tenant setting.";
+                NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
                 return;
             }
 
@@ -92,11 +122,13 @@ public partial class TenantSetting : ComponentBase
             }
 
             SuccessMessage = "Tenant setting deleted successfully.";
+            NotificationService.Notify(NotificationSeverity.Success, "Success", SuccessMessage);
             await LoadTenantSettingsAsync();
         }
         catch (Exception ex)
         {
             ErrorMessage = ex.Message;
+            NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
         }
     }
 
@@ -124,5 +156,14 @@ public partial class TenantSetting : ComponentBase
     private async Task LoadTenantSettingsAsync()
     {
         TenantSettings = await TenantSettingApiClient.GetAllAsync();
+
+        foreach (var tenantSetting in TenantSettings)
+        {
+            tenantSetting.Tenant = Tenants.FirstOrDefault(t => t.Id == tenantSetting.TenantId) ?? new Domain.SaasDBModels.Tenant
+            {
+                Id = tenantSetting.TenantId,
+                Name = $"Tenant #{tenantSetting.TenantId}"
+            };
+        }
     }
 }
