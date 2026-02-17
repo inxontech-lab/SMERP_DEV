@@ -1,0 +1,91 @@
+@page "/PosTerminal"
+
+<PageTitle>POS Terminal Management</PageTitle>
+
+<RadzenRow Gap="1rem">
+    <RadzenColumn Size="12" SizeLG="7">
+        <RadzenCard>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
+                <RadzenText Text="POS Terminals" TextStyle="TextStyle.H5" />
+                <RadzenButton Text="New POS Terminal" Icon="add_circle" Click="ResetForm" ButtonStyle="ButtonStyle.Light" />
+            </RadzenStack>
+
+            <RadzenDataGrid Data="PosTerminals" TItem="Domain.SaasDBModels.PosTerminal" AllowPaging="true" AllowFiltering="true" PageSize="10" EmptyText="No POS terminals found.">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Property="Id" Title="ID" Width="80px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Property="TenantId" Title="Tenant ID" Width="100px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Property="BranchId" Title="Branch ID" Width="100px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Property="Code" Title="Code" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Property="Name" Title="Name" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Property="IsKiosk" Title="Kiosk" Width="90px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Property="IsActive" Title="Active" Width="90px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Title="Actions" Width="180px">
+                        <Template Context="item">
+                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => Edit(item))" class="rz-mr-2" />
+                            <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(item.Id))" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenCard>
+    </RadzenColumn>
+
+    <RadzenColumn Size="12" SizeLG="5">
+        <RadzenCard>
+            <RadzenText Text="@(EditingId.HasValue ? "Edit POS Terminal" : "Create POS Terminal")" TextStyle="TextStyle.H5" class="rz-mb-3" />
+
+            <RadzenTemplateForm TItem="Domain.SaasReqDTO.PosTerminalRequest" Data="FormModel" Submit="SaveAsync">
+                <RadzenStack Gap="0.75rem">
+                    <div>
+                        <RadzenLabel Text="Tenant" Component="TenantId" />
+                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Change="OnTenantChanged" Style="width:100%;" />
+                        <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Branch" Component="BranchId" />
+                        <RadzenDropDown Name="BranchId" TValue="int" @bind-Value="FormModel.BranchId" Data="TenantBranches" TextProperty="Name" ValueProperty="Id" Style="width:100%;" />
+                        <RadzenRequiredValidator Component="BranchId" Text="Branch is required" Popup="false" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Code" Component="Code" />
+                        <RadzenTextBox Name="Code" @bind-Value="FormModel.Code" Style="width:100%;" />
+                        <RadzenRequiredValidator Component="Code" Text="Code is required" Popup="false" />
+                    </div>
+
+                    <div>
+                        <RadzenLabel Text="Name" Component="Name" />
+                        <RadzenTextBox Name="Name" @bind-Value="FormModel.Name" Style="width:100%;" />
+                        <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="false" />
+                    </div>
+
+                    <div class="rz-d-flex rz-align-items-center">
+                        <RadzenCheckBox Name="IsKiosk" @bind-Value="FormModel.IsKiosk" TValue="bool" />
+                        <RadzenLabel Text="Kiosk" class="rz-ml-2" />
+                    </div>
+
+                    <div class="rz-d-flex rz-align-items-center">
+                        <RadzenCheckBox Name="IsActive" @bind-Value="FormModel.IsActive" TValue="bool" />
+                        <RadzenLabel Text="Active" class="rz-ml-2" />
+                    </div>
+
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
+                        <RadzenButton Text="Save" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" />
+                        <RadzenButton Text="Cancel" Icon="close" Click="ResetForm" ButtonStyle="ButtonStyle.Light" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenTemplateForm>
+
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(SuccessMessage))
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Success" class="rz-mt-3">@SuccessMessage</RadzenAlert>
+            }
+        </RadzenCard>
+    </RadzenColumn>
+</RadzenRow>
