@@ -13,15 +13,15 @@ public partial class User : ComponentBase
     [Inject] private DialogService DialogService { get; set; } = default!;
     [Inject] private NotificationService NotificationService { get; set; } = default!;
 
-    protected List<Tenant> Tenants { get; set; } = [];
-    protected List<Role> Roles { get; set; } = [];
+    protected List<Domain.SaasDBModels.Tenant> Tenants { get; set; } = [];
+    protected List<Domain.SaasDBModels.Role> Roles { get; set; } = [];
     protected List<UserWithRoleResponse> Users { get; set; } = [];
     protected UserFormModel FormModel { get; set; } = new();
     protected long? EditingId { get; set; }
     protected string? ErrorMessage { get; set; }
     protected string? SuccessMessage { get; set; }
 
-    protected IEnumerable<Role> FilteredRoles => Roles.Where(item => item.TenantId == FormModel.TenantId);
+    protected IEnumerable<Domain.SaasDBModels.Role> FilteredRoles => Roles.Where(item => item.TenantId == FormModel.TenantId);
 
     protected override async Task OnInitializedAsync() => await LoadAsync();
 
