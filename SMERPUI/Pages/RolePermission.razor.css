@@ -1,0 +1,20 @@
+.role-permission-page {
+    max-width: 900px;
+}
+
+.permission-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--rz-base-300);
+}
+
+.permission-title {
+    font-weight: 600;
+}
+
+.permission-subtitle {
+    font-size: 0.875rem;
+    color: var(--rz-text-secondary-color);
+}

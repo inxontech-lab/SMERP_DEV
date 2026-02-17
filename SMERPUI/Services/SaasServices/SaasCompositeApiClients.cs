@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using Domain.SaasDBModels;
+using Domain.SaasReqDTO;
 
 namespace SMERPUI.Services.SaasServices;
 
@@ -73,8 +74,8 @@ public interface IRolePermissionApiClient
 {
     Task<List<RolePermission>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<RolePermission?> GetByIdAsync(int tenantId, int roleId, int permissionId, CancellationToken cancellationToken = default);
-    Task<RolePermission> CreateAsync(RolePermission entity, CancellationToken cancellationToken = default);
-    Task<bool> UpdateAsync(int tenantId, int roleId, int permissionId, RolePermission entity, CancellationToken cancellationToken = default);
+    Task<RolePermission> CreateAsync(RolePermissionRequest request, CancellationToken cancellationToken = default);
+    Task<bool> UpdateAsync(int tenantId, int roleId, int permissionId, RolePermissionRequest request, CancellationToken cancellationToken = default);
     Task<bool> DeleteAsync(int tenantId, int roleId, int permissionId, CancellationToken cancellationToken = default);
 }
 
@@ -86,17 +87,17 @@ public class RolePermissionApiClient(HttpClient httpClient) : IRolePermissionApi
     public async Task<RolePermission?> GetByIdAsync(int tenantId, int roleId, int permissionId, CancellationToken cancellationToken = default)
         => await httpClient.GetFromJsonAsync<RolePermission>($"api/RolePermissions/{tenantId}/{roleId}/{permissionId}", cancellationToken);
 
-    public async Task<RolePermission> CreateAsync(RolePermission entity, CancellationToken cancellationToken = default)
+    public async Task<RolePermission> CreateAsync(RolePermissionRequest request, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PostAsJsonAsync("api/RolePermissions", entity, cancellationToken);
+        var response = await httpClient.PostAsJsonAsync("api/RolePermissions", request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadFromJsonAsync<RolePermission>(cancellationToken)
                ?? throw new InvalidOperationException("No RolePermission returned by API.");
     }
 
-    public async Task<bool> UpdateAsync(int tenantId, int roleId, int permissionId, RolePermission entity, CancellationToken cancellationToken = default)
-        => (await httpClient.PutAsJsonAsync($"api/RolePermissions/{tenantId}/{roleId}/{permissionId}", entity, cancellationToken)).IsSuccessStatusCode;
+    public async Task<bool> UpdateAsync(int tenantId, int roleId, int permissionId, RolePermissionRequest request, CancellationToken cancellationToken = default)
+        => (await httpClient.PutAsJsonAsync($"api/RolePermissions/{tenantId}/{roleId}/{permissionId}", request, cancellationToken)).IsSuccessStatusCode;
 
     public async Task<bool> DeleteAsync(int tenantId, int roleId, int permissionId, CancellationToken cancellationToken = default)
         => (await httpClient.DeleteAsync($"api/RolePermissions/{tenantId}/{roleId}/{permissionId}", cancellationToken)).IsSuccessStatusCode;
