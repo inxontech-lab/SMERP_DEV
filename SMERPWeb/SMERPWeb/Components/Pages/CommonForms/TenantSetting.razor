@@ -10,9 +10,9 @@
                 <RadzenButton Text="New Setting" Icon="add_circle" Click="ResetForm" ButtonStyle="ButtonStyle.Light" />
             </RadzenStack>
 
-            <RadzenDataGrid Data="TenantSettings" TItem="Domain.SaasDBModels.TenantSetting" AllowPaging="true" PageSize="10" EmptyText="No tenant settings found.">
+            <RadzenDataGrid Data="TenantSettings" TItem="Domain.SaasDBModels.TenantSetting" AllowPaging="true" AllowFiltering="true" PageSize="10" EmptyText="No tenant settings found.">
                 <Columns>
-                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.TenantSetting" Property="TenantId" Title="Tenant ID" Width="120px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.TenantSetting" Property="Tenant.Name" Title="Tenant Name" Width="180px" />
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.TenantSetting" Property="CurrencyCode" Title="Currency" />
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.TenantSetting" Property="MoneyDecimals" Title="Money Dec" />
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.TenantSetting" Property="QtyDecimals" Title="Qty Dec" />
