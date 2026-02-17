@@ -15,8 +15,6 @@ public partial class SmerpContext : DbContext
     {
     }
 
-    public virtual DbSet<ApplicationModule> ApplicationModules { get; set; }
-
     public virtual DbSet<AuditLog> AuditLogs { get; set; }
 
     public virtual DbSet<Branch> Branches { get; set; }
@@ -41,8 +39,6 @@ public partial class SmerpContext : DbContext
 
     public virtual DbSet<Tenant> Tenants { get; set; }
 
-    public virtual DbSet<TenantModule> TenantModules { get; set; }
-
     public virtual DbSet<TenantSetting> TenantSettings { get; set; }
 
     public virtual DbSet<Uom> Uoms { get; set; }
@@ -59,12 +55,6 @@ public partial class SmerpContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<ApplicationModule>(entity =>
-        {
-            entity.Property(e => e.ModuleNameAr).HasMaxLength(50);
-            entity.Property(e => e.ModuleNameEn).HasMaxLength(50);
-        });
-
         modelBuilder.Entity<AuditLog>(entity =>
         {
             entity.HasIndex(e => new { e.TenantId, e.CreatedAt }, "IX_AuditLogs_Tenant_CreatedAt").IsDescending(false, true);
@@ -260,16 +250,6 @@ public partial class SmerpContext : DbContext
                 .HasMaxLength(60)
                 .HasDefaultValue("Asia/Bahrain");
             entity.Property(e => e.VatNo).HasMaxLength(50);
-        });
-
-        modelBuilder.Entity<TenantModule>(entity =>
-        {
-            entity.ToTable("TenantModule");
-
-            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
-            entity.Property(e => e.ModuleId)
-                .HasMaxLength(10)
-                .IsFixedLength();
         });
 
         modelBuilder.Entity<TenantSetting>(entity =>
