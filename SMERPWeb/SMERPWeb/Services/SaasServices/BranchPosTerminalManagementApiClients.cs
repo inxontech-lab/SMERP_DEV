@@ -37,6 +37,39 @@ public class BranchManagementApiClient(HttpClient httpClient) : IBranchManagemen
         => (await httpClient.DeleteAsync($"api/Branches/{id}", cancellationToken)).IsSuccessStatusCode;
 }
 
+public interface IRoleManagementApiClient
+{
+    Task<List<Role>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<Role?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<Role> CreateAsync(RoleRequest request, CancellationToken cancellationToken = default);
+    Task<bool> UpdateAsync(int id, RoleRequest request, CancellationToken cancellationToken = default);
+    Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default);
+}
+
+public class RoleManagementApiClient(HttpClient httpClient) : IRoleManagementApiClient
+{
+    public async Task<List<Role>> GetAllAsync(CancellationToken cancellationToken = default)
+        => await httpClient.GetFromJsonAsync<List<Role>>("api/Roles", cancellationToken) ?? [];
+
+    public async Task<Role?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        => await httpClient.GetFromJsonAsync<Role>($"api/Roles/{id}", cancellationToken);
+
+    public async Task<Role> CreateAsync(RoleRequest request, CancellationToken cancellationToken = default)
+    {
+        var response = await httpClient.PostAsJsonAsync("api/Roles", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadFromJsonAsync<Role>(cancellationToken)
+               ?? throw new InvalidOperationException("No Role returned by API.");
+    }
+
+    public async Task<bool> UpdateAsync(int id, RoleRequest request, CancellationToken cancellationToken = default)
+        => (await httpClient.PutAsJsonAsync($"api/Roles/{id}", request, cancellationToken)).IsSuccessStatusCode;
+
+    public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        => (await httpClient.DeleteAsync($"api/Roles/{id}", cancellationToken)).IsSuccessStatusCode;
+}
+
 public interface IPosTerminalManagementApiClient
 {
     Task<List<PosTerminal>> GetAllAsync(CancellationToken cancellationToken = default);

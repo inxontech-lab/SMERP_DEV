@@ -24,6 +24,7 @@ builder.Services.AddHttpClient<ITenantApiClient, TenantApiClient>(ConfigureSaasA
 builder.Services.AddHttpClient<ITenantManagementApiClient, TenantManagementApiClient>(ConfigureSaasApiClient);
 builder.Services.AddHttpClient<ITenantSettingManagementApiClient, TenantSettingManagementApiClient>(ConfigureSaasApiClient);
 builder.Services.AddHttpClient<IBranchManagementApiClient, BranchManagementApiClient>(ConfigureSaasApiClient);
+builder.Services.AddHttpClient<IRoleManagementApiClient, RoleManagementApiClient>(ConfigureSaasApiClient);
 builder.Services.AddHttpClient<IPosTerminalManagementApiClient, PosTerminalManagementApiClient>(ConfigureSaasApiClient);
 builder.Services.AddHttpClient<IPermissionApiClient, PermissionApiClient>(ConfigureSaasApiClient);
 builder.Services.AddHttpClient<IRolePermissionApiClient, RolePermissionApiClient>(ConfigureSaasApiClient);
