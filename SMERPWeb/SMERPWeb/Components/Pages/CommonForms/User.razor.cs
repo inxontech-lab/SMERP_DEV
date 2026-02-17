@@ -10,8 +10,8 @@ public partial class User : ComponentBase
     [Inject] private IUserOnboardingService UserOnboardingService { get; set; } = default!;
 
     protected CreateUserWithRoleRequest FormModel { get; set; } = new();
-    protected List<Tenant> Tenants { get; set; } = [];
-    protected List<Role> Roles { get; set; } = [];
+    protected List<Domain.SaasDBModels.Tenant> Tenants { get; set; } = [];
+    protected List<Domain.SaasDBModels.Role> Roles { get; set; } = [];
     protected bool IsLoading { get; set; } = true;
     protected string? ErrorMessage { get; set; }
     protected string? SuccessMessage { get; set; }
