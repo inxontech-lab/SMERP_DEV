@@ -124,5 +124,14 @@ public partial class TenantSetting : ComponentBase
     private async Task LoadTenantSettingsAsync()
     {
         TenantSettings = await TenantSettingApiClient.GetAllAsync();
+
+        foreach (var tenantSetting in TenantSettings)
+        {
+            tenantSetting.Tenant = Tenants.FirstOrDefault(t => t.Id == tenantSetting.TenantId) ?? new Domain.SaasDBModels.Tenant
+            {
+                Id = tenantSetting.TenantId,
+                Name = $"Tenant #{tenantSetting.TenantId}"
+            };
+        }
     }
 }
