@@ -12,7 +12,7 @@
         }
         else
         {
-            <RadzenTemplateForm TItem="SMERPWeb.Services.SaasServices.CreateUserWithPermissionRequest" Data="FormModel" Submit="CreateUserAsync">
+            <RadzenTemplateForm TItem="Domain.SaasReqDTO.CreateUserWithRoleRequest" Data="FormModel" Submit="CreateUserAsync">
                 <RadzenRow Gap="1rem">
                     <RadzenColumn Size="12" SizeMD="6">
                         <RadzenLabel Text="Tenant" Component="TenantId" />
@@ -22,10 +22,10 @@
                     </RadzenColumn>
 
                     <RadzenColumn Size="12" SizeMD="6">
-                        <RadzenLabel Text="Permission" Component="PermissionId" />
-                        <RadzenDropDown id="PermissionId" Name="PermissionId" TValue="int" @bind-Value="FormModel.PermissionId"
-                                        Data="Permissions" TextProperty="Name" ValueProperty="Id" Style="width:100%;" />
-                        <RadzenRequiredValidator Component="PermissionId" Text="Permission is required" Popup="false" />
+                        <RadzenLabel Text="Role" Component="RoleId" />
+                        <RadzenDropDown id="RoleId" Name="RoleId" TValue="int" @bind-Value="FormModel.RoleId"
+                                        Data="Roles" TextProperty="Name" ValueProperty="Id" Style="width:100%;" />
+                        <RadzenRequiredValidator Component="RoleId" Text="Role is required" Popup="false" />
                     </RadzenColumn>
 
                     <RadzenColumn Size="12" SizeMD="6">

@@ -36,6 +36,21 @@ public class UsersController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
+
+    [HttpPost("with-role")]
+    public async Task<ActionResult<long>> CreateWithRole([FromBody] CreateUserWithRoleRequest request, [FromServices] IUserOnboardingService onboardingService)
+    {
+        try
+        {
+            var userId = await onboardingService.CreateUserWithRoleAsync(request);
+            return Ok(userId);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpPut("{id:long}")]
     public async Task<IActionResult> Update(long id, [FromBody] UserRequest request)
     {
