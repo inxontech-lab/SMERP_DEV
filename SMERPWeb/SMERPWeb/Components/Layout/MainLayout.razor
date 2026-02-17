@@ -39,20 +39,23 @@
 <RadzenContextMenu @rendermode="RenderMode.InteractiveServer" />  193e91*@
 <RadzenLayout>
     <RadzenHeader class="app-topbar">
-        <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0">
-            <RadzenColumn Size="10">
-                <RadzenStack AlignItems="AlignItems.Start" Orientation="Orientation.Horizontal">
-                    <RadzenSidebarToggle Click="@SidebarToggleClick"></RadzenSidebarToggle>
-                    <RadzenText Text="SMERP" class="app-title" />
+        <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0" class="topbar-row">
+            <RadzenColumn Size="9" SizeMD="8" SizeLG="9">
+                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Gap="0.75rem" class="topbar-brand-wrap">
+                    <RadzenSidebarToggle Click="@SidebarToggleClick" class="topbar-toggle"></RadzenSidebarToggle>
+                    <RadzenStack AlignItems="AlignItems.Start" Gap="0" class="topbar-brand-text">
+                        <RadzenText Text="SMERP" class="app-title" />
+                        <RadzenText Text="Smart ERP Workspace" class="app-subtitle" />
+                    </RadzenStack>
                 </RadzenStack>
             </RadzenColumn>
-            <RadzenColumn Size="2">
-                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0.5rem">
+            <RadzenColumn Size="3" SizeMD="4" SizeLG="3">
+                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0.6rem" class="topbar-actions">
                     @if (!string.IsNullOrWhiteSpace(UserBadgeText))
                     {
                         <RadzenText Text="@UserBadgeText" class="app-user-badge" />
                     }
-                    <RadzenProfileMenu Click="@ProfileMenuClick">
+                    <RadzenProfileMenu Click="@ProfileMenuClick" class="topbar-profile-menu">
                         <ChildContent>
                             <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
                         </ChildContent>
