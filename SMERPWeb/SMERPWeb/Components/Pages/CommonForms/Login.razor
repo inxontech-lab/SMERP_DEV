@@ -43,11 +43,16 @@
                                 Style="width:100%;" />
             </div>
 
-            <RadzenButton Text="Login"
+            <RadzenButton Text="@(IsLoggingIn ? "Signing in..." : "Login")"
                           ButtonStyle="ButtonStyle.Primary"
                           class="login-btn"
-                          Disabled="false"
+                          Disabled="@IsLoggingIn"
                           Click="@OnLoginClicked" />
+
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <RadzenText Text="@ErrorMessage" Style="color:#dc3545; font-size:0.9rem;" />
+            }
         </div>
     </div>
 </div>
