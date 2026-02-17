@@ -1,5 +1,5 @@
+@inherits LayoutComponentBase
 @using SMERPWeb.Services.Auth
-﻿@inherits LayoutComponentBase
 
 <HeadContent>
     <link href="css/app.css" rel="stylesheet" />
@@ -117,8 +117,13 @@
     private bool sidebarExpanded = true;
     private string? UserBadgeText { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender)
+        {
+            return;
+        }
+
         var session = await UserSessionService.GetSessionAsync();
         if (session is null)
         {
@@ -130,6 +135,8 @@
         UserBadgeText = string.IsNullOrWhiteSpace(session.TenantName)
             ? displayName
             : $"{displayName} ({session.TenantName})";
+
+        StateHasChanged();
     }
 
     void SidebarToggleClick()

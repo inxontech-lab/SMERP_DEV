@@ -72,7 +72,15 @@ public partial class Login : ComponentBase
                 response.Mobile,
                 response.LastLoginAt));
 
-            NavigationManager.NavigateTo("/Home", true);
+            NavigationManager.NavigateTo("/Dashboard", true);
+        }
+        catch (HttpRequestException)
+        {
+            ErrorMessage = "Unable to reach the server. Please try again.";
+        }
+        catch (TaskCanceledException)
+        {
+            ErrorMessage = "Login request timed out. Please try again.";
         }
         finally
         {
