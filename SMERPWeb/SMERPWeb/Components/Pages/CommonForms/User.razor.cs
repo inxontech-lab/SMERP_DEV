@@ -1,4 +1,3 @@
-using Domain.SaasDBModels;
 using Domain.SaasReqDTO;
 using Microsoft.AspNetCore.Components;
 using Radzen;
@@ -16,74 +15,19 @@ public partial class User : ComponentBase
     protected List<Domain.SaasDBModels.Tenant> Tenants { get; set; } = [];
     protected List<Domain.SaasDBModels.Role> Roles { get; set; } = [];
     protected List<UserWithRoleResponse> Users { get; set; } = [];
-    protected UserFormModel FormModel { get; set; } = new();
-    protected long? EditingId { get; set; }
     protected string? ErrorMessage { get; set; }
     protected string? SuccessMessage { get; set; }
 
-    protected IEnumerable<Domain.SaasDBModels.Role> FilteredRoles => Roles.Where(item => item.TenantId == FormModel.TenantId);
-
     protected override async Task OnInitializedAsync() => await LoadAsync();
 
-    protected async Task SaveAsync(UserFormModel _)
+    protected async Task OpenCreateDialogAsync()
     {
-        ErrorMessage = null;
-        SuccessMessage = null;
-
-        if (!EditingId.HasValue && string.IsNullOrWhiteSpace(FormModel.Password))
-        {
-            ErrorMessage = "Password is required for creating user.";
-            NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
-            return;
-        }
-
-        var action = EditingId.HasValue ? "update" : "create";
-        var confirmed = await DialogService.Confirm(
-            $"Are you sure you want to {action} this user?",
-            "Confirm",
-            new ConfirmOptions { OkButtonText = "Yes", CancelButtonText = "No" });
-
-        if (confirmed != true)
-        {
-            NotificationService.Notify(NotificationSeverity.Warning, "Cancelled", "User save operation cancelled.");
-            return;
-        }
-
-        try
-        {
-            if (EditingId.HasValue)
-            {
-                var updated = await UserManagementService.UpdateUserAsync(EditingId.Value, FormModel.ToUpdateRequest());
-                if (!updated)
-                {
-                    ErrorMessage = "Unable to update user.";
-                    NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
-                    return;
-                }
-
-                SuccessMessage = "User updated successfully.";
-            }
-            else
-            {
-                await UserManagementService.CreateUserAsync(FormModel.ToCreateRequest());
-                SuccessMessage = "User created successfully.";
-            }
-
-            NotificationService.Notify(NotificationSeverity.Success, "Success", SuccessMessage);
-            await LoadUsersAsync();
-            ResetForm();
-        }
-        catch (Exception ex)
-        {
-            ErrorMessage = ex.Message;
-            NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
-        }
+        await OpenUserDialogAsync("Create User", null, null);
     }
 
-    protected void Edit(UserWithRoleResponse item)
+    protected async Task OpenEditDialogAsync(UserWithRoleResponse user)
     {
-        EditingId = item.UserId;
-        FormModel = UserFormModel.FromResponse(item);
+        await OpenUserDialogAsync("Edit User", user.UserId, UserFormModel.FromResponse(user));
     }
 
     protected async Task DeleteAsync(long userId)
@@ -112,11 +56,6 @@ public partial class User : ComponentBase
                 return;
             }
 
-            if (EditingId == userId)
-            {
-                ResetForm();
-            }
-
             SuccessMessage = "User deleted successfully.";
             NotificationService.Notify(NotificationSeverity.Success, "Success", SuccessMessage);
             await LoadUsersAsync();
@@ -128,34 +67,33 @@ public partial class User : ComponentBase
         }
     }
 
-    protected void ResetForm()
+    protected string GetTenantName(int tenantId)
+        => Tenants.FirstOrDefault(t => t.Id == tenantId)?.Name ?? "-";
+
+    private async Task OpenUserDialogAsync(string title, long? editingUserId, UserFormModel? model)
     {
-        EditingId = null;
-        ErrorMessage = null;
-        SuccessMessage = null;
-
-        FormModel = new UserFormModel
+        var result = await DialogService.OpenAsync<UserDialog>(title, new Dictionary<string, object>
         {
-            IsActive = true,
-            TenantId = Tenants.FirstOrDefault()?.Id ?? 0
-        };
-
-        OnTenantChanged(FormModel.TenantId);
-    }
-
-    protected void OnTenantChanged(object value)
-    {
-        var tenantId = value switch
+            [nameof(UserDialog.Tenants)] = Tenants,
+            [nameof(UserDialog.Roles)] = Roles,
+            [nameof(UserDialog.EditingUserId)] = editingUserId,
+            [nameof(UserDialog.FormModel)] = model ?? new UserFormModel
+            {
+                IsActive = true,
+                TenantId = Tenants.FirstOrDefault()?.Id ?? 0
+            }
+        }, new DialogOptions
         {
-            int intValue => intValue,
-            _ => FormModel.TenantId
-        };
+            Width = "720px",
+            Resizable = true,
+            Draggable = true,
+            CloseDialogOnEsc = true
+        });
 
-        FormModel.TenantId = tenantId;
-
-        if (!FilteredRoles.Any(item => item.Id == FormModel.RoleId))
+        if (result is true)
         {
-            FormModel.RoleId = FilteredRoles.FirstOrDefault()?.Id ?? 0;
+            await LoadUsersAsync();
+            SuccessMessage = editingUserId.HasValue ? "User updated successfully." : "User created successfully.";
         }
     }
 
@@ -164,7 +102,6 @@ public partial class User : ComponentBase
         Tenants = await UserManagementService.GetTenantsAsync();
         Roles = await UserManagementService.GetRolesAsync();
         await LoadUsersAsync();
-        ResetForm();
     }
 
     private async Task LoadUsersAsync() => Users = await UserManagementService.GetUsersAsync();
