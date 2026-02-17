@@ -6,19 +6,19 @@ using SMERPWeb.Services.SaasServices;
 
 namespace SMERPWeb.Components.Pages.CommonForms;
 
-public partial class RolePermission : ComponentBase
+public class RolePermissionPage : ComponentBase
 {
     [Inject] private ITenantManagementApiClient TenantApiClient { get; set; } = default!;
-    [Inject] private IRoleApiClient RoleApiClient { get; set; } = default!;
+    [Inject] private IRoleManagementApiClient RoleApiClient { get; set; } = default!;
     [Inject] private IPermissionApiClient PermissionApiClient { get; set; } = default!;
     [Inject] private IRolePermissionManagementApiClient RolePermissionApiClient { get; set; } = default!;
     [Inject] private DialogService DialogService { get; set; } = default!;
     [Inject] private NotificationService NotificationService { get; set; } = default!;
 
-    protected List<Domain.SaasDBModels.Tenant> Tenants { get; set; } = [];
-    protected List<Domain.SaasDBModels.Role> Roles { get; set; } = [];
+    protected List<Tenant> Tenants { get; set; } = [];
+    protected List<Role> Roles { get; set; } = [];
     protected List<Permission> Permissions { get; set; } = [];
-    protected List<Domain.SaasDBModels.RolePermission> RolePermissions { get; set; } = [];
+    protected List<RolePermission> RolePermissions { get; set; } = [];
 
     protected RolePermissionRequest FormModel { get; set; } = new();
     protected (int TenantId, int RoleId, int PermissionId)? EditingKeys { get; set; }
@@ -78,7 +78,7 @@ public partial class RolePermission : ComponentBase
         }
     }
 
-    protected void Edit(Domain.SaasDBModels.RolePermission item)
+    protected void Edit(RolePermission item)
     {
         EditingKeys = (item.TenantId, item.RoleId, item.PermissionId);
         FormModel = new RolePermissionRequest

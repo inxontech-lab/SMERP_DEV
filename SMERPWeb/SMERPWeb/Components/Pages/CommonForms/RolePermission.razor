@@ -1,4 +1,5 @@
 @page "/RolePermission"
+@inherits RolePermissionPage
 
 <PageTitle>Role Permission Management</PageTitle>
 
@@ -38,19 +39,19 @@
                 <RadzenStack Gap="0.75rem">
                     <div>
                         <RadzenLabel Text="Tenant" Component="TenantId" />
-                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" Disabled="IsEditing" />
+                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" Disabled="@IsEditing" />
                         <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
                     </div>
 
                     <div>
                         <RadzenLabel Text="Role" Component="RoleId" />
-                        <RadzenDropDown Name="RoleId" TValue="int" @bind-Value="FormModel.RoleId" Data="Roles" TextProperty="Name" ValueProperty="Id" Style="width:100%;" Disabled="IsEditing" />
+                        <RadzenDropDown Name="RoleId" TValue="int" @bind-Value="FormModel.RoleId" Data="Roles" TextProperty="Name" ValueProperty="Id" Style="width:100%;" Disabled="@IsEditing" />
                         <RadzenRequiredValidator Component="RoleId" Text="Role is required" Popup="false" />
                     </div>
 
                     <div>
                         <RadzenLabel Text="Permission" Component="PermissionId" />
-                        <RadzenDropDown Name="PermissionId" TValue="int" @bind-Value="FormModel.PermissionId" Data="Permissions" TextProperty="Name" ValueProperty="Id" Style="width:100%;" Disabled="IsEditing" />
+                        <RadzenDropDown Name="PermissionId" TValue="int" @bind-Value="FormModel.PermissionId" Data="Permissions" TextProperty="Name" ValueProperty="Id" Style="width:100%;" Disabled="@IsEditing" />
                         <RadzenRequiredValidator Component="PermissionId" Text="Permission is required" Popup="false" />
                     </div>
 
