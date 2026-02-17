@@ -143,14 +143,9 @@ public class UserOnboardingService(SmerpContext context) : IUserOnboardingServic
 
     private static (byte[] PasswordHash, byte[] PasswordSalt) HashPassword(string password)
     {
-        var salt = RandomNumberGenerator.GetBytes(16);
+        var salt = RandomNumberGenerator.GetBytes(32);
         var passwordBytes = Encoding.UTF8.GetBytes(password);
-        var payload = new byte[salt.Length + passwordBytes.Length];
-
-        Buffer.BlockCopy(salt, 0, payload, 0, salt.Length);
-        Buffer.BlockCopy(passwordBytes, 0, payload, salt.Length, passwordBytes.Length);
-
-        var hash = SHA256.HashData(payload);
+        var hash = Rfc2898DeriveBytes.Pbkdf2(passwordBytes, salt, 100000, HashAlgorithmName.SHA512, 64);
         return (hash, salt);
     }
 }
