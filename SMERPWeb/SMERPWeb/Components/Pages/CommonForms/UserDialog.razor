@@ -1,0 +1,67 @@
+@using SMERPWeb.Models.User
+
+<RadzenTemplateForm TItem="UserFormModel" Data="FormModel" Submit="SaveAsync">
+    <RadzenStack Gap="0.75rem">
+        <div>
+            <RadzenLabel Text="Tenant" Component="TenantId" />
+            <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId"
+                            Data="Tenants" TextProperty="Name" ValueProperty="Id"
+                            Change="OnTenantChanged"
+                            AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.Contains"
+                            Style="width:100%;" />
+            <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="Role" Component="RoleId" />
+            <RadzenDropDown Name="RoleId" TValue="int" @bind-Value="FormModel.RoleId"
+                            Data="FilteredRoles" TextProperty="Name" ValueProperty="Id"
+                            AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.Contains"
+                            Style="width:100%;" />
+            <RadzenRequiredValidator Component="RoleId" Text="Role is required" Popup="false" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="Username" Component="Username" />
+            <RadzenTextBox Name="Username" @bind-Value="FormModel.Username" Style="width:100%;" />
+            <RadzenRequiredValidator Component="Username" Text="Username is required" Popup="false" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="Display Name" Component="DisplayName" />
+            <RadzenTextBox Name="DisplayName" @bind-Value="FormModel.DisplayName" Style="width:100%;" />
+            <RadzenRequiredValidator Component="DisplayName" Text="Display name is required" Popup="false" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="Email" Component="Email" />
+            <RadzenTextBox Name="Email" @bind-Value="FormModel.Email" Style="width:100%;" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="Mobile" Component="Mobile" />
+            <RadzenTextBox Name="Mobile" @bind-Value="FormModel.Mobile" Style="width:100%;" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="Password" Component="Password" />
+            <RadzenPassword Name="Password" @bind-Value="FormModel.Password" Style="width:100%;" />
+            <RadzenRequiredValidator Component="Password" Text="Password is required for new user" Popup="false" Visible="@(!EditingUserId.HasValue)" />
+        </div>
+
+        <div class="rz-d-flex rz-align-items-center">
+            <RadzenCheckBox Name="IsActive" @bind-Value="FormModel.IsActive" TValue="bool" />
+            <RadzenLabel Text="Active" class="rz-ml-2" />
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        {
+            <RadzenAlert AlertStyle="AlertStyle.Danger">@ErrorMessage</RadzenAlert>
+        }
+
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" class="rz-mt-2">
+            <RadzenButton Text="Save" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" />
+            <RadzenButton Text="Cancel" Icon="close" Click="Cancel" ButtonStyle="ButtonStyle.Light" />
+        </RadzenStack>
+    </RadzenStack>
+</RadzenTemplateForm>
