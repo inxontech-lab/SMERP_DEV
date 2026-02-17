@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
+@using SMERPWeb.Services.Auth
 
 <HeadContent>
     <link href="css/app.css" rel="stylesheet" />
@@ -46,8 +47,12 @@
                 </RadzenStack>
             </RadzenColumn>
             <RadzenColumn Size="2">
-                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
-                    <RadzenProfileMenu>
+                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    @if (!string.IsNullOrWhiteSpace(UserBadgeText))
+                    {
+                        <RadzenText Text="@UserBadgeText" Style="color:#1f2937; font-size:0.9rem;" />
+                    }
+                    <RadzenProfileMenu Click="@ProfileMenuClick">
                         <ChildContent>
                             <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
                         </ChildContent>
@@ -96,6 +101,9 @@
 @code {
     [Inject]
     protected IJSRuntime JSRuntime { get; set; }
+
+    [Inject]
+    protected IUserSessionService UserSessionService { get; set; } = default!;
     [Inject]
     protected NavigationManager NavigationManager { get; set; }
     [Inject]
@@ -107,17 +115,41 @@
     [Inject]
     protected NotificationService NotificationService { get; set; }
     private bool sidebarExpanded = true;
+    private string? UserBadgeText { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        var session = await UserSessionService.GetSessionAsync();
+        if (session is null)
+        {
+            NavigationManager.NavigateTo("/", true);
+            return;
+        }
+
+        var displayName = string.IsNullOrWhiteSpace(session.DisplayName) ? session.Username : session.DisplayName;
+        UserBadgeText = string.IsNullOrWhiteSpace(session.TenantName)
+            ? displayName
+            : $"{displayName} ({session.TenantName})";
+
+        StateHasChanged();
+    }
 
     void SidebarToggleClick()
     {
         sidebarExpanded = !sidebarExpanded;
     }
 
-    protected void ProfileMenuClick(RadzenProfileMenuItem args)
+    protected async Task ProfileMenuClick(RadzenProfileMenuItem args)
     {
-        if (args.Value == "Logout")
+        if (args.Value?.ToString() == "Logout")
         {
-            NavigationManager.NavigateTo("Account/Logout", true);
+            await UserSessionService.ClearSessionAsync();
+            NavigationManager.NavigateTo("/", true);
         }
     }
 

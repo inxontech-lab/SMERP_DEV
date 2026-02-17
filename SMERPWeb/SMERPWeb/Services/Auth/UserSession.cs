@@ -3,6 +3,7 @@ namespace SMERPWeb.Services.Auth;
 public sealed record UserSession(
     long UserId,
     int TenantId,
+    string TenantName,
     string Username,
     string DisplayName,
     string? Email,
