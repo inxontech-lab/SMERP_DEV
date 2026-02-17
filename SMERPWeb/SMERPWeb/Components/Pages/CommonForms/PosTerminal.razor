@@ -13,8 +13,12 @@
             <RadzenDataGrid Data="PosTerminals" TItem="Domain.SaasDBModels.PosTerminal" AllowPaging="true" AllowFiltering="true" PageSize="10" EmptyText="No POS terminals found.">
                 <Columns>
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Property="Id" Title="ID" Width="80px" />
-                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Property="TenantId" Title="Tenant ID" Width="100px" />
-                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Property="BranchId" Title="Branch ID" Width="100px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Title="Tenant" Width="180px">
+                        <Template Context="item">@GetTenantName(item.TenantId)</Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Title="Branch" Width="180px">
+                        <Template Context="item">@GetBranchName(item.BranchId)</Template>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Property="Code" Title="Code" />
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Property="Name" Title="Name" />
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.PosTerminal" Property="IsKiosk" Title="Kiosk" Width="90px" />
@@ -38,13 +42,13 @@
                 <RadzenStack Gap="0.75rem">
                     <div>
                         <RadzenLabel Text="Tenant" Component="TenantId" />
-                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Change="OnTenantChanged" Style="width:100%;" />
+                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Change="OnTenantChanged" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                         <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
                     </div>
 
                     <div>
                         <RadzenLabel Text="Branch" Component="BranchId" />
-                        <RadzenDropDown Name="BranchId" TValue="int" @bind-Value="FormModel.BranchId" Data="TenantBranches" TextProperty="Name" ValueProperty="Id" Style="width:100%;" />
+                        <RadzenDropDown Name="BranchId" TValue="int" @bind-Value="FormModel.BranchId" Data="TenantBranches" TextProperty="Name" ValueProperty="Id" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                         <RadzenRequiredValidator Component="BranchId" Text="Branch is required" Popup="false" />
                     </div>
 

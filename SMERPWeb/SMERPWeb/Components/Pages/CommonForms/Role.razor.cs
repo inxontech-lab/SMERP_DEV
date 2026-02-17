@@ -137,5 +137,8 @@ public partial class Role : ComponentBase
         ResetForm();
     }
 
+    protected string GetTenantName(int tenantId) =>
+        Tenants.FirstOrDefault(t => t.Id == tenantId)?.Name ?? $"Tenant #{tenantId}";
+
     private async Task LoadRolesAsync() => Roles = await RoleApiClient.GetAllAsync();
 }

@@ -13,7 +13,9 @@
             <RadzenDataGrid Data="Branches" TItem="Domain.SaasDBModels.Branch" AllowPaging="true" AllowFiltering="true" PageSize="10" EmptyText="No branches found.">
                 <Columns>
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.Branch" Property="Id" Title="ID" Width="80px" />
-                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.Branch" Property="TenantId" Title="Tenant ID" Width="110px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.Branch" Title="Tenant" Width="180px">
+                        <Template Context="item">@GetTenantName(item.TenantId)</Template>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.Branch" Property="Code" Title="Code" />
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.Branch" Property="Name" Title="Name" />
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.Branch" Property="Address" Title="Address" />
@@ -37,7 +39,7 @@
                 <RadzenStack Gap="0.75rem">
                     <div>
                         <RadzenLabel Text="Tenant" Component="TenantId" />
-                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" />
+                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                         <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
                     </div>
 

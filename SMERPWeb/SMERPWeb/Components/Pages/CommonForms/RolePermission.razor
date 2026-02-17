@@ -13,11 +13,11 @@
             <RadzenRow Gap="1rem" class="rz-mb-3">
                 <RadzenColumn Size="12" SizeMD="4">
                     <RadzenLabel Text="Tenant" Component="TenantId" />
-                    <RadzenDropDown Name="TenantId" TValue="int?" @bind-Value="SelectedTenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Change="OnTenantChanged" Style="width:100%;" Placeholder="Select tenant" Disabled="@IsBusy" />
+                    <RadzenDropDown Name="TenantId" TValue="int?" @bind-Value="SelectedTenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Change="OnTenantChanged" Style="width:100%;" Placeholder="Select tenant" Disabled="@IsBusy" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                 </RadzenColumn>
                 <RadzenColumn Size="12" SizeMD="4">
                     <RadzenLabel Text="Role" Component="RoleId" />
-                    <RadzenDropDown Name="RoleId" TValue="int?" @bind-Value="SelectedRoleId" Data="FilteredRoles" TextProperty="Name" ValueProperty="Id" Change="OnRoleChanged" Style="width:100%;" Placeholder="Select role" Disabled="@(IsBusy || SelectedTenantId is null)" />
+                    <RadzenDropDown Name="RoleId" TValue="int?" @bind-Value="SelectedRoleId" Data="FilteredRoles" TextProperty="Name" ValueProperty="Id" Change="OnRoleChanged" Style="width:100%;" Placeholder="Select role" Disabled="@(IsBusy || SelectedTenantId is null)" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                 </RadzenColumn>
             </RadzenRow>
 

@@ -13,7 +13,9 @@
             <RadzenDataGrid Data="Roles" TItem="Domain.SaasDBModels.Role" AllowPaging="true" AllowFiltering="true" PageSize="10" EmptyText="No roles found.">
                 <Columns>
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.Role" Property="Id" Title="ID" Width="80px" />
-                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.Role" Property="TenantId" Title="Tenant ID" Width="110px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasDBModels.Role" Title="Tenant" Width="180px">
+                        <Template Context="item">@GetTenantName(item.TenantId)</Template>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.Role" Property="Name" Title="Name" />
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.Role" Property="IsActive" Title="Active" Width="100px" />
                     <RadzenDataGridColumn TItem="Domain.SaasDBModels.Role" Title="Actions" Width="180px">
@@ -35,7 +37,7 @@
                 <RadzenStack Gap="0.75rem">
                     <div>
                         <RadzenLabel Text="Tenant" Component="TenantId" />
-                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" />
+                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                         <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
                     </div>
 
