@@ -45,9 +45,28 @@ public class RolePermissionService : IRolePermissionService
             return false;
         }
 
-        existingEntity.TenantId = request.TenantId;
-        existingEntity.RoleId = request.RoleId;
-        existingEntity.PermissionId = request.PermissionId;
+        var isSameKey = tenantId == request.TenantId
+                        && roleId == request.RoleId
+                        && permissionId == request.PermissionId;
+
+        if (isSameKey)
+        {
+            return true;
+        }
+
+        var duplicateEntity = await _context.RolePermissions.FindAsync(request.TenantId, request.RoleId, request.PermissionId);
+        if (duplicateEntity is not null)
+        {
+            return false;
+        }
+
+        _context.RolePermissions.Remove(existingEntity);
+        _context.RolePermissions.Add(new RolePermission
+        {
+            TenantId = request.TenantId,
+            RoleId = request.RoleId,
+            PermissionId = request.PermissionId
+        });
 
         await _context.SaveChangesAsync();
         return true;
