@@ -15,7 +15,7 @@ public partial class RolePermission : ComponentBase
     [Inject] private DialogService DialogService { get; set; } = default!;
     [Inject] private NotificationService NotificationService { get; set; } = default!;
 
-    protected List<Tenant> Tenants { get; set; } = [];
+    protected List<Domain.SaasDBModels.Tenant> Tenants { get; set; } = [];
     protected List<Domain.SaasDBModels.Role> Roles { get; set; } = [];
     protected List<Permission> Permissions { get; set; } = [];
     protected List<Domain.SaasDBModels.RolePermission> RolePermissions { get; set; } = [];
