@@ -24,6 +24,7 @@ builder.Services.AddScoped<ITenantService, TenantService>();
 builder.Services.AddScoped<ITenantSettingService, TenantSettingService>();
 builder.Services.AddScoped<IUomService, UomService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserOnboardingService, UserOnboardingService>();
 builder.Services.AddScoped<IUserBranchService, UserBranchService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 

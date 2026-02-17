@@ -1,79 +1,110 @@
 @page "/User"
 
-<PageTitle>Create User</PageTitle>
+<PageTitle>User Management</PageTitle>
 
-<div class="user-form-wrap">
-    <RadzenCard>
-        <RadzenText Text="Create User" TextStyle="TextStyle.H5" class="rz-mb-3" />
+<RadzenRow Gap="1rem">
+    <RadzenColumn Size="12" SizeLG="7">
+        <RadzenCard>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
+                <RadzenText Text="Users" TextStyle="TextStyle.H5" />
+                <RadzenButton Text="New User" Icon="add_circle" Click="ResetForm" ButtonStyle="ButtonStyle.Light" />
+            </RadzenStack>
 
-        @if (IsLoading)
-        {
-            <RadzenProgressBarCircular Mode="ProgressBarMode.Indeterminate" ShowValue="false" />
-        }
-        else
-        {
-            <RadzenTemplateForm TItem="SMERPWeb.Services.SaasServices.CreateUserWithPermissionRequest" Data="FormModel" Submit="CreateUserAsync">
-                <RadzenRow Gap="1rem">
-                    <RadzenColumn Size="12" SizeMD="6">
+            <RadzenDataGrid Data="Users" TItem="Domain.SaasReqDTO.UserWithRoleResponse" AllowPaging="true" AllowFiltering="true" PageSize="10" EmptyText="No users found.">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Domain.SaasReqDTO.UserWithRoleResponse" Property="UserId" Title="ID" Width="80px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasReqDTO.UserWithRoleResponse" Property="TenantId" Title="Tenant ID" Width="110px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasReqDTO.UserWithRoleResponse" Property="Username" Title="Username" />
+                    <RadzenDataGridColumn TItem="Domain.SaasReqDTO.UserWithRoleResponse" Property="DisplayName" Title="Display Name" />
+                    <RadzenDataGridColumn TItem="Domain.SaasReqDTO.UserWithRoleResponse" Property="Email" Title="Email" />
+                    <RadzenDataGridColumn TItem="Domain.SaasReqDTO.UserWithRoleResponse" Property="Mobile" Title="Mobile" />
+                    <RadzenDataGridColumn TItem="Domain.SaasReqDTO.UserWithRoleResponse" Property="RoleName" Title="Role" />
+                    <RadzenDataGridColumn TItem="Domain.SaasReqDTO.UserWithRoleResponse" Property="IsActive" Title="Active" Width="100px" />
+                    <RadzenDataGridColumn TItem="Domain.SaasReqDTO.UserWithRoleResponse" Title="Actions" Width="180px">
+                        <Template Context="item">
+                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => Edit(item))" class="rz-mr-2" />
+                            <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(item.UserId))" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenCard>
+    </RadzenColumn>
+
+    <RadzenColumn Size="12" SizeLG="5">
+        <RadzenCard>
+            <RadzenText Text="@(EditingId.HasValue ? "Edit User" : "Create User")" TextStyle="TextStyle.H5" class="rz-mb-3" />
+
+            <RadzenTemplateForm TItem="Domain.SaasReqDTO.CreateUserWithRoleRequest" Data="FormModel" Submit="SaveAsync">
+                <RadzenStack Gap="0.75rem">
+                    <div>
                         <RadzenLabel Text="Tenant" Component="TenantId" />
-                        <RadzenDropDown id="TenantId" Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId"
-                                        Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" />
+                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId"
+                                        Data="Tenants" TextProperty="Name" ValueProperty="Id"
+                                        Change="OnTenantChanged"
+                                        AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.Contains"
+                                        Style="width:100%;" />
                         <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
-                    </RadzenColumn>
+                    </div>
 
-                    <RadzenColumn Size="12" SizeMD="6">
-                        <RadzenLabel Text="Permission" Component="PermissionId" />
-                        <RadzenDropDown id="PermissionId" Name="PermissionId" TValue="int" @bind-Value="FormModel.PermissionId"
-                                        Data="Permissions" TextProperty="Name" ValueProperty="Id" Style="width:100%;" />
-                        <RadzenRequiredValidator Component="PermissionId" Text="Permission is required" Popup="false" />
-                    </RadzenColumn>
+                    <div>
+                        <RadzenLabel Text="Role" Component="RoleId" />
+                        <RadzenDropDown Name="RoleId" TValue="int" @bind-Value="FormModel.RoleId"
+                                        Data="FilteredRoles" TextProperty="Name" ValueProperty="Id"
+                                        AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterOperator="StringFilterOperator.Contains"
+                                        Style="width:100%;" />
+                        <RadzenRequiredValidator Component="RoleId" Text="Role is required" Popup="false" />
+                    </div>
 
-                    <RadzenColumn Size="12" SizeMD="6">
+                    <div>
                         <RadzenLabel Text="Username" Component="Username" />
-                        <RadzenTextBox id="Username" Name="Username" @bind-Value="FormModel.Username" Style="width:100%;" />
+                        <RadzenTextBox Name="Username" @bind-Value="FormModel.Username" Style="width:100%;" />
                         <RadzenRequiredValidator Component="Username" Text="Username is required" Popup="false" />
-                    </RadzenColumn>
+                    </div>
 
-                    <RadzenColumn Size="12" SizeMD="6">
+                    <div>
                         <RadzenLabel Text="Display Name" Component="DisplayName" />
-                        <RadzenTextBox id="DisplayName" Name="DisplayName" @bind-Value="FormModel.DisplayName" Style="width:100%;" />
+                        <RadzenTextBox Name="DisplayName" @bind-Value="FormModel.DisplayName" Style="width:100%;" />
                         <RadzenRequiredValidator Component="DisplayName" Text="Display name is required" Popup="false" />
-                    </RadzenColumn>
+                    </div>
 
-                    <RadzenColumn Size="12" SizeMD="6">
+                    <div>
                         <RadzenLabel Text="Email" Component="Email" />
-                        <RadzenTextBox id="Email" Name="Email" @bind-Value="FormModel.Email" Style="width:100%;" />
-                    </RadzenColumn>
+                        <RadzenTextBox Name="Email" @bind-Value="FormModel.Email" Style="width:100%;" />
+                    </div>
 
-                    <RadzenColumn Size="12" SizeMD="6">
+                    <div>
                         <RadzenLabel Text="Mobile" Component="Mobile" />
-                        <RadzenTextBox id="Mobile" Name="Mobile" @bind-Value="FormModel.Mobile" Style="width:100%;" />
-                    </RadzenColumn>
+                        <RadzenTextBox Name="Mobile" @bind-Value="FormModel.Mobile" Style="width:100%;" />
+                    </div>
 
-                    <RadzenColumn Size="12" SizeMD="6">
+                    <div>
                         <RadzenLabel Text="Password" Component="Password" />
-                        <RadzenPassword id="Password" Name="Password" @bind-Value="FormModel.Password" Style="width:100%;" />
-                        <RadzenRequiredValidator Component="Password" Text="Password is required" Popup="false" />
-                    </RadzenColumn>
+                        <RadzenPassword Name="Password" @bind-Value="FormModel.Password" Style="width:100%;" />
+                        <RadzenRequiredValidator Component="Password" Text="Password is required for new user" Popup="false" Visible="@(!EditingId.HasValue)" />
+                    </div>
 
-                    <RadzenColumn Size="12" SizeMD="6" class="rz-d-flex rz-align-items-center">
-                        <RadzenCheckBox Name="IsActive" @bind-Value="FormModel.IsActive" />
+                    <div class="rz-d-flex rz-align-items-center">
+                        <RadzenCheckBox Name="IsActive" @bind-Value="FormModel.IsActive" TValue="bool" />
                         <RadzenLabel Text="Active" class="rz-ml-2" />
-                    </RadzenColumn>
-                </RadzenRow>
+                    </div>
 
-                <RadzenButton Text="Create User" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" />
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
+                        <RadzenButton Text="Save" Icon="save" ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" />
+                        <RadzenButton Text="Cancel" Icon="close" Click="ResetForm" ButtonStyle="ButtonStyle.Light" />
+                    </RadzenStack>
+                </RadzenStack>
             </RadzenTemplateForm>
-        }
 
-        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
-        {
-            <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
-        }
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
+            }
 
-        @if (!string.IsNullOrWhiteSpace(SuccessMessage))
-        {
-            <RadzenAlert AlertStyle="AlertStyle.Success" class="rz-mt-3">@SuccessMessage</RadzenAlert>
-        }
-    </RadzenCard>
-</div>
+            @if (!string.IsNullOrWhiteSpace(SuccessMessage))
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Success" class="rz-mt-3">@SuccessMessage</RadzenAlert>
+            }
+        </RadzenCard>
+    </RadzenColumn>
+</RadzenRow>
