@@ -93,12 +93,24 @@ public partial class Tenant : ComponentBase
         ErrorMessage = null;
         SuccessMessage = null;
 
+        var confirmed = await DialogService.Confirm(
+            "Are you sure you want to delete this tenant?",
+            "Confirm",
+            new ConfirmOptions { OkButtonText = "Yes", CancelButtonText = "No" });
+
+        if (confirmed != true)
+        {
+            NotificationService.Notify(NotificationSeverity.Warning, "Cancelled", "Tenant delete operation cancelled.");
+            return;
+        }
+
         try
         {
             var deleted = await TenantApiClient.DeleteAsync(id);
             if (!deleted)
             {
                 ErrorMessage = "Unable to delete tenant.";
+                NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
                 return;
             }
 
@@ -108,11 +120,13 @@ public partial class Tenant : ComponentBase
             }
 
             SuccessMessage = "Tenant deleted successfully.";
+            NotificationService.Notify(NotificationSeverity.Success, "Success", SuccessMessage);
             await LoadAsync();
         }
         catch (Exception ex)
         {
             ErrorMessage = ex.Message;
+            NotificationService.Notify(NotificationSeverity.Error, "Failed", ErrorMessage);
         }
     }
 
