@@ -72,7 +72,7 @@ public partial class Login : ComponentBase
                 response.Mobile,
                 response.LastLoginAt));
 
-            NavigationManager.NavigateTo("/Dashboard", true);
+            NavigationManager.NavigateTo("/Home", true);
         }
         catch (HttpRequestException)
         {
