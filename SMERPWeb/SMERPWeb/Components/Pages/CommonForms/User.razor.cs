@@ -2,20 +2,21 @@ using Domain.SaasDBModels;
 using Domain.SaasReqDTO;
 using Microsoft.AspNetCore.Components;
 using Radzen;
+using SMERPWeb.Models.User;
 using SMERPWeb.Services.SaasServices;
 
 namespace SMERPWeb.Components.Pages.CommonForms;
 
 public partial class User : ComponentBase
 {
-    [Inject] private IUserOnboardingService UserOnboardingService { get; set; } = default!;
+    [Inject] private IUserManagementService UserManagementService { get; set; } = default!;
     [Inject] private DialogService DialogService { get; set; } = default!;
     [Inject] private NotificationService NotificationService { get; set; } = default!;
 
     protected List<Tenant> Tenants { get; set; } = [];
     protected List<Role> Roles { get; set; } = [];
     protected List<UserWithRoleResponse> Users { get; set; } = [];
-    protected CreateUserWithRoleRequest FormModel { get; set; } = new();
+    protected UserFormModel FormModel { get; set; } = new();
     protected long? EditingId { get; set; }
     protected string? ErrorMessage { get; set; }
     protected string? SuccessMessage { get; set; }
@@ -24,7 +25,7 @@ public partial class User : ComponentBase
 
     protected override async Task OnInitializedAsync() => await LoadAsync();
 
-    protected async Task SaveAsync(CreateUserWithRoleRequest _)
+    protected async Task SaveAsync(UserFormModel _)
     {
         ErrorMessage = null;
         SuccessMessage = null;
@@ -52,19 +53,7 @@ public partial class User : ComponentBase
         {
             if (EditingId.HasValue)
             {
-                var updateRequest = new UpdateUserWithRoleRequest
-                {
-                    TenantId = FormModel.TenantId,
-                    RoleId = FormModel.RoleId,
-                    Username = FormModel.Username,
-                    DisplayName = FormModel.DisplayName,
-                    Password = string.IsNullOrWhiteSpace(FormModel.Password) ? null : FormModel.Password,
-                    Email = FormModel.Email,
-                    Mobile = FormModel.Mobile,
-                    IsActive = FormModel.IsActive
-                };
-
-                var updated = await UserOnboardingService.UpdateUserWithRoleAsync(EditingId.Value, updateRequest);
+                var updated = await UserManagementService.UpdateUserAsync(EditingId.Value, FormModel.ToUpdateRequest());
                 if (!updated)
                 {
                     ErrorMessage = "Unable to update user.";
@@ -76,7 +65,7 @@ public partial class User : ComponentBase
             }
             else
             {
-                await UserOnboardingService.CreateUserWithRoleAsync(FormModel);
+                await UserManagementService.CreateUserAsync(FormModel.ToCreateRequest());
                 SuccessMessage = "User created successfully.";
             }
 
@@ -94,17 +83,7 @@ public partial class User : ComponentBase
     protected void Edit(UserWithRoleResponse item)
     {
         EditingId = item.UserId;
-        FormModel = new CreateUserWithRoleRequest
-        {
-            TenantId = item.TenantId,
-            RoleId = item.RoleId ?? 0,
-            Username = item.Username,
-            DisplayName = item.DisplayName,
-            Email = item.Email,
-            Mobile = item.Mobile,
-            IsActive = item.IsActive,
-            Password = string.Empty
-        };
+        FormModel = UserFormModel.FromResponse(item);
     }
 
     protected async Task DeleteAsync(long userId)
@@ -125,7 +104,7 @@ public partial class User : ComponentBase
 
         try
         {
-            var deleted = await UserOnboardingService.DeleteUserWithRoleAsync(userId);
+            var deleted = await UserManagementService.DeleteUserAsync(userId);
             if (!deleted)
             {
                 ErrorMessage = "Unable to delete user.";
@@ -155,7 +134,7 @@ public partial class User : ComponentBase
         ErrorMessage = null;
         SuccessMessage = null;
 
-        FormModel = new CreateUserWithRoleRequest
+        FormModel = new UserFormModel
         {
             IsActive = true,
             TenantId = Tenants.FirstOrDefault()?.Id ?? 0
@@ -182,11 +161,11 @@ public partial class User : ComponentBase
 
     private async Task LoadAsync()
     {
-        Tenants = await UserOnboardingService.GetTenantsAsync();
-        Roles = await UserOnboardingService.GetRolesAsync();
+        Tenants = await UserManagementService.GetTenantsAsync();
+        Roles = await UserManagementService.GetRolesAsync();
         await LoadUsersAsync();
         ResetForm();
     }
 
-    private async Task LoadUsersAsync() => Users = await UserOnboardingService.GetUsersWithRolesAsync();
+    private async Task LoadUsersAsync() => Users = await UserManagementService.GetUsersAsync();
 }

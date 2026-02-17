@@ -35,7 +35,7 @@
         <RadzenCard>
             <RadzenText Text="@(EditingId.HasValue ? "Edit User" : "Create User")" TextStyle="TextStyle.H5" class="rz-mb-3" />
 
-            <RadzenTemplateForm TItem="Domain.SaasReqDTO.CreateUserWithRoleRequest" Data="FormModel" Submit="SaveAsync">
+            <RadzenTemplateForm TItem="SMERPWeb.Models.User.UserFormModel" Data="FormModel" Submit="SaveAsync">
                 <RadzenStack Gap="0.75rem">
                     <div>
                         <RadzenLabel Text="Tenant" Component="TenantId" />
