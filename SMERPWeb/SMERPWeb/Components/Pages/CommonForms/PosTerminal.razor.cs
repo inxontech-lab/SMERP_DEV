@@ -157,6 +157,12 @@ public partial class PosTerminal : ComponentBase
         ResetForm();
     }
 
+    protected string GetTenantName(int tenantId) =>
+        Tenants.FirstOrDefault(t => t.Id == tenantId)?.Name ?? $"Tenant #{tenantId}";
+
+    protected string GetBranchName(int branchId) =>
+        Branches.FirstOrDefault(b => b.Id == branchId)?.Name ?? $"Branch #{branchId}";
+
     private async Task LoadPosTerminalsAsync() => PosTerminals = await PosTerminalApiClient.GetAllAsync();
 
     private void SetTenantBranches(int tenantId) => TenantBranches = Branches.Where(b => b.TenantId == tenantId).ToList();

@@ -36,7 +36,7 @@
                 <RadzenStack Gap="0.75rem">
                     <div>
                         <RadzenLabel Text="Tenant" Component="TenantId" />
-                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" />
+                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                         <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
                     </div>
 

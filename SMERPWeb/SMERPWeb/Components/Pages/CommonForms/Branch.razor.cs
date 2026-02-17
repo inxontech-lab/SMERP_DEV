@@ -139,5 +139,9 @@ public partial class Branch : ComponentBase
         ResetForm();
     }
 
+
+    protected string GetTenantName(int tenantId) =>
+        Tenants.FirstOrDefault(t => t.Id == tenantId)?.Name ?? $"Tenant #{tenantId}";
+
     private async Task LoadBranchesAsync() => Branches = await BranchApiClient.GetAllAsync();
 }
