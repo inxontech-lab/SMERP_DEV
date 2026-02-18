@@ -1,5 +1,6 @@
 using Microsoft.JSInterop;
 using SMERPWeb.Services.Auth;
+using SMERPWeb.Services.Interop;
 using SMERPWeb.Services.SaasServices;
 
 namespace SMERPWeb.Services.Navigation;
@@ -28,7 +29,7 @@ public class NavigationCatalogService(
 
     public async Task<NavigationSnapshot> BuildSnapshotAsync(UserSession session, CancellationToken cancellationToken = default)
     {
-        var storedModule = await jsRuntime.InvokeAsync<string?>("sessionManager.get", SelectedModuleStorageKey);
+        var storedModule = await TryGetSelectedModuleAsync();
         var requestedModule = !string.IsNullOrWhiteSpace(storedModule) ? storedModule : session.SelectedModule;
 
         var menuSnapshot = await menuApiClient.GetNavigationMenuAsync(session.TenantId, session.UserId, requestedModule, cancellationToken);
@@ -65,7 +66,27 @@ public class NavigationCatalogService(
 
     public async Task SetSelectedModuleAsync(string moduleKey)
     {
-        await jsRuntime.InvokeVoidAsync("sessionManager.set", SelectedModuleStorageKey, moduleKey);
+        try
+        {
+            await jsRuntime.InvokeVoidAsync("sessionManager.set", SelectedModuleStorageKey, moduleKey);
+        }
+        catch (Exception ex) when (JsInteropGuard.IsUnavailable(ex))
+        {
+            // Ignore during static pre-render.
+        }
+    }
+
+
+    private async Task<string?> TryGetSelectedModuleAsync()
+    {
+        try
+        {
+            return await jsRuntime.InvokeAsync<string?>("sessionManager.get", SelectedModuleStorageKey);
+        }
+        catch (Exception ex) when (JsInteropGuard.IsUnavailable(ex))
+        {
+            return null;
+        }
     }
 
     private static string ResolveIcon(string moduleName)
