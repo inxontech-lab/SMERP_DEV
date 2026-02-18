@@ -54,8 +54,13 @@
     private string? ErrorMessage { get; set; }
     private List<ModuleCardDefinition> Modules { get; set; } = [];
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender)
+        {
+            return;
+        }
+
         var session = await UserSessionService.GetSessionAsync();
         if (session is null)
         {
@@ -75,6 +80,7 @@
         finally
         {
             IsLoading = false;
+            StateHasChanged();
         }
     }
 
