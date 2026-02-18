@@ -10,6 +10,7 @@ namespace SMERPWeb.Components.Pages.CommonForms;
 public partial class User : ComponentBase
 {
     [Inject] private IUserManagementService UserManagementService { get; set; } = default!;
+    [Inject] private IUserSessionService UserSessionService { get; set; } = default!;
     [Inject] private ICrudPermissionService CrudPermissionService { get; set; } = default!;
     [Inject] private DialogService DialogService { get; set; } = default!;
     [Inject] private NotificationService NotificationService { get; set; } = default!;
@@ -21,6 +22,7 @@ public partial class User : ComponentBase
     protected bool CanCreateUser { get; set; }
     protected bool CanEditUser { get; set; }
     protected bool CanDeleteUser { get; set; }
+    private int ViewerTenantId { get; set; }
 
     protected override async Task OnInitializedAsync() => await LoadAsync();
 
@@ -132,9 +134,12 @@ public partial class User : ComponentBase
 
     private async Task LoadAsync()
     {
+        var session = await UserSessionService.GetSessionAsync();
+        ViewerTenantId = session?.TenantId ?? 0;
+
         await LoadAccessAsync();
-        Tenants = await UserManagementService.GetTenantsAsync();
-        Roles = await UserManagementService.GetRolesAsync();
+        Tenants = await UserManagementService.GetTenantsAsync(ViewerTenantId);
+        Roles = await UserManagementService.GetRolesAsync(ViewerTenantId);
         await LoadUsersAsync();
     }
 
@@ -146,5 +151,5 @@ public partial class User : ComponentBase
         CanDeleteUser = permissions.CanDelete;
     }
 
-    private async Task LoadUsersAsync() => Users = await UserManagementService.GetUsersAsync();
+    private async Task LoadUsersAsync() => Users = await UserManagementService.GetUsersAsync(ViewerTenantId);
 }

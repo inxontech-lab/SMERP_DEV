@@ -5,7 +5,7 @@ namespace SMERPWeb.Services.SaasServices;
 
 public interface IUserManagementApiClient
 {
-    Task<List<UserWithRoleResponse>> GetUsersAsync(CancellationToken cancellationToken = default);
+    Task<List<UserWithRoleResponse>> GetUsersAsync(int viewerTenantId, CancellationToken cancellationToken = default);
     Task<long> CreateUserAsync(CreateUserWithRoleRequest request, CancellationToken cancellationToken = default);
     Task<bool> UpdateUserAsync(long userId, UpdateUserWithRoleRequest request, CancellationToken cancellationToken = default);
     Task<bool> DeleteUserAsync(long userId, CancellationToken cancellationToken = default);
@@ -13,8 +13,8 @@ public interface IUserManagementApiClient
 
 public class UserManagementApiClient(HttpClient httpClient) : IUserManagementApiClient
 {
-    public async Task<List<UserWithRoleResponse>> GetUsersAsync(CancellationToken cancellationToken = default)
-        => await httpClient.GetFromJsonAsync<List<UserWithRoleResponse>>("api/Users/with-role", cancellationToken) ?? [];
+    public async Task<List<UserWithRoleResponse>> GetUsersAsync(int viewerTenantId, CancellationToken cancellationToken = default)
+        => await httpClient.GetFromJsonAsync<List<UserWithRoleResponse>>($"api/Users/with-role?viewerTenantId={viewerTenantId}", cancellationToken) ?? [];
 
     public async Task<long> CreateUserAsync(CreateUserWithRoleRequest request, CancellationToken cancellationToken = default)
     {
