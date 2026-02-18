@@ -56,7 +56,7 @@
                     <RadzenPanelMenuItem Text="@group.GroupName" Icon="label" IconColor="@Colors.Primary">
                         @foreach (var item in group.Items)
                         {
-                            <RadzenPanelMenuItem Text="@item.Text" Path="@item.Path" Icon="@item.Icon" IconColor="@Colors.Info" />
+                            <RadzenPanelMenuItem Text="@($"{item.SubMenu} • {item.Text}")" Path="@item.Path" Icon="@item.Icon" IconColor="@Colors.Info" />
                         }
                     </RadzenPanelMenuItem>
                 }
@@ -108,7 +108,34 @@
             ? "Workspace"
             : NavigationSnapshot.Modules.FirstOrDefault(m => m.Key == NavigationSnapshot.SelectedModule)?.Name ?? "Workspace";
 
+        EnforceFormAuthorization(NavigationSnapshot);
         StateHasChanged();
+    }
+
+    private void EnforceFormAuthorization(NavigationSnapshot snapshot)
+    {
+        var currentPath = "/" + NavigationManager.ToBaseRelativePath(NavigationManager.Uri).Split('?', '#')[0].Trim('/');
+        if (currentPath == "//" || currentPath == "/")
+        {
+            currentPath = "/";
+        }
+
+        var safePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "/",
+            "/module-landing",
+            "/Home"
+        };
+
+        if (safePaths.Contains(currentPath))
+        {
+            return;
+        }
+
+        if (!snapshot.AllowedPaths.Contains(currentPath))
+        {
+            NavigationManager.NavigateTo(snapshot.AllowedPaths.FirstOrDefault() ?? "/Home", true);
+        }
     }
 
     private void SidebarToggleClick() => sidebarExpanded = !sidebarExpanded;
