@@ -11,6 +11,7 @@ builder.Services.AddDbContext<SmerpContext>(options =>
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBranchService, BranchService>();
+builder.Services.AddScoped<IModuleService, ModuleService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IPosTerminalService, PosTerminalService>();
 builder.Services.AddScoped<IProductService, ProductService>();
