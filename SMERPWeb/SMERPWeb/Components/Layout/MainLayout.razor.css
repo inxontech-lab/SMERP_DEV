@@ -54,6 +54,12 @@ main {
     line-height: 1.2;
 }
 
+.topbar-logo {
+    height: 1.9rem;
+    width: auto;
+    object-fit: contain;
+}
+
 .app-title {
     color: #1b4d83;
     font-size: 1.05rem;

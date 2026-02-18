@@ -1,7 +1,73 @@
 @inherits LayoutComponentBase
+@using SMERPWeb.Services.Auth
+
+@inject IUserSessionService UserSessionService
+@inject NavigationManager NavigationManager
 
 <RadzenComponents @rendermode="RenderMode.InteractiveServer" />
 
-<div class="plain-layout-body">
-    @Body
-</div>
+<RadzenLayout>
+    <RadzenHeader class="plain-topbar">
+        <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0" class="plain-topbar-row">
+            <RadzenColumn Size="8" SizeMD="8" SizeLG="8">
+                <img src="images/inxon-logo.png" alt="Inxon logo" class="plain-topbar-logo" />
+            </RadzenColumn>
+            <RadzenColumn Size="4" SizeMD="4" SizeLG="4">
+                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0.6rem" class="plain-topbar-actions">
+                    @if (!string.IsNullOrWhiteSpace(UserBadgeText))
+                    {
+                        <RadzenText Text="@UserBadgeText" class="plain-user-badge" />
+                    }
+                    <RadzenProfileMenu Click="@ProfileMenuClick" class="plain-profile-menu">
+                        <ChildContent>
+                            <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
+                        </ChildContent>
+                        <Template>
+                        </Template>
+                    </RadzenProfileMenu>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenHeader>
+
+    <RadzenBody>
+        <div class="plain-layout-body">
+            @Body
+        </div>
+    </RadzenBody>
+</RadzenLayout>
+
+@code {
+    private string? UserBadgeText { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        var session = await UserSessionService.GetSessionAsync();
+        if (session is null)
+        {
+            NavigationManager.NavigateTo("/", true);
+            return;
+        }
+
+        var displayName = string.IsNullOrWhiteSpace(session.DisplayName) ? session.Username : session.DisplayName;
+        UserBadgeText = string.IsNullOrWhiteSpace(session.TenantName)
+            ? displayName
+            : $"{displayName} ({session.TenantName})";
+
+        StateHasChanged();
+    }
+
+    private async Task ProfileMenuClick(RadzenProfileMenuItem args)
+    {
+        if (args.Value?.ToString() == "Logout")
+        {
+            await UserSessionService.ClearSessionAsync();
+            NavigationManager.NavigateTo("/", true);
+        }
+    }
+}
