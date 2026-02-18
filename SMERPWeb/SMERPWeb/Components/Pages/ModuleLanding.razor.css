@@ -1,8 +1,6 @@
 .module-landing-page {
     padding: 2rem;
-    min-height: 100vh;
-    background: linear-gradient(145deg, #f1f8ff 0%, #e4f1ff 100%);
-    background-attachment: fixed;
+    min-height: 100%;
 }
 
 .module-landing-header {
@@ -12,7 +10,7 @@
 }
 
 .workspace-welcome {
-    margin: 0 0 0.75rem;
+    margin: 0;
     text-align: left;
     font-family: "Segoe UI Variable Text", "Segoe UI", sans-serif;
     font-weight: 700;
@@ -69,8 +67,21 @@
 }
 
 .plain-layout-body {
-    min-height: 100vh;
-    background: linear-gradient(145deg, #f1f8ff 0%, #e4f1ff 100%);
+    min-height: 100%;
+}
+
+.module-landing-heading-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.workspace-header-logo {
+    height: 2rem;
+    width: auto;
+    object-fit: contain;
 }
 
 .workspace-welcome:focus,
