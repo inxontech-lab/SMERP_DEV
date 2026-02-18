@@ -24,16 +24,16 @@
 }
 
 .module-card {
-    border-radius: 14px;
-    border: 1px solid #edf2f7;
-    background-color: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    border-radius: 12px;
+    border: 1px solid #e7edf4;
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(15, 43, 74, 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .module-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(15, 43, 74, 0.16);
 }
 
 .module-card-icon {
@@ -49,7 +49,6 @@
     align-items: center;
     justify-content: center;
     background: #f1f6fc;
-    margin-inline: 0.25rem;
 }
 
 .module-card-title {

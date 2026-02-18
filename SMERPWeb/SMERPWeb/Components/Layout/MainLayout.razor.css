@@ -58,7 +58,6 @@ main {
     height: 1.9rem;
     width: auto;
     object-fit: contain;
-    margin-inline: 0.25rem;
 }
 
 .app-title {
