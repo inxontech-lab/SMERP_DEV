@@ -7,7 +7,7 @@
         <RadzenCard>
             <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
                 <RadzenText Text="Users" TextStyle="TextStyle.H5" />
-                <RadzenButton Text="New User" Icon="add_circle" Click="OpenCreateDialogAsync" ButtonStyle="ButtonStyle.Light" />
+                <RadzenButton Text="New User" Icon="add_circle" Click="OpenCreateDialogAsync" ButtonStyle="ButtonStyle.Light" Disabled="@(!CanCreateUser)" />
             </RadzenStack>
 
             <RadzenDataGrid Data="Users" TItem="Domain.SaasReqDTO.UserWithRoleResponse" AllowPaging="true" AllowFiltering="true" PageSize="10" EmptyText="No users found.">
@@ -25,8 +25,15 @@
                     <RadzenDataGridColumn TItem="Domain.SaasReqDTO.UserWithRoleResponse" Property="IsActive" Title="Active" Width="100px" />
                     <RadzenDataGridColumn TItem="Domain.SaasReqDTO.UserWithRoleResponse" Title="Actions" Width="180px">
                         <Template Context="item">
-                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => OpenEditDialogAsync(item))" class="rz-mr-2" />
-                            <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(item.UserId))" />
+                            @if (CanEditUser)
+                            {
+                                <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => OpenEditDialogAsync(item))" class="rz-mr-2" />
+                            }
+
+                            @if (CanDeleteUser)
+                            {
+                                <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(item.UserId))" />
+                            }
                         </Template>
                     </RadzenDataGridColumn>
                 </Columns>
