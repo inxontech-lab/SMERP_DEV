@@ -24,12 +24,16 @@ void ConfigureSaasApiClient(HttpClient client)
         : new Uri("https://localhost:7029/");
 }
 
-void AddSaasClient<TClient, TImplementation>()
+void AddSaasClient<TClient, TImplementation>(bool applyCrudPermissionHandler = true)
     where TClient : class
     where TImplementation : class, TClient
 {
-    builder.Services.AddHttpClient<TClient, TImplementation>(ConfigureSaasApiClient)
-        .AddHttpMessageHandler<CrudPermissionHandler>();
+    var httpClientBuilder = builder.Services.AddHttpClient<TClient, TImplementation>(ConfigureSaasApiClient);
+
+    if (applyCrudPermissionHandler)
+    {
+        httpClientBuilder.AddHttpMessageHandler<CrudPermissionHandler>();
+    }
 }
 
 AddSaasClient<ITenantApiClient, TenantApiClient>();
@@ -39,11 +43,11 @@ AddSaasClient<IBranchManagementApiClient, BranchManagementApiClient>();
 AddSaasClient<IRoleManagementApiClient, RoleManagementApiClient>();
 AddSaasClient<IPosTerminalManagementApiClient, PosTerminalManagementApiClient>();
 AddSaasClient<IRolePermissionManagementApiClient, RolePermissionManagementApiClient>();
-AddSaasClient<IPermissionApiClient, PermissionApiClient>();
+AddSaasClient<IPermissionApiClient, PermissionApiClient>(applyCrudPermissionHandler: false);
 AddSaasClient<IModuleApiClient, ModuleApiClient>();
 AddSaasClient<IMenuApiClient, MenuApiClient>();
-AddSaasClient<IUserRoleApiClient, UserRoleApiClient>();
-AddSaasClient<IRolePermissionApiClient, RolePermissionApiClient>();
+AddSaasClient<IUserRoleApiClient, UserRoleApiClient>(applyCrudPermissionHandler: false);
+AddSaasClient<IRolePermissionApiClient, RolePermissionApiClient>(applyCrudPermissionHandler: false);
 AddSaasClient<IRoleApiClient, RoleApiClient>();
 AddSaasClient<IUserOnboardingApiClient, UserOnboardingApiClient>();
 builder.Services.AddScoped<IUserOnboardingService, UserOnboardingService>();

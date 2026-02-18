@@ -1,4 +1,5 @@
 using Microsoft.JSInterop;
+using SMERPWeb.Services.Interop;
 
 namespace SMERPWeb.Services.Auth;
 
@@ -23,8 +24,15 @@ public class UserSessionService(IJSRuntime jsRuntime) : IUserSessionService
             return _cachedSession;
         }
 
-        _cachedSession = await jsRuntime.InvokeAsync<UserSession?>("sessionManager.get", SessionStorageKey);
-        _isLoaded = true;
+        try
+        {
+            _cachedSession = await jsRuntime.InvokeAsync<UserSession?>("sessionManager.get", SessionStorageKey);
+            _isLoaded = true;
+        }
+        catch (Exception ex) when (JsInteropGuard.IsUnavailable(ex))
+        {
+            return _cachedSession;
+        }
 
         return _cachedSession;
     }
@@ -35,13 +43,29 @@ public class UserSessionService(IJSRuntime jsRuntime) : IUserSessionService
     {
         _cachedSession = session;
         _isLoaded = true;
-        await jsRuntime.InvokeVoidAsync("sessionManager.set", SessionStorageKey, session);
+
+        try
+        {
+            await jsRuntime.InvokeVoidAsync("sessionManager.set", SessionStorageKey, session);
+        }
+        catch (Exception ex) when (JsInteropGuard.IsUnavailable(ex))
+        {
+            // During static pre-render we only keep the in-memory cache.
+        }
     }
 
     public async Task ClearSessionAsync()
     {
         _cachedSession = null;
         _isLoaded = true;
-        await jsRuntime.InvokeVoidAsync("sessionManager.remove", SessionStorageKey);
+
+        try
+        {
+            await jsRuntime.InvokeVoidAsync("sessionManager.remove", SessionStorageKey);
+        }
+        catch (Exception ex) when (JsInteropGuard.IsUnavailable(ex))
+        {
+            // Ignore when JS interop isn't available (for example, during static pre-render).
+        }
     }
 }
