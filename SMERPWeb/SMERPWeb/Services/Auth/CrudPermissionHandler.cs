@@ -3,7 +3,9 @@ using System.Net.Http;
 
 namespace SMERPWeb.Services.Auth;
 
-public sealed class CrudPermissionHandler(ICrudPermissionService crudPermissionService) : DelegatingHandler
+public sealed class CrudPermissionHandler(
+    ICrudPermissionService crudPermissionService,
+    IUserSessionService userSessionService) : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
@@ -15,6 +17,14 @@ public sealed class CrudPermissionHandler(ICrudPermissionService crudPermissionS
         var resourceKey = ResolveResourceKey(request.RequestUri);
         if (string.IsNullOrWhiteSpace(resourceKey))
         {
+            return await base.SendAsync(request, cancellationToken);
+        }
+
+        var session = await userSessionService.GetSessionAsync();
+        if (session is null)
+        {
+            // The HTTP client handler pipeline can run outside a Blazor circuit scope where JS-backed session data is unavailable.
+            // In that case, skip client-side permission short-circuiting and let the API enforce authorization.
             return await base.SendAsync(request, cancellationToken);
         }
 
