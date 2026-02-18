@@ -21,20 +21,13 @@ public interface INavigationCatalogService
 }
 
 public class NavigationCatalogService(
+    IModuleApiClient moduleApiClient,
     IUserRoleApiClient userRoleApiClient,
     IRolePermissionApiClient rolePermissionApiClient,
     IPermissionApiClient permissionApiClient,
     IJSRuntime jsRuntime) : INavigationCatalogService
 {
     private const string SelectedModuleStorageKey = "smerp-selected-module";
-
-    private static readonly IReadOnlyList<ModuleCardDefinition> ModuleCatalog =
-    [
-        new("master", "Master Forms", "folder", "Setup your core tenant data and controls.", "/Home"),
-        new("transactions", "Transactions", "receipt_long", "Run and manage day-to-day business flows.", "/Home"),
-        new("accounts", "Accounts", "account_balance_wallet", "Manage ledgers, balances, and finance operations.", "/Home"),
-        new("reports", "Reports", "bar_chart", "Track KPIs, operational analytics, and outputs.", "/Home")
-    ];
 
     private static readonly IReadOnlyList<MenuItemDefinition> MenuCatalog =
     [
@@ -50,15 +43,14 @@ public class NavigationCatalogService(
 
     public async Task<NavigationSnapshot> BuildSnapshotAsync(UserSession session, CancellationToken cancellationToken = default)
     {
+        var modules = await ResolvePermittedModulesAsync(session, cancellationToken);
+
         var permissions = await ResolvePermissionsAsync(session, cancellationToken);
         var permissionTokens = permissions
             .SelectMany(p => new[] { p.Code, p.Name, p.Module ?? string.Empty })
             .Where(value => !string.IsNullOrWhiteSpace(value))
             .Select(value => value.Trim().ToLowerInvariant())
             .ToHashSet();
-
-        var availableModuleKeys = ResolveAvailableModules(permissionTokens).ToHashSet();
-        var modules = ModuleCatalog.Where(module => availableModuleKeys.Contains(module.Key)).ToList();
 
         var storedModule = await jsRuntime.InvokeAsync<string?>("sessionManager.get", SelectedModuleStorageKey);
         var selectedModule = ResolveSelectedModule(session.SelectedModule, storedModule, modules);
@@ -78,6 +70,31 @@ public class NavigationCatalogService(
             : [new MenuGroupDefinition("Navigation", filteredItems)];
 
         return new NavigationSnapshot(modules, menuGroups, selectedModule, filteredItems.Count > 0);
+    }
+
+    private async Task<List<ModuleCardDefinition>> ResolvePermittedModulesAsync(UserSession session, CancellationToken cancellationToken)
+    {
+        var modules = await moduleApiClient.GetPermittedModulesAsync(session.TenantId, session.UserId, cancellationToken);
+
+        if (modules.Count == 0)
+        {
+            return [];
+        }
+
+        return modules
+            .Select(module =>
+            {
+                var moduleName = string.IsNullOrWhiteSpace(module.ModuleName) ? module.ModuleKey : module.ModuleName;
+                var moduleKey = string.IsNullOrWhiteSpace(module.ModuleKey) ? ResolveModuleKey(moduleName) : module.ModuleKey;
+                return new ModuleCardDefinition(
+                    moduleKey,
+                    moduleName,
+                    ResolveIcon(moduleName),
+                    ResolveDescription(moduleName),
+                    "/Home");
+            })
+            .DistinctBy(module => module.Key)
+            .ToList();
     }
 
     public async Task SetSelectedModuleAsync(string moduleKey)
@@ -115,29 +132,42 @@ public class NavigationCatalogService(
         return allPermissions.Where(permission => permissionIds.Contains(permission.Id)).ToList();
     }
 
-    private static IEnumerable<string> ResolveAvailableModules(HashSet<string> permissionTokens)
+    private static string ResolveIcon(string moduleName)
     {
-        if (permissionTokens.Count == 0)
+        var value = moduleName.Trim().ToLowerInvariant();
+        return value switch
         {
-            return ["master"];
-        }
+            var name when name.Contains("master") => "folder",
+            var name when name.Contains("trans") || name.Contains("sales") => "receipt_long",
+            var name when name.Contains("account") || name.Contains("finance") => "account_balance_wallet",
+            var name when name.Contains("report") => "bar_chart",
+            var name when name.Contains("inventory") || name.Contains("stock") => "inventory_2",
+            _ => "apps"
+        };
+    }
 
-        var modules = new HashSet<string>();
+    private static string ResolveModuleKey(string moduleName)
+    {
+        var value = moduleName.Trim().ToLowerInvariant();
+        if (value.Contains("master")) return "master";
+        if (value.Contains("trans") || value.Contains("sales")) return "transactions";
+        if (value.Contains("account") || value.Contains("finance")) return "accounts";
+        if (value.Contains("report")) return "reports";
+        return value.Replace(" ", "-");
+    }
 
-        foreach (var module in ModuleCatalog)
+    private static string ResolveDescription(string moduleName)
+    {
+        var value = moduleName.Trim().ToLowerInvariant();
+        return value switch
         {
-            if (permissionTokens.Any(token => token.Contains(module.Key, StringComparison.OrdinalIgnoreCase)))
-            {
-                modules.Add(module.Key);
-            }
-        }
-
-        if (modules.Count == 0)
-        {
-            modules.Add("master");
-        }
-
-        return modules;
+            var name when name.Contains("master") => "Configure foundational tenant setup and controls.",
+            var name when name.Contains("trans") || name.Contains("sales") => "Execute daily operational and business transactions.",
+            var name when name.Contains("account") || name.Contains("finance") => "Manage accounting flows, ledgers, and balances.",
+            var name when name.Contains("report") => "Review insights and analytics for your workspace.",
+            var name when name.Contains("inventory") || name.Contains("stock") => "Track inventory movement and availability.",
+            _ => "Access this workspace module based on your tenant permissions."
+        };
     }
 
     private static string? ResolveSelectedModule(string? sessionSelectedModule, string? storedModule, IReadOnlyCollection<ModuleCardDefinition> modules)

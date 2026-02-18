@@ -8,6 +8,14 @@
     margin-bottom: 1.5rem;
 }
 
+.workspace-welcome {
+    margin: 0 0 0.75rem;
+    text-align: left;
+    font-family: "Segoe UI Variable Text", "Segoe UI", sans-serif;
+    font-weight: 700;
+    color: #123d69;
+}
+
 .module-card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -23,6 +31,16 @@
 .module-card-icon {
     font-size: 2rem;
     color: #1f67ad;
+}
+
+.module-card-logo {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e5f0ff;
 }
 
 .module-card-title {
