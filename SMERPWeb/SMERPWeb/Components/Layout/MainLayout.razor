@@ -84,8 +84,13 @@
     private NavigationSnapshot? NavigationSnapshot { get; set; }
     private string CurrentModuleTitle { get; set; } = "Workspace";
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender)
+        {
+            return;
+        }
+
         var session = await UserSessionService.GetSessionAsync();
         if (session is null)
         {
@@ -102,6 +107,8 @@
         CurrentModuleTitle = NavigationSnapshot.SelectedModule is null
             ? "Workspace"
             : NavigationSnapshot.Modules.FirstOrDefault(m => m.Key == NavigationSnapshot.SelectedModule)?.Name ?? "Workspace";
+
+        StateHasChanged();
     }
 
     private void SidebarToggleClick() => sidebarExpanded = !sidebarExpanded;
