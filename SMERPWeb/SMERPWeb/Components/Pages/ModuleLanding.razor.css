@@ -1,0 +1,40 @@
+.module-landing-page {
+    padding: 2rem;
+    min-height: 100vh;
+    background: linear-gradient(145deg, #f6fbff 0%, #edf5ff 100%);
+}
+
+.module-landing-header {
+    margin-bottom: 1.5rem;
+}
+
+.module-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.module-card {
+    border-radius: 14px;
+    border: 1px solid #d3e7ff;
+    box-shadow: 0 8px 18px rgba(34, 84, 150, 0.08);
+}
+
+.module-card-icon {
+    font-size: 2rem;
+    color: #1f67ad;
+}
+
+.module-card-title {
+    font-weight: 700;
+    color: #1b4d83;
+}
+
+.module-card-description {
+    color: #5c7596;
+    min-height: 3rem;
+}
+
+.plain-layout-body {
+    min-height: 100vh;
+}

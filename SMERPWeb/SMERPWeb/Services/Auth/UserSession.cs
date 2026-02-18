@@ -8,4 +8,5 @@ public sealed record UserSession(
     string DisplayName,
     string? Email,
     string? Mobile,
-    DateTime? LastLoginAt);
+    DateTime? LastLoginAt,
+    string? SelectedModule = null);

@@ -3,6 +3,7 @@ using SMERPWeb.Client.Pages;
 using SMERPWeb.Services.Auth;
 using SMERPWeb.Components;
 using SMERPWeb.Services.SaasServices;
+using SMERPWeb.Services.Navigation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,8 @@ builder.Services.AddHttpClient<IRoleManagementApiClient, RoleManagementApiClient
 builder.Services.AddHttpClient<IPosTerminalManagementApiClient, PosTerminalManagementApiClient>(ConfigureSaasApiClient);
 builder.Services.AddHttpClient<IRolePermissionManagementApiClient, RolePermissionManagementApiClient>(ConfigureSaasApiClient);
 builder.Services.AddHttpClient<IPermissionApiClient, PermissionApiClient>(ConfigureSaasApiClient);
+builder.Services.AddHttpClient<IUserRoleApiClient, UserRoleApiClient>(ConfigureSaasApiClient);
+builder.Services.AddHttpClient<IRolePermissionApiClient, RolePermissionApiClient>(ConfigureSaasApiClient);
 builder.Services.AddHttpClient<IRoleApiClient, RoleApiClient>(ConfigureSaasApiClient);
 builder.Services.AddHttpClient<IUserOnboardingApiClient, UserOnboardingApiClient>(ConfigureSaasApiClient);
 builder.Services.AddScoped<IUserOnboardingService, UserOnboardingService>();
@@ -36,6 +39,7 @@ builder.Services.AddHttpClient<IUserManagementApiClient, UserManagementApiClient
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 builder.Services.AddHttpClient<IAuthApiClient, AuthApiClient>(ConfigureSaasApiClient);
 builder.Services.AddScoped<IUserSessionService, UserSessionService>();
+builder.Services.AddScoped<INavigationCatalogService, NavigationCatalogService>();
 
 var app = builder.Build();
 
