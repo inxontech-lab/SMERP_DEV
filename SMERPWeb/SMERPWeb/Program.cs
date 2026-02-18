@@ -13,6 +13,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 builder.Services.AddRadzenComponents();
+builder.Services.AddScoped<ICrudPermissionService, CrudPermissionService>();
+builder.Services.AddScoped<CrudPermissionHandler>();
 
 void ConfigureSaasApiClient(HttpClient client)
 {
@@ -22,22 +24,30 @@ void ConfigureSaasApiClient(HttpClient client)
         : new Uri("https://localhost:7029/");
 }
 
-builder.Services.AddHttpClient<ITenantApiClient, TenantApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<ITenantManagementApiClient, TenantManagementApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<ITenantSettingManagementApiClient, TenantSettingManagementApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IBranchManagementApiClient, BranchManagementApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IRoleManagementApiClient, RoleManagementApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IPosTerminalManagementApiClient, PosTerminalManagementApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IRolePermissionManagementApiClient, RolePermissionManagementApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IPermissionApiClient, PermissionApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IModuleApiClient, ModuleApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IMenuApiClient, MenuApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IUserRoleApiClient, UserRoleApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IRolePermissionApiClient, RolePermissionApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IRoleApiClient, RoleApiClient>(ConfigureSaasApiClient);
-builder.Services.AddHttpClient<IUserOnboardingApiClient, UserOnboardingApiClient>(ConfigureSaasApiClient);
+void AddSaasClient<TClient, TImplementation>()
+    where TClient : class
+    where TImplementation : class, TClient
+{
+    builder.Services.AddHttpClient<TClient, TImplementation>(ConfigureSaasApiClient)
+        .AddHttpMessageHandler<CrudPermissionHandler>();
+}
+
+AddSaasClient<ITenantApiClient, TenantApiClient>();
+AddSaasClient<ITenantManagementApiClient, TenantManagementApiClient>();
+AddSaasClient<ITenantSettingManagementApiClient, TenantSettingManagementApiClient>();
+AddSaasClient<IBranchManagementApiClient, BranchManagementApiClient>();
+AddSaasClient<IRoleManagementApiClient, RoleManagementApiClient>();
+AddSaasClient<IPosTerminalManagementApiClient, PosTerminalManagementApiClient>();
+AddSaasClient<IRolePermissionManagementApiClient, RolePermissionManagementApiClient>();
+AddSaasClient<IPermissionApiClient, PermissionApiClient>();
+AddSaasClient<IModuleApiClient, ModuleApiClient>();
+AddSaasClient<IMenuApiClient, MenuApiClient>();
+AddSaasClient<IUserRoleApiClient, UserRoleApiClient>();
+AddSaasClient<IRolePermissionApiClient, RolePermissionApiClient>();
+AddSaasClient<IRoleApiClient, RoleApiClient>();
+AddSaasClient<IUserOnboardingApiClient, UserOnboardingApiClient>();
 builder.Services.AddScoped<IUserOnboardingService, UserOnboardingService>();
-builder.Services.AddHttpClient<IUserManagementApiClient, UserManagementApiClient>(ConfigureSaasApiClient);
+AddSaasClient<IUserManagementApiClient, UserManagementApiClient>();
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 builder.Services.AddHttpClient<IAuthApiClient, AuthApiClient>(ConfigureSaasApiClient);
 builder.Services.AddScoped<IUserSessionService, UserSessionService>();

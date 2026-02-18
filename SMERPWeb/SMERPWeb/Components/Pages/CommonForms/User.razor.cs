@@ -2,6 +2,7 @@ using Domain.SaasReqDTO;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using SMERPWeb.Models.User;
+using SMERPWeb.Services.Auth;
 using SMERPWeb.Services.SaasServices;
 
 namespace SMERPWeb.Components.Pages.CommonForms;
@@ -9,6 +10,7 @@ namespace SMERPWeb.Components.Pages.CommonForms;
 public partial class User : ComponentBase
 {
     [Inject] private IUserManagementService UserManagementService { get; set; } = default!;
+    [Inject] private ICrudPermissionService CrudPermissionService { get; set; } = default!;
     [Inject] private DialogService DialogService { get; set; } = default!;
     [Inject] private NotificationService NotificationService { get; set; } = default!;
 
@@ -16,21 +18,42 @@ public partial class User : ComponentBase
     protected List<Domain.SaasDBModels.Role> Roles { get; set; } = [];
     protected List<UserWithRoleResponse> Users { get; set; } = [];
     protected string? ErrorMessage { get; set; }
+    protected bool CanCreateUser { get; set; }
+    protected bool CanEditUser { get; set; }
+    protected bool CanDeleteUser { get; set; }
 
     protected override async Task OnInitializedAsync() => await LoadAsync();
 
     protected async Task OpenCreateDialogAsync()
     {
+        if (!CanCreateUser)
+        {
+            NotifyTopRight(NotificationSeverity.Warning, "Access denied", "You do not have permission to create users.");
+            return;
+        }
+
         await OpenUserDialogAsync("Create User", null, null);
     }
 
     protected async Task OpenEditDialogAsync(UserWithRoleResponse user)
     {
+        if (!CanEditUser)
+        {
+            NotifyTopRight(NotificationSeverity.Warning, "Access denied", "You do not have permission to edit users.");
+            return;
+        }
+
         await OpenUserDialogAsync("Edit User", user.UserId, UserFormModel.FromResponse(user));
     }
 
     protected async Task DeleteAsync(long userId)
     {
+        if (!CanDeleteUser)
+        {
+            NotifyTopRight(NotificationSeverity.Warning, "Access denied", "You do not have permission to delete users.");
+            return;
+        }
+
         ErrorMessage = null;
 
         var confirmed = await DialogService.Confirm(
@@ -109,9 +132,18 @@ public partial class User : ComponentBase
 
     private async Task LoadAsync()
     {
+        await LoadAccessAsync();
         Tenants = await UserManagementService.GetTenantsAsync();
         Roles = await UserManagementService.GetRolesAsync();
         await LoadUsersAsync();
+    }
+
+    private async Task LoadAccessAsync()
+    {
+        var permissions = await CrudPermissionService.GetPermissionsAsync("user");
+        CanCreateUser = permissions.CanCreate;
+        CanEditUser = permissions.CanEdit;
+        CanDeleteUser = permissions.CanDelete;
     }
 
     private async Task LoadUsersAsync() => Users = await UserManagementService.GetUsersAsync();
