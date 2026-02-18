@@ -1,12 +1,14 @@
 .module-landing-page {
     padding: 2rem;
     min-height: 100vh;
-    background: linear-gradient(145deg, #f6fbff 0%, #edf5ff 100%);
+    background: linear-gradient(145deg, #f1f8ff 0%, #e4f1ff 100%);
     background-attachment: fixed;
 }
 
 .module-landing-header {
     margin-bottom: 1.5rem;
+    border: none;
+    outline: none;
 }
 
 .workspace-welcome {
@@ -15,6 +17,9 @@
     font-family: "Segoe UI Variable Text", "Segoe UI", sans-serif;
     font-weight: 700;
     color: #123d69;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .module-card-grid {
@@ -25,15 +30,16 @@
 
 .module-card {
     border-radius: 12px;
-    border: 1px solid #e7edf4;
-    background-color: #ffffff;
-    box-shadow: 0 4px 10px rgba(15, 43, 74, 0.08);
+    border: 1px solid #edf2f7;
+    background-color: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 0.5rem;
 }
 
 .module-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 22px rgba(15, 43, 74, 0.16);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
 }
 
 .module-card-icon {
@@ -48,6 +54,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-inline: 0.45rem;
     background: #f1f6fc;
 }
 
@@ -63,12 +70,14 @@
 
 .plain-layout-body {
     min-height: 100vh;
+    background: linear-gradient(145deg, #f1f8ff 0%, #e4f1ff 100%);
 }
 
-
 .workspace-welcome:focus,
-.workspace-welcome:focus-visible {
-    outline: none;
-    border: 0;
-    box-shadow: none;
+.workspace-welcome:focus-visible,
+.module-landing-header:focus,
+.module-landing-header:focus-visible {
+    outline: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
 }
