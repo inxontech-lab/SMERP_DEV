@@ -22,48 +22,118 @@
 
 .module-card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1rem;
 }
 
 .module-card {
-    border-radius: 12px;
-    border: 1px solid #edf2f7;
-    background-color: rgba(255, 255, 255, 0.94);
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    border-radius: 18px;
+    border: 1px solid #e6ebf2;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    padding: 0.5rem;
 }
 
 .module-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
 }
 
-.module-card-icon {
-    font-size: 2rem;
-    color: #1f67ad;
+.module-card-media {
+    position: relative;
+    height: 160px;
+    margin: 0.6rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #eceffd 0%, #dce5ff 100%);
+    overflow: hidden;
 }
 
-.module-card-logo {
-    width: 3.25rem;
-    height: 3.25rem;
-    border-radius: 50%;
-    display: flex;
+.module-card-orb {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    right: -70px;
+    top: -90px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(171, 186, 255, 0.85) 0%, rgba(171, 186, 255, 0) 70%);
+}
+
+.module-card-watermark {
+    position: absolute;
+    right: 18px;
+    bottom: 14px;
+    font-size: 4.2rem;
+    color: rgba(31, 103, 173, 0.25);
+}
+
+.module-card-chip {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    margin-inline: 0.45rem;
-    background: #f1f6fc;
+    gap: 0.45rem;
+    border-radius: 999px;
+    padding: 0.35rem 0.7rem;
+    background: rgba(255, 255, 255, 0.88);
+    color: #2f4f7a;
+    font-size: 0.82rem;
+    font-weight: 600;
+    box-shadow: 0 6px 12px rgba(15, 23, 42, 0.12);
+}
+
+.module-card-chip-icon {
+    font-size: 1rem;
+    color: #255f9a;
+}
+
+.module-card-body {
+    padding: 0.8rem 1.2rem 1.2rem;
 }
 
 .module-card-title {
+    margin: 0;
+    font-size: 1.65rem;
     font-weight: 700;
-    color: #1b4d83;
+    color: #0f2c52;
 }
 
 .module-card-description {
-    color: #5c7596;
-    min-height: 3rem;
+    margin: 0.9rem 0 1.2rem;
+    color: #2b4569;
+    min-height: 3.2rem;
+}
+
+.module-card-cta {
+    border: none;
+    background: transparent;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: #0a2444;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.module-card-cta-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 8px;
+    background: #050b13;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.module-card-cta-icon .rzi {
+    font-size: 0.9rem;
+}
+
+.module-card-cta:hover .module-card-cta-icon {
+    background: #0f1f30;
 }
 
 .plain-layout-body {

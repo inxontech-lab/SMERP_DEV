@@ -30,18 +30,30 @@
         <div class="module-card-grid">
             @foreach (var module in Modules)
             {
-                <RadzenCard class="module-card" Variant="Variant.Flat">
-                    <RadzenStack Gap="0.6rem">
-                        <div class="module-card-logo">
-                            <RadzenIcon Icon="@module.Icon" class="module-card-icon" />
+                <article class="module-card">
+                    <div class="module-card-media" aria-hidden="true">
+                        <div class="module-card-orb"></div>
+                        <RadzenIcon Icon="@module.Icon" class="module-card-watermark" />
+                        <div class="module-card-chip">
+                            <RadzenIcon Icon="@module.Icon" class="module-card-chip-icon" />
+                            <span>@module.Name</span>
                         </div>
-                        <RadzenText Text="@module.Name" class="module-card-title" />
-                        <RadzenText Text="@module.Description" class="module-card-description" />
-                        <RadzenButton Text="Open"
-                                      ButtonStyle="ButtonStyle.Primary"
-                                      Click="@(() => SelectModule(module))" />
-                    </RadzenStack>
-                </RadzenCard>
+                    </div>
+
+                    <div class="module-card-body">
+                        <h3 class="module-card-title">@module.Name</h3>
+                        <p class="module-card-description">@module.Description</p>
+
+                        <button type="button"
+                                class="module-card-cta"
+                                @onclick="() => SelectModule(module)">
+                            <span class="module-card-cta-icon">
+                                <RadzenIcon Icon="arrow_forward_ios" />
+                            </span>
+                            <span>Go to @module.Name</span>
+                        </button>
+                    </div>
+                </article>
             }
         </div>
     }
