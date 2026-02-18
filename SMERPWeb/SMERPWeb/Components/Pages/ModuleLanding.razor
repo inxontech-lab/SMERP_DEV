@@ -10,6 +10,7 @@
 
 <div class="module-landing-page">
     <div class="module-landing-header">
+        <h1 class="workspace-welcome">Welcome! to Your Workspace</h1>
         <h2>Select a module</h2>
         <p>Choose a workspace to load tenant-specific navigation.</p>
     </div>
@@ -33,7 +34,9 @@
             {
                 <RadzenCard class="module-card" Variant="Variant.Outlined">
                     <RadzenStack Gap="0.6rem">
-                        <RadzenIcon Icon="@module.Icon" class="module-card-icon" />
+                        <div class="module-card-logo">
+                            <RadzenIcon Icon="@module.Icon" class="module-card-icon" />
+                        </div>
                         <RadzenText Text="@module.Name" class="module-card-title" />
                         <RadzenText Text="@module.Description" class="module-card-description" />
                         <RadzenButton Text="Open"
@@ -51,8 +54,13 @@
     private string? ErrorMessage { get; set; }
     private List<ModuleCardDefinition> Modules { get; set; } = [];
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender)
+        {
+            return;
+        }
+
         var session = await UserSessionService.GetSessionAsync();
         if (session is null)
         {
@@ -72,6 +80,7 @@
         finally
         {
             IsLoading = false;
+            StateHasChanged();
         }
     }
 
