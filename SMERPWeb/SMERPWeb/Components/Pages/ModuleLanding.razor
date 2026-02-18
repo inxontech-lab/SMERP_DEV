@@ -1,0 +1,83 @@
+@page "/module-landing"
+@layout Layout.PlainLayout
+@using SMERPWeb.Services.Auth
+@using SMERPWeb.Services.Navigation
+@inject IUserSessionService UserSessionService
+@inject INavigationCatalogService NavigationCatalogService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Modules</PageTitle>
+
+<div class="module-landing-page">
+    <div class="module-landing-header">
+        <h2>Select a module</h2>
+        <p>Choose a workspace to load tenant-specific navigation.</p>
+    </div>
+
+    @if (IsLoading)
+    {
+        <RadzenProgressBarCircular Mode="ProgressBarMode.Indeterminate" />
+    }
+    else if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <RadzenAlert AlertStyle="AlertStyle.Warning">@ErrorMessage</RadzenAlert>
+    }
+    else if (Modules.Count == 0)
+    {
+        <RadzenAlert AlertStyle="AlertStyle.Info">No modules are currently available for your account.</RadzenAlert>
+    }
+    else
+    {
+        <div class="module-card-grid">
+            @foreach (var module in Modules)
+            {
+                <RadzenCard class="module-card" Variant="Variant.Outlined">
+                    <RadzenStack Gap="0.6rem">
+                        <RadzenIcon Icon="@module.Icon" class="module-card-icon" />
+                        <RadzenText Text="@module.Name" class="module-card-title" />
+                        <RadzenText Text="@module.Description" class="module-card-description" />
+                        <RadzenButton Text="Open"
+                                      ButtonStyle="ButtonStyle.Primary"
+                                      Click="@(() => SelectModule(module))" />
+                    </RadzenStack>
+                </RadzenCard>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private bool IsLoading { get; set; } = true;
+    private string? ErrorMessage { get; set; }
+    private List<ModuleCardDefinition> Modules { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var session = await UserSessionService.GetSessionAsync();
+        if (session is null)
+        {
+            NavigationManager.NavigateTo("/", true);
+            return;
+        }
+
+        try
+        {
+            var snapshot = await NavigationCatalogService.BuildSnapshotAsync(session);
+            Modules = snapshot.Modules.ToList();
+        }
+        catch (Exception)
+        {
+            ErrorMessage = "Unable to load modules for your account.";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task SelectModule(ModuleCardDefinition module)
+    {
+        await NavigationCatalogService.SetSelectedModuleAsync(module.Key);
+        NavigationManager.NavigateTo(module.DefaultPath, true);
+    }
+}

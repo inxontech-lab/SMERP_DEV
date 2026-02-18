@@ -1,56 +1,28 @@
 @inherits LayoutComponentBase
 @using SMERPWeb.Services.Auth
+@using SMERPWeb.Services.Navigation
 
 <HeadContent>
     <link href="css/app.css" rel="stylesheet" />
 </HeadContent>
 
-
-@* 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
-
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
- *@
-
-
 <RadzenComponents @rendermode="RenderMode.InteractiveServer" />
-@* <RadzenDialog @rendermode="RenderMode.InteractiveServer" />
-<RadzenNotification @rendermode="RenderMode.InteractiveServer" /> *@
 
-@* <RadzenTooltip @rendermode="RenderMode.InteractiveServer" />
-<RadzenContextMenu @rendermode="RenderMode.InteractiveServer" />  193e91*@
 <RadzenLayout>
     <RadzenHeader class="app-topbar">
         <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0" class="topbar-row">
-            <RadzenColumn Size="9" SizeMD="8" SizeLG="9">
+            <RadzenColumn Size="8" SizeMD="8" SizeLG="8">
                 <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Gap="0.75rem" class="topbar-brand-wrap">
                     <RadzenSidebarToggle Click="@SidebarToggleClick" class="topbar-toggle"></RadzenSidebarToggle>
                     <RadzenStack AlignItems="AlignItems.Start" Gap="0" class="topbar-brand-text">
                         <RadzenText Text="SMERP" class="app-title" />
-                        <RadzenText Text="Smart ERP Workspace" class="app-subtitle" />
+                        <RadzenText Text="@CurrentModuleTitle" class="app-subtitle" />
                     </RadzenStack>
                 </RadzenStack>
             </RadzenColumn>
-            <RadzenColumn Size="3" SizeMD="4" SizeLG="3">
+            <RadzenColumn Size="4" SizeMD="4" SizeLG="4">
                 <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0.6rem" class="topbar-actions">
+                    <RadzenButton Text="Modules" Icon="apps" Size="ButtonSize.Small" Variant="Variant.Outlined" Click="@NavigateToModuleLanding" />
                     @if (!string.IsNullOrWhiteSpace(UserBadgeText))
                     {
                         <RadzenText Text="@UserBadgeText" class="app-user-badge" />
@@ -66,67 +38,54 @@
             </RadzenColumn>
         </RadzenRow>
     </RadzenHeader>
+
     <RadzenBody>
         @Body
     </RadzenBody>
 
-
-    @* #F9F9F9 #FFFFFF  #f3f6f9 color: var(--rz-sidebar-color);*@
-    @* <RadzenImage Path="images/PHC_1.png" style="width: 200px; height: 180px;background-color:#f3f6f9"></RadzenImage> *@
     <RadzenSidebar Expanded="@sidebarExpanded">
         <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6">
-            <RadzenText Text="App Name" TextStyle="Radzen.Blazor.TextStyle.Subtitle1" Style="color:#F9F9F9" />
+            <RadzenText Text="@CurrentModuleTitle" TextStyle="Radzen.Blazor.TextStyle.Subtitle1" Style="color:#F9F9F9" />
         </RadzenStack>
+
         <RadzenPanelMenu Multiple="true">
-            <RadzenPanelMenuItem Text="Dashboard" Path="/Dashboard" Icon="dashboard" IconColor="@Colors.Info" />
-            <RadzenPanelMenuItem Text="Master Forms" Icon="label" IconColor="@Colors.Primary">
-                <RadzenPanelMenuItem Text="Tenant" Path="/Tenant" Icon="business" IconColor="@Colors.Primary" />
-                <RadzenPanelMenuItem Text="Tenant Setting" Path="/TenantSetting" Icon="settings" IconColor="@Colors.Info" />
-                <RadzenPanelMenuItem Text="Branch" Path="/Branch" Icon="account_tree" IconColor="@Colors.Warning" />
-                <RadzenPanelMenuItem Text="Role" Path="/Role" Icon="badge" IconColor="@Colors.Secondary" />
-                <RadzenPanelMenuItem Text="Role Permission" Path="/RolePermission" Icon="lock_open" IconColor="@Colors.Warning" />
-                <RadzenPanelMenuItem Text="POS Terminal" Path="/PosTerminal" Icon="point_of_sale" IconColor="@Colors.Success" />
-                <RadzenPanelMenuItem Text="User" Path="/User" Icon="account_circle" IconColor="@Colors.Success" />
-            </RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Transactions" Icon="label" IconColor="@Colors.Primary">
-            </RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Accounts" Icon="label" IconColor="@Colors.Primary">
-            </RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Reports" Icon="assignment" IconColor="@Colors.Primary">
-            </RadzenPanelMenuItem>
+            @if (NavigationSnapshot?.MenuGroups is { Count: > 0 } groups)
+            {
+                @foreach (var group in groups)
+                {
+                    <RadzenPanelMenuItem Text="@group.GroupName" Icon="label" IconColor="@Colors.Primary">
+                        @foreach (var item in group.Items)
+                        {
+                            <RadzenPanelMenuItem Text="@item.Text" Path="@item.Path" Icon="@item.Icon" IconColor="@Colors.Info" />
+                        }
+                    </RadzenPanelMenuItem>
+                }
+            }
+            else
+            {
+                <RadzenPanelMenuItem Text="Home" Path="/Home" Icon="home" IconColor="@Colors.Info" />
+            }
         </RadzenPanelMenu>
+
         <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding);">
             <RadzenText Text="Application Name v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
             <RadzenText Text="Copyright Ⓒ 2025" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
         </RadzenStack>
     </RadzenSidebar>
 </RadzenLayout>
-@code {
-    [Inject]
-    protected IJSRuntime JSRuntime { get; set; }
 
-    [Inject]
-    protected IUserSessionService UserSessionService { get; set; } = default!;
-    [Inject]
-    protected NavigationManager NavigationManager { get; set; }
-    [Inject]
-    protected DialogService DialogService { get; set; }
-    [Inject]
-    protected TooltipService TooltipService { get; set; }
-    [Inject]
-    protected ContextMenuService ContextMenuService { get; set; }
-    [Inject]
-    protected NotificationService NotificationService { get; set; }
+@code {
+    [Inject] protected IUserSessionService UserSessionService { get; set; } = default!;
+    [Inject] protected INavigationCatalogService NavigationCatalogService { get; set; } = default!;
+    [Inject] protected NavigationManager NavigationManager { get; set; } = default!;
+
     private bool sidebarExpanded = true;
     private string? UserBadgeText { get; set; }
+    private NavigationSnapshot? NavigationSnapshot { get; set; }
+    private string CurrentModuleTitle { get; set; } = "Workspace";
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
-        if (!firstRender)
-        {
-            return;
-        }
-
         var session = await UserSessionService.GetSessionAsync();
         if (session is null)
         {
@@ -139,15 +98,15 @@
             ? displayName
             : $"{displayName} ({session.TenantName})";
 
-        StateHasChanged();
+        NavigationSnapshot = await NavigationCatalogService.BuildSnapshotAsync(session);
+        CurrentModuleTitle = NavigationSnapshot.SelectedModule is null
+            ? "Workspace"
+            : NavigationSnapshot.Modules.FirstOrDefault(m => m.Key == NavigationSnapshot.SelectedModule)?.Name ?? "Workspace";
     }
 
-    void SidebarToggleClick()
-    {
-        sidebarExpanded = !sidebarExpanded;
-    }
+    private void SidebarToggleClick() => sidebarExpanded = !sidebarExpanded;
 
-    protected async Task ProfileMenuClick(RadzenProfileMenuItem args)
+    private async Task ProfileMenuClick(RadzenProfileMenuItem args)
     {
         if (args.Value?.ToString() == "Logout")
         {
@@ -156,8 +115,5 @@
         }
     }
 
-    void NavigateToPage(string pageUrl)
-    {
-        NavigationManager.NavigateTo(pageUrl, true);
-    }
+    private void NavigateToModuleLanding() => NavigationManager.NavigateTo("/module-landing", true);
 }
