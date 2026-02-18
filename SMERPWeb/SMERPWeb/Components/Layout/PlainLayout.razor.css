@@ -1,0 +1,59 @@
+.plain-topbar {
+    background: linear-gradient(105deg, #ffffff 0%, #f8fcff 52%, #edf6ff 100%);
+    border-bottom: 1px solid #d4e7ff;
+    box-shadow: 0 10px 28px rgba(30, 76, 143, 0.12);
+    padding: 0.65rem 1rem;
+}
+
+.plain-topbar-row {
+    min-height: 3.25rem;
+}
+
+.plain-topbar-logo {
+    height: 1.9rem;
+    width: auto;
+    object-fit: contain;
+    margin-inline: 0.25rem;
+}
+
+.plain-topbar-actions {
+    min-width: 0;
+}
+
+.plain-user-badge {
+    color: #315274;
+    font-size: 0.82rem;
+    background-color: #f0f7ff;
+    border: 1px solid #d1e6ff;
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.plain-profile-menu {
+    background-color: #ffffff;
+    border: 1px solid #d8e9ff;
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(27, 77, 131, 0.12);
+}
+
+.plain-layout-body {
+    padding: 1.25rem;
+}
+
+@media (max-width: 640.98px) {
+    .plain-topbar {
+        padding: 0.6rem 0.75rem;
+    }
+
+    .plain-user-badge {
+        max-width: 9.5rem;
+    }
+
+    .plain-layout-body {
+        padding: 0.9rem;
+    }
+}

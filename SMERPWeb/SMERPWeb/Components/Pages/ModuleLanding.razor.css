@@ -2,10 +2,19 @@
     padding: 2rem;
     min-height: 100vh;
     background: linear-gradient(145deg, #f6fbff 0%, #edf5ff 100%);
+    background-attachment: fixed;
 }
 
 .module-landing-header {
     margin-bottom: 1.5rem;
+}
+
+.workspace-welcome {
+    margin: 0 0 0.75rem;
+    text-align: left;
+    font-family: "Segoe UI Variable Text", "Segoe UI", sans-serif;
+    font-weight: 700;
+    color: #123d69;
 }
 
 .module-card-grid {
@@ -16,13 +25,31 @@
 
 .module-card {
     border-radius: 14px;
-    border: 1px solid #d3e7ff;
-    box-shadow: 0 8px 18px rgba(34, 84, 150, 0.08);
+    border: 1px solid #edf2f7;
+    background-color: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.module-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
 }
 
 .module-card-icon {
     font-size: 2rem;
     color: #1f67ad;
+}
+
+.module-card-logo {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f6fc;
+    margin-inline: 0.25rem;
 }
 
 .module-card-title {
@@ -37,4 +64,12 @@
 
 .plain-layout-body {
     min-height: 100vh;
+}
+
+
+.workspace-welcome:focus,
+.workspace-welcome:focus-visible {
+    outline: none;
+    border: 0;
+    box-shadow: none;
 }
