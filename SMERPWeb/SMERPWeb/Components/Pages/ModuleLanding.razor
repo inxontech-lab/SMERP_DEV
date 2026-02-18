@@ -1,10 +1,5 @@
 @page "/module-landing"
 @layout Layout.PlainLayout
-@using SMERPWeb.Services.Auth
-@using SMERPWeb.Services.Navigation
-@inject IUserSessionService UserSessionService
-@inject INavigationCatalogService NavigationCatalogService
-@inject NavigationManager NavigationManager
 
 <PageTitle>Modules</PageTitle>
 
@@ -32,7 +27,7 @@
         <div class="module-card-grid">
             @foreach (var module in Modules)
             {
-                <RadzenCard class="module-card" Variant="Variant.Outlined">
+                <RadzenCard class="module-card" Variant="Variant.Flat">
                     <RadzenStack Gap="0.6rem">
                         <div class="module-card-logo">
                             <RadzenIcon Icon="@module.Icon" class="module-card-icon" />
@@ -48,45 +43,3 @@
         </div>
     }
 </div>
-
-@code {
-    private bool IsLoading { get; set; } = true;
-    private string? ErrorMessage { get; set; }
-    private List<ModuleCardDefinition> Modules { get; set; } = [];
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (!firstRender)
-        {
-            return;
-        }
-
-        var session = await UserSessionService.GetSessionAsync();
-        if (session is null)
-        {
-            NavigationManager.NavigateTo("/", true);
-            return;
-        }
-
-        try
-        {
-            var snapshot = await NavigationCatalogService.BuildSnapshotAsync(session);
-            Modules = snapshot.Modules.ToList();
-        }
-        catch (Exception)
-        {
-            ErrorMessage = "Unable to load modules for your account.";
-        }
-        finally
-        {
-            IsLoading = false;
-            StateHasChanged();
-        }
-    }
-
-    private async Task SelectModule(ModuleCardDefinition module)
-    {
-        await NavigationCatalogService.SetSelectedModuleAsync(module.Key);
-        NavigationManager.NavigateTo(module.DefaultPath, true);
-    }
-}
