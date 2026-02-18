@@ -9,10 +9,12 @@
     min-height: 3.25rem;
 }
 
-.plain-topbar-logo {
-    height: 1.9rem;
-    width: auto;
-    object-fit: contain;
+.plain-topbar-title {
+    color: #1b4d83;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .plain-topbar-actions {
