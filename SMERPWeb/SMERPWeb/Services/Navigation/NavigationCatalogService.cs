@@ -65,9 +65,9 @@ public class NavigationCatalogService(
             filteredItems = MenuCatalog.Where(item => item.ModuleKey == selectedModule).ToList();
         }
 
-        var menuGroups = filteredItems.Count == 0
-            ? []
-            : [new MenuGroupDefinition("Navigation", filteredItems)];
+        IReadOnlyList<MenuGroupDefinition> menuGroups = filteredItems.Count == 0
+            ? Array.Empty<MenuGroupDefinition>()
+            : new[] { new MenuGroupDefinition("Navigation", filteredItems) };
 
         return new NavigationSnapshot(modules, menuGroups, selectedModule, filteredItems.Count > 0);
     }
