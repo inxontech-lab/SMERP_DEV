@@ -2,6 +2,7 @@
     padding: 2rem;
     min-height: 100vh;
     background: linear-gradient(145deg, #f6fbff 0%, #edf5ff 100%);
+    background-attachment: fixed;
 }
 
 .module-landing-header {
@@ -62,4 +63,12 @@
 
 .plain-layout-body {
     min-height: 100vh;
+}
+
+
+.workspace-welcome:focus,
+.workspace-welcome:focus-visible {
+    outline: none;
+    border: 0;
+    box-shadow: none;
 }
