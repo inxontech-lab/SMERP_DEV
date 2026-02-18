@@ -23,7 +23,8 @@
 
 /*#315274*/
 .plain-user-badge {
-    color: blue;
+    color: #1d4ed8;
+    font-weight: 700;
     font-size: 0.82rem;
     background-color: #f0f7ff;
     border: 1px solid #d1e6ff;
