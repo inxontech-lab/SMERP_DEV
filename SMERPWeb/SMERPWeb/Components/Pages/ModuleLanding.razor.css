@@ -92,3 +92,9 @@
     border: 0 !important;
     box-shadow: none !important;
 }
+
+@media (max-width: 640.98px) {
+    .workspace-header-logo {
+        height: 2.5rem;
+    }
+}
