@@ -21,8 +21,9 @@
     min-width: 0;
 }
 
+/*#315274*/
 .plain-user-badge {
-    color: #315274;
+    color: blue;
     font-size: 0.82rem;
     background-color: #f0f7ff;
     border: 1px solid #d1e6ff;
