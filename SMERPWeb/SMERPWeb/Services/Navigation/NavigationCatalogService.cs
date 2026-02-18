@@ -31,14 +31,14 @@ public class NavigationCatalogService(
 
     private static readonly IReadOnlyList<MenuItemDefinition> MenuCatalog =
     [
-        new("Home", "/Home", "home", "master", ["dashboard", "home", "view"]),
-        new("Tenant", "/Tenant", "business", "master", ["tenant"]),
-        new("Tenant Setting", "/TenantSetting", "settings", "master", ["tenant_setting", "tenantsetting", "setting"]),
-        new("Branch", "/Branch", "account_tree", "master", ["branch"]),
-        new("Role", "/Role", "badge", "master", ["role"]),
-        new("Role Permission", "/RolePermission", "lock_open", "master", ["role_permission", "permission"]),
-        new("POS Terminal", "/PosTerminal", "point_of_sale", "master", ["pos", "terminal"]),
-        new("User", "/User", "account_circle", "master", ["user"])
+        new("Home", "/Home", "home", "admin", ["dashboard", "home", "view"]),
+        new("Tenant", "/Tenant", "business", "admin", ["tenant"]),
+        new("Tenant Setting", "/TenantSetting", "settings", "admin", ["tenant_setting", "tenantsetting", "setting"]),
+        new("Branch", "/Branch", "account_tree", "admin", ["branch"]),
+        new("Role", "/Role", "badge", "admin", ["role"]),
+        new("Role Permission", "/RolePermission", "lock_open", "admin", ["role_permission", "permission"]),
+        new("POS Terminal", "/PosTerminal", "point_of_sale", "admin", ["pos", "terminal"]),
+        new("User", "/User", "account_circle", "admin", ["user"])
     ];
 
     public async Task<NavigationSnapshot> BuildSnapshotAsync(UserSession session, CancellationToken cancellationToken = default)
