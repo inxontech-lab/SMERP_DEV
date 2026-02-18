@@ -8,7 +8,7 @@ namespace SMERPAPIs.Services.SaasServices;
 
 public class UserOnboardingService(SmerpContext context) : IUserOnboardingService
 {
-    public async Task<List<UserWithRoleResponse>> GetUsersWithRolesAsync()
+    public async Task<List<UserWithRoleResponse>> GetUsersWithRolesAsync(int? viewerTenantId = null)
     {
         var query =
             from user in context.Users.AsNoTracking()
@@ -28,6 +28,11 @@ public class UserOnboardingService(SmerpContext context) : IUserOnboardingServic
                 RoleId = userRole != null ? userRole.RoleId : null,
                 RoleName = role != null ? role.Name : null
             };
+
+        if (viewerTenantId.HasValue && viewerTenantId.Value != 1)
+        {
+            query = query.Where(item => item.TenantId == viewerTenantId.Value);
+        }
 
         return await query.ToListAsync();
     }

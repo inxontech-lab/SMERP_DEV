@@ -25,9 +25,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("with-role")]
-    public async Task<ActionResult<List<UserWithRoleResponse>>> GetAllWithRole()
+    public async Task<ActionResult<List<UserWithRoleResponse>>> GetAllWithRole([FromQuery] int? viewerTenantId = null)
     {
-        return Ok(await _onboardingService.GetUsersWithRolesAsync());
+        return Ok(await _onboardingService.GetUsersWithRolesAsync(viewerTenantId));
     }
 
     [HttpGet("{id:long}")]
