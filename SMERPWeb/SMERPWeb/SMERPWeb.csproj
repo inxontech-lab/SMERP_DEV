@@ -13,4 +13,9 @@
     <PackageReference Include="Radzen.Blazor" Version="9.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components\Pages\MasterForms\" />
+    <Folder Include="Services\InventoryServices\" />
+  </ItemGroup>
+
 </Project>
