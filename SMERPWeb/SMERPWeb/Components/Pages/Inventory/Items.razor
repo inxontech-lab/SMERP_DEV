@@ -1,0 +1,43 @@
+@page "/Items"
+
+<PageTitle>Items Management</PageTitle>
+
+<RadzenCard>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
+        <RadzenText Text="Items" TextStyle="TextStyle.H5" />
+        <RadzenButton Text="New Item" Icon="add_circle" Click="OpenCreateDialogAsync" ButtonStyle="ButtonStyle.Primary" Disabled="@(!CanCreateItem)" />
+    </RadzenStack>
+
+    <RadzenRow class="rz-mb-3">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenTextBox @bind-Value="SearchText" Name="SearchItems" Placeholder="Search by SKU / Barcode / Name" Style="width:100%;" />
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenDataGrid Data="FilteredItems" TItem="Domain.SaasDBModels.Product" AllowPaging="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" PageSize="10" EmptyText="No items found.">
+        <Columns>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.Product" Property="Id" Title="ID" Width="90px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.Product" Title="Tenant" Width="200px">
+                <Template Context="item">@GetTenantName(item.TenantId)</Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.Product" Property="Sku" Title="SKU" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.Product" Property="Barcode" Title="Barcode" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.Product" Property="Name" Title="Name" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.Product" Title="Base UOM">
+                <Template Context="item">@GetUomName(item.BaseUomId)</Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.Product" Property="IsActive" Title="Active" Width="100px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.Product" Title="Actions" Width="150px" Filterable="false" Sortable="false">
+                <Template Context="item">
+                    <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => OpenEditDialogAsync(item))" class="rz-mr-2" Disabled="@(!CanEditItem)" />
+                    <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(item.Id))" Disabled="@(!CanDeleteItem)" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
+}

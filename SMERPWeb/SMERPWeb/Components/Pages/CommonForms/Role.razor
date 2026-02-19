@@ -36,13 +36,13 @@
             <RadzenTemplateForm TItem="Domain.SaasReqDTO.RoleRequest" Data="FormModel" Submit="SaveAsync">
                 <RadzenStack Gap="0.75rem">
                     <div>
-                        <RadzenLabel Text="Tenant" Component="TenantId" />
+                        <RadzenLabel Text="Tenant *" Component="TenantId" />
                         <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                         <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
                     </div>
 
                     <div>
-                        <RadzenLabel Text="Name" Component="Name" />
+                        <RadzenLabel Text="Name *" Component="Name" />
                         <RadzenTextBox Name="Name" @bind-Value="FormModel.Name" Style="width:100%;" />
                         <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="false" />
                     </div>

@@ -1,6 +1,7 @@
 using Domain.SaasDBModels;
 using Microsoft.EntityFrameworkCore;
 using SMERPAPIs.Services.SaasServices;
+using SMERPAPIs.Services.InventoryServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserOnboardingService, UserOnboardingService>();
 builder.Services.AddScoped<IUserBranchService, UserBranchService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
+builder.Services.AddScoped<IItemService, ItemService>();
 
 
 builder.Services.AddControllers();
