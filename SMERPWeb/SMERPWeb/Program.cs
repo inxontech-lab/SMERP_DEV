@@ -4,6 +4,7 @@ using SMERPWeb.Services.Auth;
 using SMERPWeb.Components;
 using SMERPWeb.Services.SaasServices;
 using SMERPWeb.Services.Navigation;
+using SMERPWeb.Services.InventoryServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,8 @@ AddSaasClient<IUserOnboardingApiClient, UserOnboardingApiClient>();
 builder.Services.AddScoped<IUserOnboardingService, UserOnboardingService>();
 AddSaasClient<IUserManagementApiClient, UserManagementApiClient>();
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();
+AddSaasClient<IItemApiClient, ItemApiClient>();
+builder.Services.AddScoped<IItemManagementService, ItemManagementService>();
 builder.Services.AddHttpClient<IAuthApiClient, AuthApiClient>(ConfigureSaasApiClient);
 builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 builder.Services.AddScoped<INavigationCatalogService, NavigationCatalogService>();

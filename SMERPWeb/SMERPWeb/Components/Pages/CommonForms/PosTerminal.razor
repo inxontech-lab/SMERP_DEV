@@ -41,25 +41,25 @@
             <RadzenTemplateForm TItem="Domain.SaasReqDTO.PosTerminalRequest" Data="FormModel" Submit="SaveAsync">
                 <RadzenStack Gap="0.75rem">
                     <div>
-                        <RadzenLabel Text="Tenant" Component="TenantId" />
+                        <RadzenLabel Text="Tenant *" Component="TenantId" />
                         <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Change="OnTenantChanged" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                         <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
                     </div>
 
                     <div>
-                        <RadzenLabel Text="Branch" Component="BranchId" />
+                        <RadzenLabel Text="Branch *" Component="BranchId" />
                         <RadzenDropDown Name="BranchId" TValue="int" @bind-Value="FormModel.BranchId" Data="TenantBranches" TextProperty="Name" ValueProperty="Id" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                         <RadzenRequiredValidator Component="BranchId" Text="Branch is required" Popup="false" />
                     </div>
 
                     <div>
-                        <RadzenLabel Text="Code" Component="Code" />
+                        <RadzenLabel Text="Code *" Component="Code" />
                         <RadzenTextBox Name="Code" @bind-Value="FormModel.Code" Style="width:100%;" />
                         <RadzenRequiredValidator Component="Code" Text="Code is required" Popup="false" />
                     </div>
 
                     <div>
-                        <RadzenLabel Text="Name" Component="Name" />
+                        <RadzenLabel Text="Name *" Component="Name" />
                         <RadzenTextBox Name="Name" @bind-Value="FormModel.Name" Style="width:100%;" />
                         <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="false" />
                     </div>
