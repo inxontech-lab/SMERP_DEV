@@ -137,7 +137,7 @@ public partial class Items : ComponentBase
     private async Task LoadAsync()
     {
         ViewerTenantId = await ItemManagementService.GetViewerTenantIdAsync();
-        var permissions = await CrudPermissionService.GetPermissionsAsync("items");
+        var permissions = await CrudPermissionService.GetPermissionsAsync("product");
         CanCreateItem = permissions.CanCreate;
         CanEditItem = permissions.CanEdit;
         CanDeleteItem = permissions.CanDelete;

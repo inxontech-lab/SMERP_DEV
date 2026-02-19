@@ -34,9 +34,9 @@ public class MenuService(SmerpContext context) : IMenuService
         new("Branch", "/Branch", "account_tree", "admin", "Administration", "Organization", ["branch"]),
         new("Role", "/Role", "badge", "admin", "Administration", "Security", ["role"]),
         new("Role Permission", "/RolePermission", "lock_open", "admin", "Administration", "Security", ["role_permission", "permission"]),
-        new("POS Terminal", "/PosTerminal", "point_of_sale", "admin", "Administration", "Operations", ["pos", "terminal"]),
         new("User", "/User", "account_circle", "admin", "Administration", "Security", ["user"]),
-        new("Items", "/Items", "point_of_sale", "inventory", "Inventory", "Items", ["items"])
+        new("POS Terminal", "/PosTerminal", "point_of_sale", "admin", "Administration", "Operations", ["pos", "terminal"]),
+        new("Items Master", "/Items", "point_of_sale", "inventory", "Master Setup", "Items", ["items"])
     ];
 
     public async Task<NavigationMenuSnapshotDto> GetNavigationMenuAsync(int tenantId, long userId, string? moduleKey, CancellationToken cancellationToken = default)
