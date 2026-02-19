@@ -1,0 +1,43 @@
+%PDF-1.4
+1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
+2 0 obj<< /Type /Pages /Kids [3 0 R] /Count 1 >>endobj
+3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>endobj
+4 0 obj<< /Length 766 >>stream
+BT
+/F1 18 Tf
+50 800 Td
+(SMERP GCC Inventory ER Diagram \(High-Level\)) Tj
+0 -28 Td
+/F1 11 Tf
+(Branch-Aware Scope:) Tj
+0 -18 Td
+(- Branches own Warehouses and scope stock, reservations, GRN, adjustments, reorder policy) Tj
+0 -18 Td
+(Entities:) Tj
+0 -18 Td
+(- Branches, Warehouses, WarehouseBins, Items, Suppliers, Units, Categories, Brands) Tj
+0 -16 Td
+(- StockLedger, ItemStockBalances, StockReservations, ItemBatches, ItemSerials) Tj
+0 -16 Td
+(- GoodsReceipt H/L, StockTransfer H/L \(inter-branch\), StockAdjustment H/L) Tj
+0 -16 Td
+(- PriceLists, ItemPrices, TaxCodes, Currencies, ExchangeRates, AuditLogs) Tj
+0 -28 Td
+(Source of truth: StockLedger. Fast reads: ItemStockBalances.) Tj
+0 -16 Td
+(See detailed ER in: Domain/SqlScripts/Inventory_ER_Diagram.mmd) Tj
+ET
+endstream endobj
+5 0 obj<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>endobj
+xref
+0 6
+0000000000 65535 f
+0000000009 00000 n
+0000000056 00000 n
+0000000111 00000 n
+0000000235 00000 n
+0000001050 00000 n
+trailer<< /Size 6 /Root 1 0 R >>
+startxref
+1118
+%%EOF
