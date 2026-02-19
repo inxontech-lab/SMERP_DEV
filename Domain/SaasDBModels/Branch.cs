@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.SaasDBModels;
@@ -18,6 +18,10 @@ public partial class Branch
     public bool IsActive { get; set; }
 
     public virtual ICollection<PosTerminal> PosTerminals { get; set; } = new List<PosTerminal>();
+
+    public virtual ICollection<ProductBranchStock> ProductBranchStocks { get; set; } = new List<ProductBranchStock>();
+
+    public virtual ICollection<ProductPrice> ProductPrices { get; set; } = new List<ProductPrice>();
 
     public virtual Tenant Tenant { get; set; } = null!;
 

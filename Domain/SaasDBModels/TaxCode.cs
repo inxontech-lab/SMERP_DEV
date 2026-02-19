@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.SaasDBModels;
@@ -21,5 +21,5 @@ public partial class TaxCode
 
     public bool IsActive { get; set; }
 
-    public virtual ICollection<ProductPrice> ProductPrices { get; set; } = new List<ProductPrice>();
+    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

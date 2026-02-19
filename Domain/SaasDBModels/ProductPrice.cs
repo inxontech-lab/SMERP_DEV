@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.SaasDBModels;
@@ -11,17 +11,25 @@ public partial class ProductPrice
 
     public long ProductId { get; set; }
 
-    public int TaxCodeId { get; set; }
+    public int UomId { get; set; }
 
-    public decimal SellPrice { get; set; }
+    public int? BranchId { get; set; }
 
-    public bool IsVatInclusive { get; set; }
+    public byte PriceType { get; set; }
 
-    public int DefaultSellUomId { get; set; }
+    public decimal Price { get; set; }
 
-    public virtual Uom DefaultSellUom { get; set; } = null!;
+    public decimal? MinQty { get; set; }
+
+    public DateTime EffectiveFrom { get; set; }
+
+    public DateTime? EffectiveTo { get; set; }
+
+    public bool IsActive { get; set; }
+
+    public virtual Branch? Branch { get; set; }
 
     public virtual Product Product { get; set; } = null!;
 
-    public virtual TaxCode TaxCode { get; set; } = null!;
+    public virtual Uom Uom { get; set; } = null!;
 }

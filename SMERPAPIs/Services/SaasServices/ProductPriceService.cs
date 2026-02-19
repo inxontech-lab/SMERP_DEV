@@ -13,9 +13,13 @@ public class ProductPriceService : SaasCrudService<ProductPrice, ProductPriceReq
     {
         entity.TenantId = request.TenantId;
         entity.ProductId = request.ProductId;
-        entity.TaxCodeId = request.TaxCodeId;
-        entity.SellPrice = request.SellPrice;
-        entity.IsVatInclusive = request.IsVatInclusive;
-        entity.DefaultSellUomId = request.DefaultSellUomId;
+        entity.UomId = request.UomId;
+        entity.BranchId = request.BranchId;
+        entity.PriceType = request.PriceType;
+        entity.Price = request.Price;
+        entity.MinQty = request.MinQty;
+        entity.EffectiveFrom = request.EffectiveFrom;
+        entity.EffectiveTo = request.EffectiveTo;
+        entity.IsActive = request.IsActive;
     }
 }
