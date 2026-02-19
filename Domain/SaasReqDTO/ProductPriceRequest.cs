@@ -6,11 +6,19 @@ public class ProductPriceRequest
 
     public long ProductId { get; set; }
 
-    public int TaxCodeId { get; set; }
+    public int UomId { get; set; }
 
-    public decimal SellPrice { get; set; }
+    public int? BranchId { get; set; }
 
-    public bool IsVatInclusive { get; set; }
+    public byte PriceType { get; set; }
 
-    public int DefaultSellUomId { get; set; }
+    public decimal Price { get; set; }
+
+    public decimal? MinQty { get; set; }
+
+    public DateTime EffectiveFrom { get; set; }
+
+    public DateTime? EffectiveTo { get; set; }
+
+    public bool IsActive { get; set; }
 }

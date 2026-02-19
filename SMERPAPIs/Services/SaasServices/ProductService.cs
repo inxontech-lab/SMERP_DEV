@@ -15,7 +15,17 @@ public class ProductService : SaasCrudService<Product, ProductRequest, long>, IP
         entity.Sku = request.Sku;
         entity.Barcode = request.Barcode;
         entity.Name = request.Name;
+        entity.NameArabic = request.NameArabic;
+        entity.ShortName = request.ShortName;
+        entity.Description = request.Description;
+        entity.DescriptionArabic = request.DescriptionArabic;
         entity.BaseUomId = request.BaseUomId;
+        entity.TaxCodeId = request.TaxCodeId;
+        entity.IsVatApplicable = request.IsVatApplicable;
+        entity.VatPricingMethod = request.VatPricingMethod;
+        entity.IsBatchTracked = request.IsBatchTracked;
+        entity.IsSerialTracked = request.IsSerialTracked;
+        entity.IsStockItem = request.IsStockItem;
         entity.IsActive = request.IsActive;
         entity.CreatedAt = request.CreatedAt;
     }

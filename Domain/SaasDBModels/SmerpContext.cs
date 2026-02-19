@@ -25,6 +25,12 @@ public partial class SmerpContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
+    public virtual DbSet<ProductBranchStock> ProductBranchStocks { get; set; }
+
+    public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+
+    public virtual DbSet<ProductCategoryMap> ProductCategoryMaps { get; set; }
+
     public virtual DbSet<ProductPrice> ProductPrices { get; set; }
 
     public virtual DbSet<ProductUom> ProductUoms { get; set; }
@@ -111,42 +117,124 @@ public partial class SmerpContext : DbContext
 
             entity.HasIndex(e => new { e.TenantId, e.Name }, "IX_Products_Tenant_Name");
 
+            entity.HasIndex(e => new { e.TenantId, e.NameArabic }, "IX_Products_Tenant_NameArabic").HasFilter("([NameArabic] IS NOT NULL)");
+
             entity.HasIndex(e => new { e.TenantId, e.Sku }, "UQ_Products_Sku").IsUnique();
 
             entity.Property(e => e.Barcode).HasMaxLength(50);
             entity.Property(e => e.CreatedAt)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())");
+            entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.DescriptionArabic).HasMaxLength(1000);
             entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.IsStockItem).HasDefaultValue(true);
+            entity.Property(e => e.IsVatApplicable).HasDefaultValue(true);
             entity.Property(e => e.Name).HasMaxLength(200);
+            entity.Property(e => e.NameArabic).HasMaxLength(200);
+            entity.Property(e => e.ShortName).HasMaxLength(100);
             entity.Property(e => e.Sku).HasMaxLength(50);
+            entity.Property(e => e.VatPricingMethod).HasDefaultValue((byte)1);
 
             entity.HasOne(d => d.BaseUom).WithMany(p => p.Products)
                 .HasForeignKey(d => d.BaseUomId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Products_Uoms");
+
+            entity.HasOne(d => d.TaxCode).WithMany(p => p.Products)
+                .HasForeignKey(d => d.TaxCodeId)
+                .HasConstraintName("FK_Products_TaxCodes");
+        });
+
+        modelBuilder.Entity<ProductBranchStock>(entity =>
+        {
+            entity.HasIndex(e => new { e.TenantId, e.ProductId, e.BranchId }, "UQ_ProductBranchStocks").IsUnique();
+
+            entity.Property(e => e.LastUpdatedAt)
+                .HasPrecision(0)
+                .HasDefaultValueSql("(sysdatetime())");
+            entity.Property(e => e.MaxStockLevel)
+                .HasDefaultValue(0m)
+                .HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.OnHandQty)
+                .HasDefaultValue(0m)
+                .HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.ReorderLevel)
+                .HasDefaultValue(0m)
+                .HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.ReservedQty)
+                .HasDefaultValue(0m)
+                .HasColumnType("decimal(18, 6)");
+
+            entity.HasOne(d => d.Branch).WithMany(p => p.ProductBranchStocks)
+                .HasForeignKey(d => d.BranchId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductBranchStocks_Branches");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductBranchStocks)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductBranchStocks_Products");
+        });
+
+        modelBuilder.Entity<ProductCategory>(entity =>
+        {
+            entity.HasIndex(e => new { e.TenantId, e.Code }, "UQ_ProductCategories_Code").IsUnique();
+
+            entity.HasIndex(e => new { e.TenantId, e.Name }, "IX_ProductCategories_Name");
+
+            entity.Property(e => e.Code).HasMaxLength(30);
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.Name).HasMaxLength(150);
+            entity.Property(e => e.NameArabic).HasMaxLength(150);
+
+            entity.HasOne(d => d.ParentCategory).WithMany(p => p.InverseParentCategory)
+                .HasForeignKey(d => d.ParentCategoryId)
+                .HasConstraintName("FK_ProductCategories_Parent");
+        });
+
+        modelBuilder.Entity<ProductCategoryMap>(entity =>
+        {
+            entity.HasIndex(e => new { e.TenantId, e.ProductId, e.CategoryId }, "UQ_ProductCategoryMaps").IsUnique();
+
+            entity.Property(e => e.IsPrimary).HasDefaultValue(false);
+
+            entity.HasOne(d => d.Category).WithMany(p => p.ProductCategoryMaps)
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductCategoryMaps_ProductCategories");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductCategoryMaps)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductCategoryMaps_Products");
         });
 
         modelBuilder.Entity<ProductPrice>(entity =>
         {
-            entity.HasIndex(e => new { e.TenantId, e.ProductId }, "UQ_ProductPrices").IsUnique();
+            entity.HasIndex(e => new { e.TenantId, e.ProductId, e.BranchId, e.PriceType, e.UomId, e.MinQty, e.EffectiveFrom }, "UQ_ProductPrices").IsUnique();
 
-            entity.Property(e => e.SellPrice).HasColumnType("decimal(18, 3)");
+            entity.Property(e => e.EffectiveFrom)
+                .HasPrecision(0)
+                .HasDefaultValueSql("(sysdatetime())");
+            entity.Property(e => e.EffectiveTo).HasPrecision(0);
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.MinQty).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.Price).HasColumnType("decimal(18, 3)");
 
-            entity.HasOne(d => d.DefaultSellUom).WithMany(p => p.ProductPrices)
-                .HasForeignKey(d => d.DefaultSellUomId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ProductPrices_Uoms");
+            entity.HasOne(d => d.Branch).WithMany(p => p.ProductPrices)
+                .HasForeignKey(d => d.BranchId)
+                .HasConstraintName("FK_ProductPrices_Branches");
 
             entity.HasOne(d => d.Product).WithMany(p => p.ProductPrices)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProductPrices_Products");
 
-            entity.HasOne(d => d.TaxCode).WithMany(p => p.ProductPrices)
-                .HasForeignKey(d => d.TaxCodeId)
+            entity.HasOne(d => d.Uom).WithMany(p => p.ProductPrices)
+                .HasForeignKey(d => d.UomId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ProductPrices_TaxCodes");
+                .HasConstraintName("FK_ProductPrices_Uoms");
         });
 
         modelBuilder.Entity<ProductUom>(entity =>
@@ -155,6 +243,7 @@ public partial class SmerpContext : DbContext
 
             entity.HasIndex(e => new { e.TenantId, e.ProductId, e.UomId }, "UQ_ProductUoms").IsUnique();
 
+            entity.Property(e => e.Barcode).HasMaxLength(50);
             entity.Property(e => e.FactorToBase).HasColumnType("decimal(18, 6)");
             entity.Property(e => e.IsPurchasable).HasDefaultValue(true);
             entity.Property(e => e.IsSellable).HasDefaultValue(true);

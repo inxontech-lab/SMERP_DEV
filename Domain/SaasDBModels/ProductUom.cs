@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.SaasDBModels;
@@ -26,6 +26,8 @@ public partial class ProductUom
     public bool IsDefaultSell { get; set; }
 
     public bool IsDefaultBuy { get; set; }
+
+    public string? Barcode { get; set; }
 
     public virtual Product Product { get; set; } = null!;
 
