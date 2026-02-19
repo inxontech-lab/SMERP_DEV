@@ -54,6 +54,292 @@ CREATE TABLE inventory.ExchangeRates
     CONSTRAINT FK_inventory_ExchangeRates_Currency FOREIGN KEY (CurrencyId) REFERENCES inventory.Currencies(CurrencyId)
 );
 
+IF OBJECT_ID('inventory.AuditLogs', 'U') IS NOT NULL DROP TABLE inventory.AuditLogs;
+CREATE TABLE inventory.AuditLogs
+(
+    AuditLogId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    ModuleName NVARCHAR(100) NOT NULL,
+    EntityName NVARCHAR(120) NOT NULL,
+    EntityId NVARCHAR(120) NULL,
+    ActionType NVARCHAR(30) NOT NULL, -- INSERT/UPDATE/DELETE/POST/REVERSE
+    OldData NVARCHAR(MAX) NULL,
+    NewData NVARCHAR(MAX) NULL,
+    IPAddress NVARCHAR(45) NULL,
+    UserAgent NVARCHAR(300) NULL,
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_AuditLogs_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL
+);
+
+IF OBJECT_ID('inventory.Currencies', 'U') IS NOT NULL DROP TABLE inventory.Currencies;
+CREATE TABLE inventory.Currencies
+(
+    CurrencyId INT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    CurrencyCode NVARCHAR(3) NOT NULL,
+    CurrencyName NVARCHAR(60) NOT NULL,
+    CurrencyNameArabic NVARCHAR(60) NULL,
+    Symbol NVARCHAR(10) NULL,
+    IsBaseCurrency BIT NOT NULL CONSTRAINT DF_inventory_Currencies_IsBaseCurrency DEFAULT (0),
+    IsActive BIT NOT NULL CONSTRAINT DF_inventory_Currencies_IsActive DEFAULT (1),
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_Currencies_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_Currencies UNIQUE (TenantId, CurrencyCode)
+);
+
+IF OBJECT_ID('inventory.ExchangeRates', 'U') IS NOT NULL DROP TABLE inventory.ExchangeRates;
+CREATE TABLE inventory.ExchangeRates
+(
+    ExchangeRateId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    CurrencyId INT NOT NULL,
+    RateDate DATE NOT NULL,
+    BuyRate DECIMAL(18,6) NOT NULL,
+    SellRate DECIMAL(18,6) NOT NULL,
+    AverageRate DECIMAL(18,6) NOT NULL,
+    SourceName NVARCHAR(100) NULL,
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_ExchangeRates_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_ExchangeRates UNIQUE (TenantId, CurrencyId, RateDate),
+    CONSTRAINT FK_inventory_ExchangeRates_Currency FOREIGN KEY (CurrencyId) REFERENCES inventory.Currencies(CurrencyId)
+);
+
+IF OBJECT_ID('inventory.TaxCodes', 'U') IS NOT NULL DROP TABLE inventory.TaxCodes;
+CREATE TABLE inventory.TaxCodes
+(
+    TaxCodeId INT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    TaxCode NVARCHAR(20) NOT NULL,
+    TaxName NVARCHAR(100) NOT NULL,
+    TaxNameArabic NVARCHAR(100) NULL,
+    TaxType NVARCHAR(20) NOT NULL, -- VAT/EXCISE/ZERO/EXEMPT
+    TaxRate DECIMAL(5,2) NOT NULL,
+    IsInclusive BIT NOT NULL CONSTRAINT DF_inventory_TaxCodes_IsInclusive DEFAULT (0),
+    CountryCode NVARCHAR(3) NULL,
+    IsActive BIT NOT NULL CONSTRAINT DF_inventory_TaxCodes_IsActive DEFAULT (1),
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_TaxCodes_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_TaxCodes UNIQUE (TenantId, TaxCode)
+);
+
+/* =========================================================
+   2) MASTER DATA
+IF OBJECT_ID('inventory.Suppliers', 'U') IS NOT NULL DROP TABLE inventory.Suppliers;
+CREATE TABLE inventory.Suppliers
+(
+    SupplierId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    SupplierCode NVARCHAR(30) NOT NULL,
+    SupplierName NVARCHAR(200) NOT NULL,
+    SupplierNameArabic NVARCHAR(200) NULL,
+    ContactPerson NVARCHAR(120) NULL,
+    ContactPersonArabic NVARCHAR(120) NULL,
+    PhoneNo NVARCHAR(30) NULL,
+    MobileNo NVARCHAR(30) NULL,
+    Email NVARCHAR(150) NULL,
+    VATRegistrationNo NVARCHAR(50) NULL,
+    CRNo NVARCHAR(50) NULL,
+    AddressLine1 NVARCHAR(250) NULL,
+    AddressLine1Arabic NVARCHAR(250) NULL,
+    AddressLine2 NVARCHAR(250) NULL,
+    AddressLine2Arabic NVARCHAR(250) NULL,
+    City NVARCHAR(100) NULL,
+    CityArabic NVARCHAR(100) NULL,
+    CountryCode NVARCHAR(3) NULL,
+    PaymentTermDays INT NOT NULL CONSTRAINT DF_inventory_Suppliers_PaymentTermDays DEFAULT (0),
+    CreditLimit DECIMAL(18,3) NOT NULL CONSTRAINT DF_inventory_Suppliers_CreditLimit DEFAULT (0),
+    IsApprovedVendor BIT NOT NULL CONSTRAINT DF_inventory_Suppliers_IsApprovedVendor DEFAULT (1),
+    IsActive BIT NOT NULL CONSTRAINT DF_inventory_Suppliers_IsActive DEFAULT (1),
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_Suppliers_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_Suppliers UNIQUE (TenantId, SupplierCode)
+);
+
+IF OBJECT_ID('inventory.Units', 'U') IS NOT NULL DROP TABLE inventory.Units;
+CREATE TABLE inventory.Units
+(
+    UnitId INT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    UnitCode NVARCHAR(20) NOT NULL,
+    UnitName NVARCHAR(100) NOT NULL,
+    UnitNameArabic NVARCHAR(100) NULL,
+    DecimalPrecision TINYINT NOT NULL CONSTRAINT DF_inventory_Units_DecimalPrecision DEFAULT (3),
+    IsActive BIT NOT NULL CONSTRAINT DF_inventory_Units_IsActive DEFAULT (1),
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_Units_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_Units UNIQUE (TenantId, UnitCode)
+);
+
+IF OBJECT_ID('inventory.ItemCategories', 'U') IS NOT NULL DROP TABLE inventory.ItemCategories;
+CREATE TABLE inventory.ItemCategories
+(
+    ItemCategoryId INT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    CategoryCode NVARCHAR(30) NOT NULL,
+    CategoryName NVARCHAR(150) NOT NULL,
+    CategoryNameArabic NVARCHAR(150) NULL,
+    IsActive BIT NOT NULL CONSTRAINT DF_inventory_ItemCategories_IsActive DEFAULT (1),
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_ItemCategories_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_ItemCategories UNIQUE (TenantId, CategoryCode)
+);
+
+IF OBJECT_ID('inventory.ItemSubCategories', 'U') IS NOT NULL DROP TABLE inventory.ItemSubCategories;
+CREATE TABLE inventory.ItemSubCategories
+(
+    ItemSubCategoryId INT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    ItemCategoryId INT NOT NULL,
+    SubCategoryCode NVARCHAR(30) NOT NULL,
+    SubCategoryName NVARCHAR(150) NOT NULL,
+    SubCategoryNameArabic NVARCHAR(150) NULL,
+    IsActive BIT NOT NULL CONSTRAINT DF_inventory_ItemSubCategories_IsActive DEFAULT (1),
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_ItemSubCategories_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_ItemSubCategories UNIQUE (TenantId, ItemCategoryId, SubCategoryCode),
+    CONSTRAINT FK_inventory_ItemSubCategories_Category FOREIGN KEY (ItemCategoryId) REFERENCES inventory.ItemCategories(ItemCategoryId)
+);
+
+IF OBJECT_ID('inventory.Brands', 'U') IS NOT NULL DROP TABLE inventory.Brands;
+CREATE TABLE inventory.Brands
+(
+    BrandId INT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    BrandCode NVARCHAR(30) NOT NULL,
+    BrandName NVARCHAR(120) NOT NULL,
+    BrandNameArabic NVARCHAR(120) NULL,
+    CountryCode NVARCHAR(3) NULL,
+    IsActive BIT NOT NULL CONSTRAINT DF_inventory_Brands_IsActive DEFAULT (1),
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_Brands_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_Brands UNIQUE (TenantId, BrandCode)
+);
+
+IF OBJECT_ID('inventory.Items', 'U') IS NOT NULL DROP TABLE inventory.Items;
+CREATE TABLE inventory.Items
+(
+    ItemId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    ItemCode NVARCHAR(40) NOT NULL,
+    SKU NVARCHAR(40) NULL,
+    Barcode NVARCHAR(50) NULL,
+    ItemName NVARCHAR(200) NOT NULL,
+    ItemNameArabic NVARCHAR(200) NULL,
+    ItemShortName NVARCHAR(100) NULL,
+    ItemShortNameArabic NVARCHAR(100) NULL,
+    Description NVARCHAR(1000) NULL,
+    DescriptionArabic NVARCHAR(1000) NULL,
+    BrandId INT NULL,
+    ItemCategoryId INT NOT NULL,
+    ItemSubCategoryId INT NULL,
+    BaseUnitId INT NOT NULL,
+    SalesUnitId INT NULL,
+    PurchaseUnitId INT NULL,
+    TaxCodeId INT NULL,
+    PreferredSupplierId BIGINT NULL,
+    OriginCountryCode NVARCHAR(3) NULL,
+    HSCode NVARCHAR(20) NULL,
+    IsBatchTracked BIT NOT NULL CONSTRAINT DF_inventory_Items_IsBatchTracked DEFAULT (0),
+    IsSerialTracked BIT NOT NULL CONSTRAINT DF_inventory_Items_IsSerialTracked DEFAULT (0),
+    IsExpiryTracked BIT NOT NULL CONSTRAINT DF_inventory_Items_IsExpiryTracked DEFAULT (0),
+    ShelfLifeDays INT NULL,
+    MinSellingPrice DECIMAL(18,3) NOT NULL CONSTRAINT DF_inventory_Items_MinSellingPrice DEFAULT (0),
+    StandardCost DECIMAL(18,3) NOT NULL CONSTRAINT DF_inventory_Items_StandardCost DEFAULT (0),
+    IsHalalCertified BIT NOT NULL CONSTRAINT DF_inventory_Items_IsHalalCertified DEFAULT (0), -- GCC unique
+    RamadanDemandFactor DECIMAL(6,3) NOT NULL CONSTRAINT DF_inventory_Items_RamadanDemandFactor DEFAULT (1.000), -- unique demand tuning
+    IsActive BIT NOT NULL CONSTRAINT DF_inventory_Items_IsActive DEFAULT (1),
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_Items_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_Items UNIQUE (TenantId, ItemCode),
+    CONSTRAINT FK_inventory_Items_Brand FOREIGN KEY (BrandId) REFERENCES inventory.Brands(BrandId),
+    CONSTRAINT FK_inventory_Items_Category FOREIGN KEY (ItemCategoryId) REFERENCES inventory.ItemCategories(ItemCategoryId),
+    CONSTRAINT FK_inventory_Items_SubCategory FOREIGN KEY (ItemSubCategoryId) REFERENCES inventory.ItemSubCategories(ItemSubCategoryId),
+    CONSTRAINT FK_inventory_Items_BaseUnit FOREIGN KEY (BaseUnitId) REFERENCES inventory.Units(UnitId),
+    CONSTRAINT FK_inventory_Items_SalesUnit FOREIGN KEY (SalesUnitId) REFERENCES inventory.Units(UnitId),
+    CONSTRAINT FK_inventory_Items_PurchaseUnit FOREIGN KEY (PurchaseUnitId) REFERENCES inventory.Units(UnitId),
+    CONSTRAINT FK_inventory_Items_TaxCode FOREIGN KEY (TaxCodeId) REFERENCES inventory.TaxCodes(TaxCodeId),
+    CONSTRAINT FK_inventory_Items_Supplier FOREIGN KEY (PreferredSupplierId) REFERENCES inventory.Suppliers(SupplierId)
+);
+
+IF OBJECT_ID('inventory.ItemBarcodes', 'U') IS NOT NULL DROP TABLE inventory.ItemBarcodes;
+CREATE TABLE inventory.ItemBarcodes
+(
+    ItemBarcodeId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    ItemId BIGINT NOT NULL,
+    UnitId INT NOT NULL,
+    Barcode NVARCHAR(50) NOT NULL,
+    IsPrimary BIT NOT NULL CONSTRAINT DF_inventory_ItemBarcodes_IsPrimary DEFAULT (0),
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_ItemBarcodes_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_ItemBarcodes UNIQUE (TenantId, Barcode),
+    CONSTRAINT FK_inventory_ItemBarcodes_Item FOREIGN KEY (ItemId) REFERENCES inventory.Items(ItemId),
+    CONSTRAINT FK_inventory_ItemBarcodes_Unit FOREIGN KEY (UnitId) REFERENCES inventory.Units(UnitId)
+);
+
+IF OBJECT_ID('inventory.ItemSuppliers', 'U') IS NOT NULL DROP TABLE inventory.ItemSuppliers;
+CREATE TABLE inventory.ItemSuppliers
+(
+    ItemSupplierId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    ItemId BIGINT NOT NULL,
+    SupplierId BIGINT NOT NULL,
+    SupplierItemCode NVARCHAR(50) NULL,
+    LastPurchasePrice DECIMAL(18,3) NOT NULL CONSTRAINT DF_inventory_ItemSuppliers_LastPurchasePrice DEFAULT (0),
+    LeadTimeDays INT NOT NULL CONSTRAINT DF_inventory_ItemSuppliers_LeadTimeDays DEFAULT (0),
+    IsPreferred BIT NOT NULL CONSTRAINT DF_inventory_ItemSuppliers_IsPreferred DEFAULT (0),
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_ItemSuppliers_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_ItemSuppliers UNIQUE (TenantId, ItemId, SupplierId),
+    CONSTRAINT FK_inventory_ItemSuppliers_Item FOREIGN KEY (ItemId) REFERENCES inventory.Items(ItemId),
+    CONSTRAINT FK_inventory_ItemSuppliers_Supplier FOREIGN KEY (SupplierId) REFERENCES inventory.Suppliers(SupplierId)
+);
+
+IF OBJECT_ID('inventory.ItemUnitConversions', 'U') IS NOT NULL DROP TABLE inventory.ItemUnitConversions;
+CREATE TABLE inventory.ItemUnitConversions
+(
+    ItemUnitConversionId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    ItemId BIGINT NOT NULL,
+    FromUnitId INT NOT NULL,
+    ToUnitId INT NOT NULL,
+    ConversionFactor DECIMAL(18,6) NOT NULL,
+    RoundingMode NVARCHAR(20) NOT NULL CONSTRAINT DF_inventory_ItemUnitConversions_RoundingMode DEFAULT ('ROUND'),
+    IsActive BIT NOT NULL CONSTRAINT DF_inventory_ItemUnitConversions_IsActive DEFAULT (1),
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_ItemUnitConversions_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_ItemUnitConversions UNIQUE (TenantId, ItemId, FromUnitId, ToUnitId),
+    CONSTRAINT FK_inventory_ItemUnitConversions_Item FOREIGN KEY (ItemId) REFERENCES inventory.Items(ItemId),
+    CONSTRAINT FK_inventory_ItemUnitConversions_From FOREIGN KEY (FromUnitId) REFERENCES inventory.Units(UnitId),
+    CONSTRAINT FK_inventory_ItemUnitConversions_To FOREIGN KEY (ToUnitId) REFERENCES inventory.Units(UnitId)
+);
+
 IF OBJECT_ID('inventory.TaxCodes', 'U') IS NOT NULL DROP TABLE inventory.TaxCodes;
 CREATE TABLE inventory.TaxCodes
 (
@@ -317,6 +603,43 @@ CREATE TABLE inventory.Warehouses
     CONSTRAINT UQ_inventory_Warehouses UNIQUE (TenantId, BranchId, WarehouseCode),
     CONSTRAINT FK_inventory_Warehouses_Branch FOREIGN KEY (BranchId) REFERENCES dbo.Branches(Id)
 );
+IF OBJECT_ID('inventory.StockLedger', 'U') IS NOT NULL DROP TABLE inventory.StockLedger;
+CREATE TABLE inventory.StockLedger
+(
+    StockLedgerId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    BranchId INT NOT NULL,
+    LedgerDate DATETIME2(0) NOT NULL,
+    TransactionType NVARCHAR(30) NOT NULL,
+    TransactionNo NVARCHAR(40) NOT NULL,
+    ItemId BIGINT NOT NULL,
+    WarehouseId INT NOT NULL,
+    WarehouseBinId BIGINT NULL,
+    BatchNo NVARCHAR(60) NULL,
+    ExpiryDate DATE NULL,
+    SerialNo NVARCHAR(100) NULL,
+    QtyIn DECIMAL(18,6) NOT NULL CONSTRAINT DF_inventory_StockLedger_QtyIn DEFAULT (0),
+    QtyOut DECIMAL(18,6) NOT NULL CONSTRAINT DF_inventory_StockLedger_QtyOut DEFAULT (0),
+    UnitCost DECIMAL(18,3) NOT NULL CONSTRAINT DF_inventory_StockLedger_UnitCost DEFAULT (0),
+    ValueImpact AS ((QtyIn - QtyOut) * UnitCost) PERSISTED,
+    ReferenceType NVARCHAR(30) NULL,
+    ReferenceId NVARCHAR(40) NULL,
+    Notes NVARCHAR(500) NULL,
+    NotesArabic NVARCHAR(500) NULL,
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_StockLedger_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT FK_inventory_StockLedger_Item FOREIGN KEY (ItemId) REFERENCES inventory.Items(ItemId),
+    CONSTRAINT FK_inventory_StockLedger_Warehouse FOREIGN KEY (WarehouseId) REFERENCES inventory.Warehouses(WarehouseId),
+    CONSTRAINT FK_inventory_StockLedger_Bin FOREIGN KEY (WarehouseBinId) REFERENCES inventory.WarehouseBins(WarehouseBinId),
+    CONSTRAINT FK_inventory_StockLedger_Branch FOREIGN KEY (BranchId) REFERENCES dbo.Branches(Id)
+);
+
+IF OBJECT_ID('inventory.ItemStockBalances', 'U') IS NOT NULL DROP TABLE inventory.ItemStockBalances;
+CREATE TABLE inventory.ItemStockBalances
+(
+    ItemStockBalanceId BIGINT IDENTITY(1,1) PRIMARY KEY,
 
 IF OBJECT_ID('inventory.WarehouseBins', 'U') IS NOT NULL DROP TABLE inventory.WarehouseBins;
 CREATE TABLE inventory.WarehouseBins
@@ -448,6 +771,198 @@ CREATE TABLE inventory.ItemStockBalances
     BranchId INT NOT NULL,
     ItemId BIGINT NOT NULL,
     WarehouseId INT NOT NULL,
+IF OBJECT_ID('inventory.GoodsReceiptHeaders', 'U') IS NOT NULL DROP TABLE inventory.GoodsReceiptHeaders;
+IF OBJECT_ID('inventory.GoodsReceiptLines', 'U') IS NOT NULL DROP TABLE inventory.GoodsReceiptLines;
+CREATE TABLE inventory.GoodsReceiptHeaders
+(
+    GoodsReceiptHeaderId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    BranchId INT NOT NULL,
+    GRNNo NVARCHAR(40) NOT NULL,
+    GRNDate DATETIME2(0) NOT NULL,
+    SupplierId BIGINT NOT NULL,
+    WarehouseId INT NOT NULL,
+    CurrencyId INT NOT NULL,
+    ExchangeRate DECIMAL(18,6) NOT NULL CONSTRAINT DF_inventory_GoodsReceiptHeaders_ExchangeRate DEFAULT (1),
+    SupplierInvoiceNo NVARCHAR(60) NULL,
+    SupplierInvoiceDate DATE NULL,
+    SubTotal DECIMAL(18,3) NOT NULL CONSTRAINT DF_inventory_GoodsReceiptHeaders_SubTotal DEFAULT (0),
+    DiscountAmount DECIMAL(18,3) NOT NULL CONSTRAINT DF_inventory_GoodsReceiptHeaders_DiscountAmount DEFAULT (0),
+    VATAmount DECIMAL(18,3) NOT NULL CONSTRAINT DF_inventory_GoodsReceiptHeaders_VATAmount DEFAULT (0),
+    ExciseAmount DECIMAL(18,3) NOT NULL CONSTRAINT DF_inventory_GoodsReceiptHeaders_ExciseAmount DEFAULT (0),
+    NetTotal DECIMAL(18,3) NOT NULL CONSTRAINT DF_inventory_GoodsReceiptHeaders_NetTotal DEFAULT (0),
+    Status NVARCHAR(20) NOT NULL CONSTRAINT DF_inventory_GoodsReceiptHeaders_Status DEFAULT ('DRAFT'),
+    Remarks NVARCHAR(500) NULL,
+    RemarksArabic NVARCHAR(500) NULL,
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_GoodsReceiptHeaders_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_GoodsReceiptHeaders UNIQUE (TenantId, GRNNo),
+    CONSTRAINT FK_inventory_GoodsReceiptHeaders_Supplier FOREIGN KEY (SupplierId) REFERENCES inventory.Suppliers(SupplierId),
+    CONSTRAINT FK_inventory_GoodsReceiptHeaders_Warehouse FOREIGN KEY (WarehouseId) REFERENCES inventory.Warehouses(WarehouseId),
+    CONSTRAINT FK_inventory_GoodsReceiptHeaders_Currency FOREIGN KEY (CurrencyId) REFERENCES inventory.Currencies(CurrencyId),
+    CONSTRAINT FK_inventory_GoodsReceiptHeaders_Branch FOREIGN KEY (BranchId) REFERENCES dbo.Branches(Id)
+);
+CREATE TABLE inventory.GoodsReceiptLines
+(
+    GoodsReceiptLineId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    GoodsReceiptHeaderId BIGINT NOT NULL,
+    ItemId BIGINT NOT NULL,
+    UnitId INT NOT NULL,
+    BatchNo NVARCHAR(60) NULL,
+    ExpiryDate DATE NULL,
+    ReceivedQty DECIMAL(18,6) NOT NULL,
+    UnitCost DECIMAL(18,3) NOT NULL,
+    DiscountPercent DECIMAL(5,2) NOT NULL CONSTRAINT DF_inventory_GoodsReceiptLines_DiscountPercent DEFAULT (0),
+    VATAmount DECIMAL(18,3) NOT NULL CONSTRAINT DF_inventory_GoodsReceiptLines_VATAmount DEFAULT (0),
+    ExciseAmount DECIMAL(18,3) NOT NULL CONSTRAINT DF_inventory_GoodsReceiptLines_ExciseAmount DEFAULT (0),
+    LineTotal DECIMAL(18,3) NOT NULL,
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_GoodsReceiptLines_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT FK_inventory_GoodsReceiptLines_Header FOREIGN KEY (GoodsReceiptHeaderId) REFERENCES inventory.GoodsReceiptHeaders(GoodsReceiptHeaderId),
+    CONSTRAINT FK_inventory_GoodsReceiptLines_Item FOREIGN KEY (ItemId) REFERENCES inventory.Items(ItemId),
+    CONSTRAINT FK_inventory_GoodsReceiptLines_Unit FOREIGN KEY (UnitId) REFERENCES inventory.Units(UnitId)
+);
+
+IF OBJECT_ID('inventory.StockTransferHeaders', 'U') IS NOT NULL DROP TABLE inventory.StockTransferHeaders;
+IF OBJECT_ID('inventory.StockTransferLines', 'U') IS NOT NULL DROP TABLE inventory.StockTransferLines;
+CREATE TABLE inventory.StockTransferHeaders
+(
+    StockTransferHeaderId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    FromBranchId INT NOT NULL,
+    ToBranchId INT NOT NULL,
+    TransferNo NVARCHAR(40) NOT NULL,
+    TransferDate DATETIME2(0) NOT NULL,
+    FromWarehouseId INT NOT NULL,
+    ToWarehouseId INT NOT NULL,
+    TransferReason NVARCHAR(200) NULL,
+    TransferReasonArabic NVARCHAR(200) NULL,
+    Status NVARCHAR(20) NOT NULL CONSTRAINT DF_inventory_StockTransferHeaders_Status DEFAULT ('DRAFT'),
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_StockTransferHeaders_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_StockTransferHeaders UNIQUE (TenantId, TransferNo),
+    CONSTRAINT FK_inventory_StockTransferHeaders_FromWarehouse FOREIGN KEY (FromWarehouseId) REFERENCES inventory.Warehouses(WarehouseId),
+    CONSTRAINT FK_inventory_StockTransferHeaders_ToWarehouse FOREIGN KEY (ToWarehouseId) REFERENCES inventory.Warehouses(WarehouseId),
+    CONSTRAINT FK_inventory_StockTransferHeaders_FromBranch FOREIGN KEY (FromBranchId) REFERENCES dbo.Branches(Id),
+    CONSTRAINT FK_inventory_StockTransferHeaders_ToBranch FOREIGN KEY (ToBranchId) REFERENCES dbo.Branches(Id)
+);
+CREATE TABLE inventory.StockTransferLines
+(
+    StockTransferLineId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    StockTransferHeaderId BIGINT NOT NULL,
+    ItemId BIGINT NOT NULL,
+    UnitId INT NOT NULL,
+    TransferQty DECIMAL(18,6) NOT NULL,
+    BatchNo NVARCHAR(60) NULL,
+    ExpiryDate DATE NULL,
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_StockTransferLines_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT FK_inventory_StockTransferLines_Header FOREIGN KEY (StockTransferHeaderId) REFERENCES inventory.StockTransferHeaders(StockTransferHeaderId),
+    CONSTRAINT FK_inventory_StockTransferLines_Item FOREIGN KEY (ItemId) REFERENCES inventory.Items(ItemId),
+    CONSTRAINT FK_inventory_StockTransferLines_Unit FOREIGN KEY (UnitId) REFERENCES inventory.Units(UnitId)
+);
+
+IF OBJECT_ID('inventory.StockAdjustmentHeaders', 'U') IS NOT NULL DROP TABLE inventory.StockAdjustmentHeaders;
+IF OBJECT_ID('inventory.StockAdjustmentLines', 'U') IS NOT NULL DROP TABLE inventory.StockAdjustmentLines;
+CREATE TABLE inventory.StockAdjustmentHeaders
+(
+    StockAdjustmentHeaderId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    BranchId INT NOT NULL,
+    AdjustmentNo NVARCHAR(40) NOT NULL,
+    AdjustmentDate DATETIME2(0) NOT NULL,
+    WarehouseId INT NOT NULL,
+    AdjustmentReason NVARCHAR(200) NOT NULL,
+    AdjustmentReasonArabic NVARCHAR(200) NULL,
+    Status NVARCHAR(20) NOT NULL CONSTRAINT DF_inventory_StockAdjustmentHeaders_Status DEFAULT ('DRAFT'),
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_StockAdjustmentHeaders_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT UQ_inventory_StockAdjustmentHeaders UNIQUE (TenantId, AdjustmentNo),
+    CONSTRAINT FK_inventory_StockAdjustmentHeaders_Warehouse FOREIGN KEY (WarehouseId) REFERENCES inventory.Warehouses(WarehouseId),
+    CONSTRAINT FK_inventory_StockAdjustmentHeaders_Branch FOREIGN KEY (BranchId) REFERENCES dbo.Branches(Id)
+);
+CREATE TABLE inventory.StockAdjustmentLines
+(
+    StockAdjustmentLineId BIGINT IDENTITY(1,1) PRIMARY KEY,
+    TenantId INT NOT NULL,
+    StockAdjustmentHeaderId BIGINT NOT NULL,
+    ItemId BIGINT NOT NULL,
+    UnitId INT NOT NULL,
+    SystemQty DECIMAL(18,6) NOT NULL,
+    CountedQty DECIMAL(18,6) NOT NULL,
+    DifferenceQty AS (CountedQty - SystemQty) PERSISTED,
+    UnitCost DECIMAL(18,3) NOT NULL,
+    BatchNo NVARCHAR(60) NULL,
+    ExpiryDate DATE NULL,
+    CreatedUserId BIGINT NOT NULL,
+    CreatedDateTime DATETIME2(0) NOT NULL CONSTRAINT DF_inventory_StockAdjustmentLines_CreatedDateTime DEFAULT (SYSDATETIME()),
+    UpdatedUserId BIGINT NULL,
+    UpdatedDateTime DATETIME2(0) NULL,
+    CONSTRAINT FK_inventory_StockAdjustmentLines_Header FOREIGN KEY (StockAdjustmentHeaderId) REFERENCES inventory.StockAdjustmentHeaders(StockAdjustmentHeaderId),
+    CONSTRAINT FK_inventory_StockAdjustmentLines_Item FOREIGN KEY (ItemId) REFERENCES inventory.Items(ItemId),
+    CONSTRAINT FK_inventory_StockAdjustmentLines_Unit FOREIGN KEY (UnitId) REFERENCES inventory.Units(UnitId)
+);
+
+/* =========================================================
+   5) VIEWS
+IF OBJECT_ID('inventory.vwCurrentStock', 'V') IS NOT NULL DROP VIEW inventory.vwCurrentStock;
+EXEC ('
+CREATE VIEW inventory.vwCurrentStock
+AS
+SELECT
+    sb.TenantId,
+    sb.ItemId,
+    i.ItemCode,
+    i.ItemName,
+    i.ItemNameArabic,
+    sb.BranchId,
+    sb.WarehouseId,
+    w.WarehouseCode,
+    w.WarehouseName,
+    sb.BatchNo,
+    sb.ExpiryDate,
+    sb.OnHandQty,
+    sb.ReservedQty,
+    sb.AvailableQty,
+    sb.AvgCost,
+    (sb.OnHandQty * sb.AvgCost) AS StockValue
+FROM inventory.ItemStockBalances sb
+JOIN inventory.Items i ON i.ItemId = sb.ItemId
+JOIN inventory.Warehouses w ON w.WarehouseId = sb.WarehouseId
+');
+
+IF OBJECT_ID('inventory.vwItemStockRuntime', 'V') IS NOT NULL DROP VIEW inventory.vwItemStockRuntime;
+EXEC ('
+CREATE VIEW inventory.vwItemStockRuntime
+AS
+SELECT
+    sl.TenantId,
+    sl.ItemId,
+    sl.BranchId,
+    sl.WarehouseId,
+    sl.BatchNo,
+    sl.ExpiryDate,
+    SUM(sl.QtyIn - sl.QtyOut) AS RuntimeOnHandQty,
+    MAX(sl.LedgerDate) AS LastMovementDate
+FROM inventory.StockLedger sl
+GROUP BY sl.TenantId, sl.BranchId, sl.ItemId, sl.WarehouseId, sl.BatchNo, sl.ExpiryDate
+');
+
+IF OBJECT_ID('inventory.vwNearExpiryStock', 'V') IS NOT NULL DROP VIEW inventory.vwNearExpiryStock;
+EXEC ('
+CREATE VIEW inventory.vwNearExpiryStock
     WarehouseBinId BIGINT NULL,
     BatchNo NVARCHAR(60) NULL,
     ExpiryDate DATE NULL,
@@ -700,6 +1215,34 @@ SELECT
     sb.ItemId,
     i.ItemCode,
     i.ItemName,
+IF OBJECT_ID('inventory.fnStockOnHand', 'FN') IS NOT NULL DROP FUNCTION inventory.fnStockOnHand;
+EXEC ('
+CREATE FUNCTION inventory.fnStockOnHand
+(
+    @TenantId INT,
+    @ItemId BIGINT,
+    @BranchId INT,
+    @WarehouseId INT
+)
+RETURNS DECIMAL(18,6)
+AS
+BEGIN
+    DECLARE @Qty DECIMAL(18,6);
+
+    SELECT @Qty = ISNULL(SUM(sb.OnHandQty), 0)
+    FROM inventory.ItemStockBalances sb
+    WHERE sb.TenantId = @TenantId
+      AND sb.ItemId = @ItemId
+      AND sb.BranchId = @BranchId
+      AND sb.WarehouseId = @WarehouseId;
+
+    RETURN ISNULL(@Qty, 0);
+END
+');
+
+IF OBJECT_ID('inventory.fnAvailableStock', 'FN') IS NOT NULL DROP FUNCTION inventory.fnAvailableStock;
+EXEC ('
+CREATE FUNCTION inventory.fnAvailableStock
     i.ItemNameArabic,
     sb.BranchId,
     sb.WarehouseId,
