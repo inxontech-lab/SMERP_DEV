@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\Inventory\" />
-    <Folder Include="Services\InverntoryServices\" />
     <Folder Include="Services\SaasServices\" />
   </ItemGroup>
 
