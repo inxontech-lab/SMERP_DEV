@@ -1,0 +1,63 @@
+%% Branch entity is sourced from dbo.Branches in the main database schema.
+erDiagram
+    Currencies ||--o{ ExchangeRates : has
+    TaxCodes ||--o{ Items : applies_to
+    Suppliers ||--o{ Items : preferred_supplier
+    Suppliers ||--o{ ItemSuppliers : maps
+    Items ||--o{ ItemSuppliers : has_supplier
+    Units ||--o{ Items : base_sales_purchase
+    ItemCategories ||--o{ ItemSubCategories : has
+    ItemCategories ||--o{ Items : classifies
+    ItemSubCategories ||--o{ Items : classifies
+    Brands ||--o{ Items : brands
+    Items ||--o{ ItemBarcodes : has
+    Units ||--o{ ItemBarcodes : for_unit
+    Warehouses ||--o{ WarehouseBins : contains
+
+    DboBranches ||--o{ Warehouses : owns
+    DboBranches ||--o{ StockLedger : scoped
+    DboBranches ||--o{ ItemStockBalances : scoped
+    DboBranches ||--o{ StockReservations : scoped
+    DboBranches ||--o{ GoodsReceiptHeaders : receives_for
+    DboBranches ||--o{ StockAdjustmentHeaders : adjusts_for
+    DboBranches ||--o{ ReorderPolicies : plans_for
+    DboBranches ||--o{ StockTransferHeaders : from_to
+
+    Currencies ||--o{ PriceLists : base_currency
+    PriceLists ||--o{ ItemPrices : has
+    Items ||--o{ ItemPrices : priced
+    Units ||--o{ ItemPrices : priced_by_uom
+
+    Items ||--o{ ReorderPolicies : policy
+    Warehouses ||--o{ ReorderPolicies : policy
+
+    Items ||--o{ StockLedger : movement
+    Warehouses ||--o{ StockLedger : movement
+    WarehouseBins ||--o{ StockLedger : movement
+
+    Items ||--o{ ItemStockBalances : snapshot
+    Warehouses ||--o{ ItemStockBalances : snapshot
+    WarehouseBins ||--o{ ItemStockBalances : snapshot
+
+    Items ||--o{ StockReservations : reserved
+    Warehouses ||--o{ StockReservations : reserved
+
+    Items ||--o{ ItemBatches : batch
+    Warehouses ||--o{ ItemBatches : batch
+    Items ||--o{ ItemSerials : serial
+    Warehouses ||--o{ ItemSerials : serial
+
+    Suppliers ||--o{ GoodsReceiptHeaders : receives_from
+    Warehouses ||--o{ GoodsReceiptHeaders : receives_to
+    Currencies ||--o{ GoodsReceiptHeaders : valued_in
+    GoodsReceiptHeaders ||--o{ GoodsReceiptLines : contains
+    Items ||--o{ GoodsReceiptLines : received_item
+    Units ||--o{ GoodsReceiptLines : received_uom
+
+    StockTransferHeaders ||--o{ StockTransferLines : contains
+    Items ||--o{ StockTransferLines : transferred_item
+    Units ||--o{ StockTransferLines : transferred_uom
+
+    StockAdjustmentHeaders ||--o{ StockAdjustmentLines : contains
+    Items ||--o{ StockAdjustmentLines : adjusted_item
+    Units ||--o{ StockAdjustmentLines : adjusted_uom
