@@ -188,10 +188,6 @@ CREATE TABLE inventory.ItemUnitConversions
 
 /* -------------------------------
    4) Inventory transaction tables
-   Design note:
-   - inventory.InventoryTransactions is the source-of-truth stock ledger.
-   - inventory.ItemStockBalances is a performance snapshot for fast reads.
-   - inventory.vwItemStockRuntime provides pure runtime stock calculation.
 -------------------------------- */
 IF OBJECT_ID('inventory.Warehouses', 'U') IS NOT NULL DROP TABLE inventory.Warehouses;
 CREATE TABLE inventory.Warehouses
@@ -267,26 +263,6 @@ CREATE TABLE inventory.InventoryTransactions
     CONSTRAINT FK_inventory_InventoryTransactions_Unit FOREIGN KEY (UnitId)
         REFERENCES inventory.Units (UnitId)
 );
-
-/* Runtime stock calculation view (no stored balance dependency) */
-IF OBJECT_ID('inventory.vwItemStockRuntime', 'V') IS NOT NULL DROP VIEW inventory.vwItemStockRuntime;
-EXEC ('
-CREATE VIEW inventory.vwItemStockRuntime
-AS
-SELECT
-    it.TenantId,
-    it.ItemId,
-    it.WarehouseId,
-    CAST(NULL AS NVARCHAR(60)) AS BatchNo,
-    CAST(NULL AS DATE) AS ExpiryDate,
-    SUM(it.QtyIn - it.QtyOut) AS RuntimeOnHandQty,
-    MAX(it.TransactionDate) AS LastTransactionDate
-FROM inventory.InventoryTransactions it
-GROUP BY
-    it.TenantId,
-    it.ItemId,
-    it.WarehouseId
-');
 
 /* -------------------------------
    5) Purchase receipt (GRN)
