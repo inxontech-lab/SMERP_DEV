@@ -54,9 +54,16 @@
                 @foreach (var group in groups)
                 {
                     <RadzenPanelMenuItem Text="@group.GroupName" Icon="label" IconColor="@Colors.Primary">
-                        @foreach (var item in group.Items)
+                        @foreach (var subMenuGroup in group.Items
+                           .GroupBy(item => string.IsNullOrWhiteSpace(item.SubMenu) ? "General" : item.SubMenu.Trim(), StringComparer.OrdinalIgnoreCase)
+                           .OrderBy(subMenu => subMenu.Key, StringComparer.OrdinalIgnoreCase))
                         {
-                            <RadzenPanelMenuItem Text="@($"{item.SubMenu} • {item.Text}")" Path="@item.Path" Icon="@item.Icon" IconColor="@Colors.Info" />
+                            <RadzenPanelMenuItem Text="@subMenuGroup.Key" Icon="folder_open" IconColor="@Colors.Secondary">
+                                @foreach (var item in subMenuGroup.OrderBy(menu => menu.Text, StringComparer.OrdinalIgnoreCase))
+                                {
+                                    <RadzenPanelMenuItem Text="@item.Text" Path="@item.Path" Icon="@item.Icon" IconColor="@Colors.Info" />
+                                }
+                            </RadzenPanelMenuItem>
                         }
                     </RadzenPanelMenuItem>
                 }
