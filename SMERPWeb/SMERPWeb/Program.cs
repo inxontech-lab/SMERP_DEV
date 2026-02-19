@@ -50,6 +50,7 @@ AddSaasClient<IMenuApiClient, MenuApiClient>();
 AddSaasClient<IUserRoleApiClient, UserRoleApiClient>(applyCrudPermissionHandler: false);
 AddSaasClient<IRolePermissionApiClient, RolePermissionApiClient>(applyCrudPermissionHandler: false);
 AddSaasClient<IRoleApiClient, RoleApiClient>();
+AddSaasClient<IUomApiClient, UomApiClient>();
 AddSaasClient<IUserOnboardingApiClient, UserOnboardingApiClient>();
 builder.Services.AddScoped<IUserOnboardingService, UserOnboardingService>();
 AddSaasClient<IUserManagementApiClient, UserManagementApiClient>();
