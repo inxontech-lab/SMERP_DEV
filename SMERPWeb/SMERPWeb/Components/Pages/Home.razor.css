@@ -1,3 +1,10 @@
+
+.home-welcome {
+    margin-bottom: 1.5rem;
+    border: none;
+    outline: none;
+}
+
 .home-welcome,
 .home-welcome:focus,
 .home-welcome:focus-visible {
