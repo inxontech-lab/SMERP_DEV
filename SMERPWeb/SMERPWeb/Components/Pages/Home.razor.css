@@ -1,0 +1,7 @@
+.home-welcome,
+.home-welcome:focus,
+.home-welcome:focus-visible {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
