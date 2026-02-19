@@ -1,0 +1,54 @@
+@using Domain.SaasReqDTO
+
+<RadzenTemplateForm TItem="ProductRequest" Data="FormModel" Submit="HandleSubmit">
+    <RadzenStack Gap="0.75rem">
+        @if (ViewerTenantId == 1)
+        {
+            <div>
+                <RadzenLabel Text="Tenant *" Component="TenantId" />
+                <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
+            </div>
+        }
+        else
+        {
+            <div>
+                <RadzenLabel Text="Tenant *" />
+                <RadzenText Text="@GetTenantName(FormModel.TenantId)" />
+            </div>
+        }
+
+        <div>
+            <RadzenLabel Text="SKU *" Component="Sku" />
+            <RadzenTextBox Name="Sku" @bind-Value="FormModel.Sku" Style="width:100%;" />
+            <RadzenRequiredValidator Component="Sku" Text="SKU is required" Popup="false" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="Barcode" Component="Barcode" />
+            <RadzenTextBox Name="Barcode" @bind-Value="FormModel.Barcode" Style="width:100%;" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="Name *" Component="Name" />
+            <RadzenTextBox Name="Name" @bind-Value="FormModel.Name" Style="width:100%;" />
+            <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="false" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="Base UOM *" Component="BaseUomId" />
+            <RadzenDropDown Name="BaseUomId" TValue="int" @bind-Value="FormModel.BaseUomId" Data="Uoms" TextProperty="Name" ValueProperty="Id" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+            <RadzenRequiredValidator Component="BaseUomId" Text="Base UOM is required" Popup="false" />
+        </div>
+
+        <div class="rz-d-flex rz-align-items-center">
+            <RadzenCheckBox TValue="bool" Name="IsActive" @bind-Value="FormModel.IsActive" />
+            <RadzenLabel Text="Active" class="rz-ml-2" />
+        </div>
+
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
+            <RadzenButton Text="Save" Icon="save" ButtonType="ButtonType.Submit" />
+            <RadzenButton Text="Cancel" Icon="close" ButtonStyle="ButtonStyle.Light" Click="Cancel" />
+        </RadzenStack>
+    </RadzenStack>
+</RadzenTemplateForm>

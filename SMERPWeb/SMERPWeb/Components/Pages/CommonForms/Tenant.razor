@@ -35,13 +35,13 @@
             <RadzenTemplateForm TItem="Domain.SaasReqDTO.TenantRequest" Data="FormModel" Submit="SaveAsync">
                 <RadzenStack Gap="0.75rem">
                     <div>
-                        <RadzenLabel Text="Code" Component="Code" />
+                        <RadzenLabel Text="Code *" Component="Code" />
                         <RadzenTextBox Name="Code" @bind-Value="FormModel.Code" Style="width:100%;" />
                         <RadzenRequiredValidator Component="Code" Text="Code is required" Popup="false" />
                     </div>
 
                     <div>
-                        <RadzenLabel Text="Name" Component="Name" />
+                        <RadzenLabel Text="Name *" Component="Name" />
                         <RadzenTextBox Name="Name" @bind-Value="FormModel.Name" Style="width:100%;" />
                         <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="false" />
                     </div>
@@ -62,13 +62,13 @@
                     </div>
 
                     <div>
-                        <RadzenLabel Text="Country Code" Component="CountryCode" />
+                        <RadzenLabel Text="Country Code *" Component="CountryCode" />
                         <RadzenTextBox Name="CountryCode" @bind-Value="FormModel.CountryCode" Style="width:100%;" />
                         <RadzenRequiredValidator Component="CountryCode" Text="Country code is required" Popup="false" />
                     </div>
 
                     <div>
-                        <RadzenLabel Text="Time Zone" Component="TimeZone" />
+                        <RadzenLabel Text="Time Zone *" Component="TimeZone" />
                         <RadzenTextBox Name="TimeZone" @bind-Value="FormModel.TimeZone" Style="width:100%;" />
                         <RadzenRequiredValidator Component="TimeZone" Text="Time zone is required" Popup="false" />
                     </div>
