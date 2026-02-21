@@ -57,6 +57,8 @@ AddSaasClient<IUserManagementApiClient, UserManagementApiClient>();
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 AddSaasClient<IItemApiClient, ItemApiClient>();
 builder.Services.AddScoped<IItemManagementService, ItemManagementService>();
+AddSaasClient<ISupplierApiClient, SupplierApiClient>();
+builder.Services.AddScoped<ISupplierManagementService, SupplierManagementService>();
 builder.Services.AddHttpClient<IAuthApiClient, AuthApiClient>(ConfigureSaasApiClient);
 builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 builder.Services.AddScoped<INavigationCatalogService, NavigationCatalogService>();
