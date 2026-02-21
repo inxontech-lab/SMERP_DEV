@@ -1,0 +1,42 @@
+@page "/Suppliers"
+
+<PageTitle>Suppliers Management</PageTitle>
+
+<RadzenCard>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
+        <RadzenText Text="Suppliers" TextStyle="TextStyle.H5" />
+        <RadzenButton Text="New Supplier" Icon="add_circle" Click="OpenCreateDialogAsync" ButtonStyle="ButtonStyle.Primary" Disabled="@(!CanCreateSupplier)" />
+    </RadzenStack>
+
+    <RadzenRow class="rz-mb-3">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenTextBox @bind-Value="SearchText" Name="SearchSuppliers" Placeholder="Search by code / name / contact / phone" Style="width:100%;" />
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenDataGrid Data="FilteredSuppliers" TItem="Domain.SaasDBModels.InvSupplier" AllowPaging="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" PageSize="10" EmptyText="No suppliers found.">
+        <Columns>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvSupplier" Property="Id" Title="ID" Width="90px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvSupplier" Title="Tenant" Width="200px">
+                <Template Context="supplier">@GetTenantName(supplier.TenantId)</Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvSupplier" Property="Code" Title="Code" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvSupplier" Property="Name" Title="Name" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvSupplier" Property="ContactPerson" Title="Contact" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvSupplier" Property="Phone" Title="Phone" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvSupplier" Property="Email" Title="Email" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvSupplier" Property="IsActive" Title="Active" Width="100px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvSupplier" Title="Actions" Width="150px" Filterable="false" Sortable="false">
+                <Template Context="supplier">
+                    <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => OpenEditDialogAsync(supplier))" class="rz-mr-2" Disabled="@(!CanEditSupplier)" />
+                    <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(supplier.Id))" Disabled="@(!CanDeleteSupplier)" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
+}
