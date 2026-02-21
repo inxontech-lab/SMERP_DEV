@@ -31,6 +31,13 @@ builder.Services.AddScoped<IUserOnboardingService, UserOnboardingService>();
 builder.Services.AddScoped<IUserBranchService, UserBranchService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<IItemService, ItemService>();
+builder.Services.AddScoped<IInvItemService, InvItemService>();
+builder.Services.AddScoped<IInvItemCategoryService, InvItemCategoryService>();
+builder.Services.AddScoped<IInvItemSubCategoryService, InvItemSubCategoryService>();
+builder.Services.AddScoped<IInvItemUomconversionService, InvItemUomconversionService>();
+builder.Services.AddScoped<IInvSupplierService, InvSupplierService>();
+builder.Services.AddScoped<IInvUomService, InvUomService>();
+builder.Services.AddScoped<IInvWarehouseService, InvWarehouseService>();
 
 
 builder.Services.AddControllers();
