@@ -66,16 +66,6 @@ public class PermissionApiClient(HttpClient httpClient) : SaasCrudApiClient<Perm
 
 public interface IPosTerminalApiClient : ISaasCrudApiClient<PosTerminal, int>;
 public class PosTerminalApiClient(HttpClient httpClient) : SaasCrudApiClient<PosTerminal, int>(httpClient, "PosTerminals"), IPosTerminalApiClient;
-
-public interface IProductApiClient : ISaasCrudApiClient<Product, long>;
-public class ProductApiClient(HttpClient httpClient) : SaasCrudApiClient<Product, long>(httpClient, "Products"), IProductApiClient;
-
-public interface IProductPriceApiClient : ISaasCrudApiClient<ProductPrice, long>;
-public class ProductPriceApiClient(HttpClient httpClient) : SaasCrudApiClient<ProductPrice, long>(httpClient, "ProductPrices"), IProductPriceApiClient;
-
-public interface IProductUomApiClient : ISaasCrudApiClient<ProductUom, long>;
-public class ProductUomApiClient(HttpClient httpClient) : SaasCrudApiClient<ProductUom, long>(httpClient, "ProductUoms"), IProductUomApiClient;
-
 public interface IRefreshTokenApiClient : ISaasCrudApiClient<RefreshToken, long>;
 public class RefreshTokenApiClient(HttpClient httpClient) : SaasCrudApiClient<RefreshToken, long>(httpClient, "RefreshTokens"), IRefreshTokenApiClient;
 
