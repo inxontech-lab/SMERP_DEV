@@ -41,6 +41,6 @@ public class SupplierManagementService(
     public async Task<List<Tenant>> GetTenantsAsync(int viewerTenantId, CancellationToken cancellationToken = default)
     {
         var tenants = await tenantManagementApiClient.GetAllAsync(cancellationToken);
-        return viewerTenantId == 1 ? tenants : tenants.Where(t => t.Id == viewerTenantId).ToList();
+        return viewerTenantId <= 1 ? tenants : tenants.Where(t => t.Id == viewerTenantId).ToList();
     }
 }
