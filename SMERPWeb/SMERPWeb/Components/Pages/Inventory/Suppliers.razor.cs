@@ -81,7 +81,7 @@ public partial class Suppliers : ComponentBase
         NotifyTopRight(NotificationSeverity.Success, "Success", "Supplier deleted successfully.");
     }
 
-    protected string GetTenantName(int tenantId) => Tenants.FirstOrDefault(t => t.Id == tenantId)?.Name ?? $"Tenant #{tenantId}";
+    protected string GetTenantName(int tenantId) => Tenants.FirstOrDefault(t => t.Id == tenantId)?.Name ?? "Unknown Tenant";
 
     private async Task OpenDialogAsync(Domain.SaasDBModels.InvSupplier? editingSupplier)
     {
