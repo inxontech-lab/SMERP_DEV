@@ -31,6 +31,11 @@
         </div>
 
         <div>
+            <RadzenLabel Text="Name (Arabic)" Component="NameAr" />
+            <RadzenTextBox Name="NameAr" @bind-Value="FormModel.NameAr" Style="width:100%;" />
+        </div>
+
+        <div>
             <RadzenLabel Text="Contact Person" Component="ContactPerson" />
             <RadzenTextBox Name="ContactPerson" @bind-Value="FormModel.ContactPerson" Style="width:100%;" />
         </div>
@@ -43,6 +48,36 @@
         <div>
             <RadzenLabel Text="Email" Component="Email" />
             <RadzenTextBox Name="Email" @bind-Value="FormModel.Email" Style="width:100%;" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="Address" Component="Address" />
+            <RadzenTextArea Name="Address" @bind-Value="FormModel.Address" Style="width:100%;" Rows="2" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="Address (Arabic)" Component="AddressAr" />
+            <RadzenTextArea Name="AddressAr" @bind-Value="FormModel.AddressAr" Style="width:100%;" Rows="2" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="Country Code" Component="CountryCode" />
+            <RadzenTextBox Name="CountryCode" @bind-Value="FormModel.CountryCode" Style="width:100%;" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="VAT Registration No" Component="VatregistrationNo" />
+            <RadzenTextBox Name="VatregistrationNo" @bind-Value="FormModel.VatregistrationNo" Style="width:100%;" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="CR No" Component="Crno" />
+            <RadzenTextBox Name="Crno" @bind-Value="FormModel.Crno" Style="width:100%;" />
+        </div>
+
+        <div>
+            <RadzenLabel Text="Payment Terms (Days)" Component="PaymentTermsDays" />
+            <RadzenNumeric Name="PaymentTermsDays" TValue="int?" @bind-Value="FormModel.PaymentTermsDays" Style="width:100%;" Min="0" />
         </div>
 
         <div class="rz-d-flex rz-align-items-center">
