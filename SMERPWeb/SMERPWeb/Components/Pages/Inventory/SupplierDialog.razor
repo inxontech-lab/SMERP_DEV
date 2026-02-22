@@ -4,7 +4,7 @@
     <RadzenRow Gap="1rem">
         <RadzenColumn Size="12" SizeMD="6">
             <RadzenStack Gap="0.75rem">
-                @if (ViewerTenantId == 1)
+                @if (ViewerTenantId <= 1)
                 {
                     <div>
                         <RadzenLabel Text="Tenant *" Component="TenantId" />

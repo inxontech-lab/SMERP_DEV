@@ -19,7 +19,7 @@ public partial class SupplierDialog : ComponentBase
         FormModel = EditingSupplier is null
             ? new CreateInvSupplierRequest
             {
-                TenantId = ViewerTenantId == 1 ? Tenants.FirstOrDefault()?.Id ?? 1 : ViewerTenantId,
+                TenantId = ViewerTenantId <= 1 ? Tenants.FirstOrDefault()?.Id ?? 0 : ViewerTenantId,
                 IsActive = true
             }
             : new CreateInvSupplierRequest
@@ -54,5 +54,5 @@ public partial class SupplierDialog : ComponentBase
     protected void Cancel() => DialogService.Close();
 
     protected string GetTenantName(int tenantId)
-        => Tenants.FirstOrDefault(t => t.Id == tenantId)?.Name ?? $"Tenant #{tenantId}";
+        => Tenants.FirstOrDefault(t => t.Id == tenantId)?.Name ?? "Unknown Tenant";
 }
