@@ -13,6 +13,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+
 builder.Services.AddRadzenComponents();
 builder.Services.AddScoped<ICrudPermissionService, CrudPermissionService>();
 builder.Services.AddScoped<CrudPermissionHandler>();
