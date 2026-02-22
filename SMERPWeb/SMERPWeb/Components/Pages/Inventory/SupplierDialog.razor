@@ -2,118 +2,88 @@
 
 <RadzenTemplateForm TItem="CreateInvSupplierRequest" Data="FormModel" Submit="HandleSubmit">
     <RadzenStack Gap="0.75rem">
-        <RadzenRow Gap="1rem">
-            <RadzenColumn Size="12" SizeMD="6">
-                @if (ViewerTenantId == 1)
-                {
-                    <div>
-                        <RadzenLabel Text="Tenant *" Component="TenantId" />
-                        <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
-                        <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
-                    </div>
-                }
-                else
-                {
-                    <div>
-                        <RadzenLabel Text="Tenant *" />
-                        <RadzenText Text="@GetTenantName(FormModel.TenantId)" />
-                    </div>
-                }
-            </RadzenColumn>
+        @if (ViewerTenantId == 1)
+        {
+            <div>
+                <RadzenLabel Text="Tenant *" Component="TenantId" />
+                <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
+            </div>
+        }
+        else
+        {
+            <div>
+                <RadzenLabel Text="Tenant *" />
+                <RadzenText Text="@GetTenantName(FormModel.TenantId)" />
+            </div>
+        }
 
-            <RadzenColumn Size="12" SizeMD="6">
-                <div>
-                    <RadzenLabel Text="Code *" Component="Code" />
-                    <RadzenTextBox Name="Code" @bind-Value="FormModel.Code" Style="width:100%;" />
-                    <RadzenRequiredValidator Component="Code" Text="Code is required" Popup="false" />
-                </div>
-            </RadzenColumn>
+        <div>
+            <RadzenLabel Text="Code *" Component="Code" />
+            <RadzenTextBox Name="Code" @bind-Value="FormModel.Code" Style="width:100%;" />
+            <RadzenRequiredValidator Component="Code" Text="Code is required" Popup="false" />
+        </div>
 
-            <RadzenColumn Size="12" SizeMD="6">
-                <div>
-                    <RadzenLabel Text="Name *" Component="Name" />
-                    <RadzenTextBox Name="Name" @bind-Value="FormModel.Name" Style="width:100%;" />
-                    <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="false" />
-                </div>
-            </RadzenColumn>
+        <div>
+            <RadzenLabel Text="Name *" Component="Name" />
+            <RadzenTextBox Name="Name" @bind-Value="FormModel.Name" Style="width:100%;" />
+            <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="false" />
+        </div>
 
-            <RadzenColumn Size="12" SizeMD="6">
-                <div>
-                    <RadzenLabel Text="Name (Arabic)" Component="NameAr" />
-                    <RadzenTextBox Name="NameAr" @bind-Value="FormModel.NameAr" Style="width:100%;" />
-                </div>
-            </RadzenColumn>
+        <div>
+            <RadzenLabel Text="Name (Arabic)" Component="NameAr" />
+            <RadzenTextBox Name="NameAr" @bind-Value="FormModel.NameAr" Style="width:100%;" />
+        </div>
 
-            <RadzenColumn Size="12" SizeMD="6">
-                <div>
-                    <RadzenLabel Text="Contact Person" Component="ContactPerson" />
-                    <RadzenTextBox Name="ContactPerson" @bind-Value="FormModel.ContactPerson" Style="width:100%;" />
-                </div>
-            </RadzenColumn>
+        <div>
+            <RadzenLabel Text="Contact Person" Component="ContactPerson" />
+            <RadzenTextBox Name="ContactPerson" @bind-Value="FormModel.ContactPerson" Style="width:100%;" />
+        </div>
 
-            <RadzenColumn Size="12" SizeMD="6">
-                <div>
-                    <RadzenLabel Text="Phone" Component="Phone" />
-                    <RadzenTextBox Name="Phone" @bind-Value="FormModel.Phone" Style="width:100%;" />
-                </div>
-            </RadzenColumn>
+        <div>
+            <RadzenLabel Text="Phone" Component="Phone" />
+            <RadzenTextBox Name="Phone" @bind-Value="FormModel.Phone" Style="width:100%;" />
+        </div>
 
-            <RadzenColumn Size="12" SizeMD="6">
-                <div>
-                    <RadzenLabel Text="Email" Component="Email" />
-                    <RadzenTextBox Name="Email" @bind-Value="FormModel.Email" Style="width:100%;" />
-                </div>
-            </RadzenColumn>
+        <div>
+            <RadzenLabel Text="Email" Component="Email" />
+            <RadzenTextBox Name="Email" @bind-Value="FormModel.Email" Style="width:100%;" />
+        </div>
 
-            <RadzenColumn Size="12" SizeMD="6">
-                <div>
-                    <RadzenLabel Text="Country Code" Component="CountryCode" />
-                    <RadzenTextBox Name="CountryCode" @bind-Value="FormModel.CountryCode" Style="width:100%;" />
-                </div>
-            </RadzenColumn>
+        <div>
+            <RadzenLabel Text="Address" Component="Address" />
+            <RadzenTextArea Name="Address" @bind-Value="FormModel.Address" Style="width:100%;" Rows="2" />
+        </div>
 
-            <RadzenColumn Size="12" SizeMD="6">
-                <div>
-                    <RadzenLabel Text="VAT Registration No" Component="VatregistrationNo" />
-                    <RadzenTextBox Name="VatregistrationNo" @bind-Value="FormModel.VatregistrationNo" Style="width:100%;" />
-                </div>
-            </RadzenColumn>
+        <div>
+            <RadzenLabel Text="Address (Arabic)" Component="AddressAr" />
+            <RadzenTextArea Name="AddressAr" @bind-Value="FormModel.AddressAr" Style="width:100%;" Rows="2" />
+        </div>
 
-            <RadzenColumn Size="12" SizeMD="6">
-                <div>
-                    <RadzenLabel Text="CR No" Component="Crno" />
-                    <RadzenTextBox Name="Crno" @bind-Value="FormModel.Crno" Style="width:100%;" />
-                </div>
-            </RadzenColumn>
+        <div>
+            <RadzenLabel Text="Country Code" Component="CountryCode" />
+            <RadzenTextBox Name="CountryCode" @bind-Value="FormModel.CountryCode" Style="width:100%;" />
+        </div>
 
-            <RadzenColumn Size="12" SizeMD="6">
-                <div>
-                    <RadzenLabel Text="Payment Terms (Days)" Component="PaymentTermsDays" />
-                    <RadzenNumeric Name="PaymentTermsDays" TValue="int?" @bind-Value="FormModel.PaymentTermsDays" Style="width:100%;" Min="0" />
-                </div>
-            </RadzenColumn>
+        <div>
+            <RadzenLabel Text="VAT Registration No" Component="VatregistrationNo" />
+            <RadzenTextBox Name="VatregistrationNo" @bind-Value="FormModel.VatregistrationNo" Style="width:100%;" />
+        </div>
 
-            <RadzenColumn Size="12" SizeMD="6">
-                <div>
-                    <RadzenLabel Text="Address" Component="Address" />
-                    <RadzenTextArea Name="Address" @bind-Value="FormModel.Address" Style="width:100%;" Rows="2" />
-                </div>
-            </RadzenColumn>
+        <div>
+            <RadzenLabel Text="CR No" Component="Crno" />
+            <RadzenTextBox Name="Crno" @bind-Value="FormModel.Crno" Style="width:100%;" />
+        </div>
 
-            <RadzenColumn Size="12" SizeMD="6">
-                <div>
-                    <RadzenLabel Text="Address (Arabic)" Component="AddressAr" />
-                    <RadzenTextArea Name="AddressAr" @bind-Value="FormModel.AddressAr" Style="width:100%;" Rows="2" />
-                </div>
-            </RadzenColumn>
+        <div>
+            <RadzenLabel Text="Payment Terms (Days)" Component="PaymentTermsDays" />
+            <RadzenNumeric Name="PaymentTermsDays" TValue="int?" @bind-Value="FormModel.PaymentTermsDays" Style="width:100%;" Min="0" />
+        </div>
 
-            <RadzenColumn Size="12">
-                <div class="rz-d-flex rz-align-items-center">
-                    <RadzenCheckBox TValue="bool" Name="IsActive" @bind-Value="FormModel.IsActive" />
-                    <RadzenLabel Text="Active" class="rz-ml-2" />
-                </div>
-            </RadzenColumn>
-        </RadzenRow>
+        <div class="rz-d-flex rz-align-items-center">
+            <RadzenCheckBox TValue="bool" Name="IsActive" @bind-Value="FormModel.IsActive" />
+            <RadzenLabel Text="Active" class="rz-ml-2" />
+        </div>
 
         <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
             <RadzenButton Text="Save" Icon="save" ButtonType="ButtonType.Submit" />
