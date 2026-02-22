@@ -10,6 +10,7 @@
                         <RadzenLabel Text="Tenant *" Component="TenantId" />
                         <RadzenDropDown Name="TenantId" TValue="int" @bind-Value="FormModel.TenantId" Data="Tenants" TextProperty="Name" ValueProperty="Id" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
                         <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
+                        <RadzenNumericRangeValidator Component="TenantId" Min="1" Text="Please select a tenant" Popup="false" />
                     </div>
                 }
                 else
