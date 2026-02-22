@@ -90,7 +90,7 @@ public partial class Suppliers : ComponentBase
             [nameof(SupplierDialog.EditingSupplier)] = editingSupplier,
             [nameof(SupplierDialog.ViewerTenantId)] = ViewerTenantId,
             [nameof(SupplierDialog.Tenants)] = Tenants
-        }, new DialogOptions { Width = "650px", Draggable = true, Resizable = true, CloseDialogOnEsc = true });
+        }, new DialogOptions { Width = "900px", Draggable = true, Resizable = true, CloseDialogOnEsc = true });
 
         if (result is not CreateInvSupplierRequest request)
         {
