@@ -81,7 +81,7 @@ public partial class Suppliers : ComponentBase
         NotifyTopRight(NotificationSeverity.Success, "Success", "Supplier deleted successfully.");
     }
 
-    protected string GetTenantName(int tenantId) => Tenants.FirstOrDefault(t => t.Id == tenantId)?.Name ?? $"Tenant #{tenantId}";
+    protected string GetTenantName(int tenantId) => Tenants.FirstOrDefault(t => t.Id == tenantId)?.Name ?? "Unknown Tenant";
 
     private async Task OpenDialogAsync(Domain.SaasDBModels.InvSupplier? editingSupplier)
     {
@@ -90,7 +90,7 @@ public partial class Suppliers : ComponentBase
             [nameof(SupplierDialog.EditingSupplier)] = editingSupplier,
             [nameof(SupplierDialog.ViewerTenantId)] = ViewerTenantId,
             [nameof(SupplierDialog.Tenants)] = Tenants
-        }, new DialogOptions { Width = "650px", Draggable = true, Resizable = true, CloseDialogOnEsc = true });
+        }, new DialogOptions { Width = "900px", Draggable = true, Resizable = true, CloseDialogOnEsc = true });
 
         if (result is not CreateInvSupplierRequest request)
         {
