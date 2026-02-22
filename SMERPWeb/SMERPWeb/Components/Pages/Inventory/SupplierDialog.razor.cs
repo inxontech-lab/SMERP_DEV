@@ -48,6 +48,15 @@ public partial class SupplierDialog : ComponentBase
             FormModel.TenantId = ViewerTenantId;
         }
 
+        if (FormModel.TenantId <= 0)
+        {
+            return;
+        }
+
+        FormModel.Code = FormModel.Code?.Trim() ?? string.Empty;
+        FormModel.Name = FormModel.Name?.Trim() ?? string.Empty;
+        FormModel.Email = string.IsNullOrWhiteSpace(FormModel.Email) ? null : FormModel.Email.Trim();
+
         DialogService.Close(FormModel);
     }
 
