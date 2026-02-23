@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMERPWeb", "SMERPWeb\SMERPW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMERPWeb.Client", "SMERPWeb\SMERPWeb.Client\SMERPWeb.Client.csproj", "{D741E1FD-BAE4-4C03-98A9-6FC391063104}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMERPUI", "SMERPUI\SMERPUI.csproj", "{27658E61-E00F-462D-86F8-6FF997295158}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{D741E1FD-BAE4-4C03-98A9-6FC391063104}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D741E1FD-BAE4-4C03-98A9-6FC391063104}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D741E1FD-BAE4-4C03-98A9-6FC391063104}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27658E61-E00F-462D-86F8-6FF997295158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27658E61-E00F-462D-86F8-6FF997295158}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27658E61-E00F-462D-86F8-6FF997295158}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27658E61-E00F-462D-86F8-6FF997295158}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

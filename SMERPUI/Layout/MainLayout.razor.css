@@ -1,0 +1,198 @@
+.page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.sidebar {
+    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+}
+
+.top-row {
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #d6d5d5;
+    justify-content: flex-end;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.app-topbar {
+    background: linear-gradient(105deg, #ffffff 0%, #f8fcff 52%, #edf6ff 100%);
+    border-bottom: 1px solid #d4e7ff;
+    box-shadow: 0 10px 28px rgba(30, 76, 143, 0.12);
+    padding: 0.65rem 1rem;
+}
+
+.topbar-row {
+    min-height: 3.75rem;
+}
+
+.topbar-brand-wrap {
+    background: linear-gradient(145deg, #f4faff 0%, #eef6ff 100%);
+    border: 1px solid #d7e8ff;
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem 0.35rem 0.5rem;
+    box-shadow: 0 6px 14px rgba(44, 97, 171, 0.12);
+    width: fit-content;
+}
+
+.topbar-toggle {
+    color: #265f9c;
+    background: #ffffff;
+    border: 1px solid #d7e9ff;
+    border-radius: 999px;
+    width: 2rem;
+    height: 2rem;
+}
+
+.topbar-brand-text {
+    line-height: 1.2;
+}
+
+.topbar-logo {
+    height: 1.9rem;
+    width: auto;
+    object-fit: contain;
+}
+
+.app-title {
+    color: #1b4d83;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.app-subtitle {
+    color: #5f7ea4;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.app-user-badge {
+    color: #1d4ed8;
+    font-weight: 700;
+    font-size: 0.82rem;
+    background-color: #f0f7ff;
+    border: 1px solid #d1e6ff;
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.topbar-actions {
+    min-width: 0;
+}
+
+.topbar-profile-menu {
+    background-color: #ffffff;
+    border: 1px solid #d8e9ff;
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(27, 77, 131, 0.12);
+}
+
+    .top-row ::deep a, .top-row ::deep .btn-link {
+        white-space: nowrap;
+        margin-left: 1.5rem;
+        text-decoration: none;
+    }
+
+    .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
+        text-decoration: underline;
+    }
+
+    .top-row ::deep a:first-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+@media (max-width: 640.98px) {
+    .app-topbar {
+        padding: 0.6rem 0.75rem;
+    }
+
+    .topbar-brand-wrap {
+        border-radius: 0.9rem;
+    }
+
+    .app-subtitle {
+        display: none;
+    }
+
+    .app-user-badge {
+        max-width: 9.5rem;
+    }
+
+    .top-row {
+        justify-content: space-between;
+    }
+
+    .top-row ::deep a, .top-row ::deep .btn-link {
+        margin-left: 0;
+    }
+}
+
+@media (min-width: 641px) {
+    .page {
+        flex-direction: row;
+    }
+
+    .sidebar {
+        width: 250px;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+    }
+
+    .top-row {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .top-row.auth ::deep a:first-child {
+        flex: 1;
+        text-align: right;
+        width: 0;
+    }
+
+    .top-row, article {
+        padding-left: 2rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+
+::deep .rz-notification {
+    top: 1rem !important;
+    right: 1rem !important;
+    left: auto !important;
+    bottom: auto !important;
+}
