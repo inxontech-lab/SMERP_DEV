@@ -6,9 +6,9 @@
     <link href="css/app.css" rel="stylesheet" />
 </HeadContent>
 
-<RadzenComponents />
+<RadzenComponents @rendermode="RenderMode.InteractiveServer" />
 
-<RadzenLayout>
+<RadzenLayout @rendermode="RenderMode.InteractiveServer">
     <RadzenHeader class="app-topbar">
         <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0" class="topbar-row">
             <RadzenColumn Size="8" SizeMD="8" SizeLG="8">
@@ -90,53 +90,33 @@
     private string? UserBadgeText { get; set; }
     private NavigationSnapshot? NavigationSnapshot { get; set; }
     private string CurrentModuleTitle { get; set; } = "Workspace";
-    private bool _isInitializing;
-    private bool _isInitialized;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (_isInitializing || _isInitialized)
+        if (!firstRender)
         {
             return;
         }
 
-        _isInitializing = true;
-
-        try
+        var session = await UserSessionService.GetSessionAsync();
+        if (session is null)
         {
-            var session = await UserSessionService.GetSessionAsync();
-            if (session is null)
-            {
-                if (firstRender)
-                {
-                    await Task.Yield();
-                    StateHasChanged();
-                    return;
-                }
-
-                NavigationManager.NavigateTo("/");
-                _isInitialized = true;
-                return;
-            }
-
-            var displayName = string.IsNullOrWhiteSpace(session.DisplayName) ? session.Username : session.DisplayName;
-            UserBadgeText = string.IsNullOrWhiteSpace(session.TenantName)
-                ? displayName
-                : $"{displayName} ({session.TenantName})";
-
-            NavigationSnapshot = await NavigationCatalogService.BuildSnapshotAsync(session);
-            CurrentModuleTitle = NavigationSnapshot.SelectedModule is null
-                ? "Workspace"
-                : NavigationSnapshot.Modules.FirstOrDefault(m => m.Key == NavigationSnapshot.SelectedModule)?.Name ?? "Workspace";
-
-            EnforceFormAuthorization(NavigationSnapshot);
-            _isInitialized = true;
-            StateHasChanged();
+            NavigationManager.NavigateTo("/", true);
+            return;
         }
-        finally
-        {
-            _isInitializing = false;
-        }
+
+        var displayName = string.IsNullOrWhiteSpace(session.DisplayName) ? session.Username : session.DisplayName;
+        UserBadgeText = string.IsNullOrWhiteSpace(session.TenantName)
+            ? displayName
+            : $"{displayName} ({session.TenantName})";
+
+        NavigationSnapshot = await NavigationCatalogService.BuildSnapshotAsync(session);
+        CurrentModuleTitle = NavigationSnapshot.SelectedModule is null
+            ? "Workspace"
+            : NavigationSnapshot.Modules.FirstOrDefault(m => m.Key == NavigationSnapshot.SelectedModule)?.Name ?? "Workspace";
+
+        EnforceFormAuthorization(NavigationSnapshot);
+        StateHasChanged();
     }
 
     private void EnforceFormAuthorization(NavigationSnapshot snapshot)
@@ -176,5 +156,5 @@
         }
     }
 
-    private void NavigateToModuleLanding() => NavigationManager.NavigateTo("/module-landing");
+    private void NavigateToModuleLanding() => NavigationManager.NavigateTo("/module-landing", true);
 }
