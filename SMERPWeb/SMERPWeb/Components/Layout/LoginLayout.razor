@@ -1,8 +1,8 @@
 ﻿@inherits LayoutComponentBase
 
-<RadzenComponents />
+<RadzenComponents @rendermode="RenderMode.InteractiveServer" />
 
-<RadzenLayout Style="display: flex;justify-content: center;align-items: center;">
+<RadzenLayout @rendermode="RenderMode.InteractiveServer" Style="display: flex;justify-content: center;align-items: center;">
     <RadzenBody>
         @Body
     </RadzenBody>
