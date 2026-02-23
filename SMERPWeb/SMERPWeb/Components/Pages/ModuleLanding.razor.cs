@@ -13,40 +13,60 @@ public partial class ModuleLanding
     private bool IsLoading { get; set; } = true;
     private string? ErrorMessage { get; set; }
     private List<ModuleCardDefinition> Modules { get; set; } = [];
+    private bool _isInitializing;
+    private bool _isInitialized;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender)
+        if (_isInitializing || _isInitialized)
         {
             return;
         }
 
-        var session = await UserSessionService.GetSessionAsync();
-        if (session is null)
-        {
-            NavigationManager.NavigateTo("/", true);
-            return;
-        }
+        _isInitializing = true;
 
         try
         {
-            var snapshot = await NavigationCatalogService.BuildSnapshotAsync(session);
-            Modules = snapshot.Modules.ToList();
-        }
-        catch (Exception)
-        {
-            ErrorMessage = "Unable to load modules for your account.";
+            var session = await UserSessionService.GetSessionAsync();
+            if (session is null)
+            {
+                if (firstRender)
+                {
+                    await Task.Yield();
+                    StateHasChanged();
+                    return;
+                }
+
+                NavigationManager.NavigateTo("/");
+                _isInitialized = true;
+                return;
+            }
+
+            try
+            {
+                var snapshot = await NavigationCatalogService.BuildSnapshotAsync(session);
+                Modules = snapshot.Modules.ToList();
+            }
+            catch (Exception)
+            {
+                ErrorMessage = "Unable to load modules for your account.";
+            }
+            finally
+            {
+                IsLoading = false;
+                _isInitialized = true;
+                StateHasChanged();
+            }
         }
         finally
         {
-            IsLoading = false;
-            StateHasChanged();
+            _isInitializing = false;
         }
     }
 
     private async Task SelectModule(ModuleCardDefinition module)
     {
         await NavigationCatalogService.SetSelectedModuleAsync(module.Key);
-        NavigationManager.NavigateTo(module.DefaultPath, true);
+        NavigationManager.NavigateTo(module.DefaultPath);
     }
 }

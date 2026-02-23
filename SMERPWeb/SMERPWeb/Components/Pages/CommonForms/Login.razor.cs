@@ -72,7 +72,7 @@ public partial class Login : ComponentBase
                 response.Mobile,
                 response.LastLoginAt));
 
-            NavigationManager.NavigateTo("/module-landing", true);
+            NavigationManager.NavigateTo("/module-landing");
         }
         catch (HttpRequestException)
         {
