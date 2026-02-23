@@ -109,10 +109,12 @@
             {
                 if (firstRender)
                 {
+                    await Task.Yield();
+                    StateHasChanged();
                     return;
                 }
 
-                NavigationManager.NavigateTo("/", true);
+                NavigationManager.NavigateTo("/");
                 _isInitialized = true;
                 return;
             }
@@ -174,5 +176,5 @@
         }
     }
 
-    private void NavigateToModuleLanding() => NavigationManager.NavigateTo("/module-landing", true);
+    private void NavigateToModuleLanding() => NavigationManager.NavigateTo("/module-landing");
 }

@@ -32,10 +32,12 @@ public partial class ModuleLanding
             {
                 if (firstRender)
                 {
+                    await Task.Yield();
+                    StateHasChanged();
                     return;
                 }
 
-                NavigationManager.NavigateTo("/", true);
+                NavigationManager.NavigateTo("/");
                 _isInitialized = true;
                 return;
             }
@@ -65,6 +67,6 @@ public partial class ModuleLanding
     private async Task SelectModule(ModuleCardDefinition module)
     {
         await NavigationCatalogService.SetSelectedModuleAsync(module.Key);
-        NavigationManager.NavigateTo(module.DefaultPath, true);
+        NavigationManager.NavigateTo(module.DefaultPath);
     }
 }
