@@ -1,4 +1,6 @@
 @inherits LayoutComponentBase
+
+
 @using SMERPWeb.Services.Auth
 @using SMERPWeb.Services.Navigation
 
@@ -6,9 +8,9 @@
     <link href="css/app.css" rel="stylesheet" />
 </HeadContent>
 
-<RadzenComponents @rendermode="RenderMode.InteractiveServer" />
+<RadzenComponents />
 
-<RadzenLayout @rendermode="RenderMode.InteractiveServer">
+<RadzenLayout >
     <RadzenHeader class="app-topbar">
         <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0" class="topbar-row">
             <RadzenColumn Size="8" SizeMD="8" SizeLG="8">

@@ -9,6 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\PlainLayoutHeader.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\PlainLayoutHeader.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.23" />
   </ItemGroup>
 

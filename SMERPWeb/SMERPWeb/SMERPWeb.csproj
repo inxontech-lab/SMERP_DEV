@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Components\Layout\PlainLayoutHeader.razor" />
+    <Content Remove="Components\Pages\CommonComponents\PlainLayoutHeader.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Domain\Domain.csproj" />
     <ProjectReference Include="..\SMERPWeb.Client\SMERPWeb.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.23" />
@@ -14,7 +19,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Components\Pages\CommonComponents\" />
     <Folder Include="Services\InventoryServices\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Layout\PlainLayoutHeader.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Components\Layout\PlainLayoutHeader.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Components\Pages\CommonForms\PlainLayoutHeader.razor" />
   </ItemGroup>
 
 </Project>
