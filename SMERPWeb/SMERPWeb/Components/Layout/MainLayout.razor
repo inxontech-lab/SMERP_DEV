@@ -90,33 +90,51 @@
     private string? UserBadgeText { get; set; }
     private NavigationSnapshot? NavigationSnapshot { get; set; }
     private string CurrentModuleTitle { get; set; } = "Workspace";
+    private bool _isInitializing;
+    private bool _isInitialized;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender)
+        if (_isInitializing || _isInitialized)
         {
             return;
         }
 
-        var session = await UserSessionService.GetSessionAsync();
-        if (session is null)
+        _isInitializing = true;
+
+        try
         {
-            NavigationManager.NavigateTo("/", true);
-            return;
+            var session = await UserSessionService.GetSessionAsync();
+            if (session is null)
+            {
+                if (firstRender)
+                {
+                    return;
+                }
+
+                NavigationManager.NavigateTo("/", true);
+                _isInitialized = true;
+                return;
+            }
+
+            var displayName = string.IsNullOrWhiteSpace(session.DisplayName) ? session.Username : session.DisplayName;
+            UserBadgeText = string.IsNullOrWhiteSpace(session.TenantName)
+                ? displayName
+                : $"{displayName} ({session.TenantName})";
+
+            NavigationSnapshot = await NavigationCatalogService.BuildSnapshotAsync(session);
+            CurrentModuleTitle = NavigationSnapshot.SelectedModule is null
+                ? "Workspace"
+                : NavigationSnapshot.Modules.FirstOrDefault(m => m.Key == NavigationSnapshot.SelectedModule)?.Name ?? "Workspace";
+
+            EnforceFormAuthorization(NavigationSnapshot);
+            _isInitialized = true;
+            StateHasChanged();
         }
-
-        var displayName = string.IsNullOrWhiteSpace(session.DisplayName) ? session.Username : session.DisplayName;
-        UserBadgeText = string.IsNullOrWhiteSpace(session.TenantName)
-            ? displayName
-            : $"{displayName} ({session.TenantName})";
-
-        NavigationSnapshot = await NavigationCatalogService.BuildSnapshotAsync(session);
-        CurrentModuleTitle = NavigationSnapshot.SelectedModule is null
-            ? "Workspace"
-            : NavigationSnapshot.Modules.FirstOrDefault(m => m.Key == NavigationSnapshot.SelectedModule)?.Name ?? "Workspace";
-
-        EnforceFormAuthorization(NavigationSnapshot);
-        StateHasChanged();
+        finally
+        {
+            _isInitializing = false;
+        }
     }
 
     private void EnforceFormAuthorization(NavigationSnapshot snapshot)
