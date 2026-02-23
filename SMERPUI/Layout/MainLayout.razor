@@ -98,7 +98,12 @@
         var session = await UserSessionService.GetSessionAsync();
         if (session is null)
         {
-            NavigationManager.NavigateTo("/", true);
+            var currentPath = "/" + NavigationManager.ToBaseRelativePath(NavigationManager.Uri).Split('?', '#')[0].Trim('/');
+            if (!string.Equals(currentPath, "/", StringComparison.OrdinalIgnoreCase))
+            {
+                NavigationManager.NavigateTo("/");
+            }
+
             return;
         }
 
@@ -107,13 +112,23 @@
             ? displayName
             : $"{displayName} ({session.TenantName})";
 
-        NavigationSnapshot = await NavigationCatalogService.BuildSnapshotAsync(session);
-        CurrentModuleTitle = NavigationSnapshot.SelectedModule is null
-            ? "Workspace"
-            : NavigationSnapshot.Modules.FirstOrDefault(m => m.Key == NavigationSnapshot.SelectedModule)?.Name ?? "Workspace";
+        try
+        {
+            NavigationSnapshot = await NavigationCatalogService.BuildSnapshotAsync(session);
+            CurrentModuleTitle = NavigationSnapshot.SelectedModule is null
+                ? "Workspace"
+                : NavigationSnapshot.Modules.FirstOrDefault(m => m.Key == NavigationSnapshot.SelectedModule)?.Name ?? "Workspace";
 
-        EnforceFormAuthorization(NavigationSnapshot);
-        StateHasChanged();
+            EnforceFormAuthorization(NavigationSnapshot);
+            StateHasChanged();
+        }
+        catch
+        {
+            // Keep shell layout available when menu API is temporarily unavailable.
+            NavigationSnapshot = null;
+            CurrentModuleTitle = "Workspace";
+            StateHasChanged();
+        }
     }
 
     private void EnforceFormAuthorization(NavigationSnapshot snapshot)
