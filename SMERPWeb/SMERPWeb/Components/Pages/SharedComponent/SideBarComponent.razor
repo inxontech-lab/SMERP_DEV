@@ -1,0 +1,99 @@
+﻿@rendermode InteractiveAuto
+
+@using SMERPWeb.Services.Auth
+@using SMERPWeb.Services.Navigation
+
+<RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6">
+    <RadzenText Text="@CurrentModuleTitle" TextStyle="Radzen.Blazor.TextStyle.Subtitle1" Style="color:#F9F9F9" />
+</RadzenStack>
+
+<RadzenPanelMenu Multiple="true">
+    @if (NavigationSnapshot?.MenuGroups is { Count: > 0 } groups)
+    {
+        @foreach (var group in groups)
+        {
+            <RadzenPanelMenuItem Text="@group.GroupName" Icon="label" IconColor="@Colors.Primary">
+                @foreach (var subMenuGroup in group.Items
+                        .GroupBy(item => string.IsNullOrWhiteSpace(item.SubMenu) ? "General" : item.SubMenu.Trim(), StringComparer.OrdinalIgnoreCase)
+                        .OrderBy(subMenu => subMenu.Key, StringComparer.OrdinalIgnoreCase))
+                {
+                    <RadzenPanelMenuItem Text="@subMenuGroup.Key" Icon="folder_open" IconColor="@Colors.Secondary">
+                        @foreach (var item in subMenuGroup.OrderBy(menu => menu.Text, StringComparer.OrdinalIgnoreCase))
+                        {
+                            <RadzenPanelMenuItem Text="@item.Text" Path="@item.Path" Icon="@item.Icon" IconColor="@Colors.Info" />
+                        }
+                    </RadzenPanelMenuItem>
+                }
+            </RadzenPanelMenuItem>
+        }
+    }
+    else
+    {
+        <RadzenPanelMenuItem Text="Home" Path="/Home" Icon="home" IconColor="@Colors.Info" />
+    }
+</RadzenPanelMenu>
+
+<RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding);">
+    <RadzenText Text="Application Name v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+    <RadzenText Text="Copyright Ⓒ 2025" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+</RadzenStack>
+
+
+@code {
+    [Inject] protected IUserSessionService UserSessionService { get; set; } = default!;
+    [Inject] protected INavigationCatalogService NavigationCatalogService { get; set; } = default!;
+    [Inject] protected NavigationManager NavigationManager { get; set; } = default!;
+
+    private NavigationSnapshot? NavigationSnapshot { get; set; }
+    private string CurrentModuleTitle { get; set; } = "Workspace";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        var session = await UserSessionService.GetSessionAsync();
+        if (session is null)
+        {
+            NavigationManager.NavigateTo("/", true);
+            return;
+        }
+
+        NavigationSnapshot = await NavigationCatalogService.BuildSnapshotAsync(session);
+        CurrentModuleTitle = NavigationSnapshot.SelectedModule is null
+            ? "Workspace"
+            : NavigationSnapshot.Modules.FirstOrDefault(m => m.Key == NavigationSnapshot.SelectedModule)?.Name ?? "Workspace";
+
+        EnforceFormAuthorization(NavigationSnapshot);
+        StateHasChanged();
+    }
+
+    private void EnforceFormAuthorization(NavigationSnapshot snapshot)
+    {
+        var currentPath = "/" + NavigationManager.ToBaseRelativePath(NavigationManager.Uri).Split('?', '#')[0].Trim('/');
+        if (currentPath == "//" || currentPath == "/")
+        {
+            currentPath = "/";
+        }
+
+        var safePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "/",
+            "/module-landing",
+            "/Home"
+        };
+
+        if (safePaths.Contains(currentPath))
+        {
+            return;
+        }
+
+        if (!snapshot.AllowedPaths.Contains(currentPath))
+        {
+            NavigationManager.NavigateTo(snapshot.AllowedPaths.FirstOrDefault() ?? "/Home", true);
+        }
+    }
+
+}

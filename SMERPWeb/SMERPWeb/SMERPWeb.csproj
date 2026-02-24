@@ -36,8 +36,4 @@
     <_ContentIncludedByDefault Remove="Components\Layout\PlainLayoutHeader.razor" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="Components\Pages\CommonForms\PlainLayoutHeader.razor" />
-  </ItemGroup>
-
 </Project>

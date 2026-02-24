@@ -1,9 +1,6 @@
 @inherits LayoutComponentBase
 
 
-@using SMERPWeb.Services.Auth
-@using SMERPWeb.Services.Navigation
-
 <HeadContent>
     <link href="css/app.css" rel="stylesheet" />
 </HeadContent>
@@ -12,33 +9,7 @@
 
 <RadzenLayout >
     <RadzenHeader class="app-topbar">
-        <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0" class="topbar-row">
-            <RadzenColumn Size="8" SizeMD="8" SizeLG="8">
-                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Gap="0.75rem" class="topbar-brand-wrap">
-                    <RadzenSidebarToggle Click="@SidebarToggleClick" class="topbar-toggle"></RadzenSidebarToggle>
-                    <RadzenStack AlignItems="AlignItems.Start" Gap="0" class="topbar-brand-text">
-                       @*  <img src="images/inxon-logo.png" alt="Inxon logo" class="topbar-logo" /> *@
-                        <RadzenText Text="@CurrentModuleTitle" class="app-subtitle" Style="font-size:large;" />
-                    </RadzenStack>
-                </RadzenStack>
-            </RadzenColumn>
-            <RadzenColumn Size="4" SizeMD="4" SizeLG="4">
-                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0.6rem" class="topbar-actions">
-                    <RadzenButton Text="Modules" Icon="apps" Size="ButtonSize.Small" Variant="Variant.Outlined" Click="@NavigateToModuleLanding" />
-                    @if (!string.IsNullOrWhiteSpace(UserBadgeText))
-                    {
-                        <RadzenText Text="@UserBadgeText" class="app-user-badge" />
-                    }
-                    <RadzenProfileMenu Click="@ProfileMenuClick" class="topbar-profile-menu">
-                        <ChildContent>
-                            <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
-                        </ChildContent>
-                        <Template>
-                        </Template>
-                    </RadzenProfileMenu>
-                </RadzenStack>
-            </RadzenColumn>
-        </RadzenRow>
+        <SMERPWeb.Components.Pages.SharedComponent.MainLayoutHeader/>
     </RadzenHeader>
 
     <RadzenBody>
@@ -46,117 +17,18 @@
     </RadzenBody>
 
     <RadzenSidebar Expanded="@sidebarExpanded">
-        <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6">
-            <RadzenText Text="@CurrentModuleTitle" TextStyle="Radzen.Blazor.TextStyle.Subtitle1" Style="color:#F9F9F9" />
-        </RadzenStack>
-
-        <RadzenPanelMenu Multiple="true">
-            @if (NavigationSnapshot?.MenuGroups is { Count: > 0 } groups)
-            {
-                @foreach (var group in groups)
-                {
-                    <RadzenPanelMenuItem Text="@group.GroupName" Icon="label" IconColor="@Colors.Primary">
-                        @foreach (var subMenuGroup in group.Items
-                           .GroupBy(item => string.IsNullOrWhiteSpace(item.SubMenu) ? "General" : item.SubMenu.Trim(), StringComparer.OrdinalIgnoreCase)
-                           .OrderBy(subMenu => subMenu.Key, StringComparer.OrdinalIgnoreCase))
-                        {
-                            <RadzenPanelMenuItem Text="@subMenuGroup.Key" Icon="folder_open" IconColor="@Colors.Secondary">
-                                @foreach (var item in subMenuGroup.OrderBy(menu => menu.Text, StringComparer.OrdinalIgnoreCase))
-                                {
-                                    <RadzenPanelMenuItem Text="@item.Text" Path="@item.Path" Icon="@item.Icon" IconColor="@Colors.Info" />
-                                }
-                            </RadzenPanelMenuItem>
-                        }
-                    </RadzenPanelMenuItem>
-                }
-            }
-            else
-            {
-                <RadzenPanelMenuItem Text="Home" Path="/Home" Icon="home" IconColor="@Colors.Info" />
-            }
-        </RadzenPanelMenu>
-
-        <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding);">
-            <RadzenText Text="Application Name v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-            <RadzenText Text="Copyright Ⓒ 2025" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-        </RadzenStack>
+       <SMERPWeb.Components.Pages.SharedComponent.SideBarComponent />
     </RadzenSidebar>
 </RadzenLayout>
 
 @code {
-    [Inject] protected IUserSessionService UserSessionService { get; set; } = default!;
-    [Inject] protected INavigationCatalogService NavigationCatalogService { get; set; } = default!;
-    [Inject] protected NavigationManager NavigationManager { get; set; } = default!;
+    
 
     private bool sidebarExpanded = true;
-    private string? UserBadgeText { get; set; }
-    private NavigationSnapshot? NavigationSnapshot { get; set; }
-    private string CurrentModuleTitle { get; set; } = "Workspace";
+    [Inject] protected NavigationManager NavigationManager { get; set; } = default!;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (!firstRender)
-        {
-            return;
-        }
-
-        var session = await UserSessionService.GetSessionAsync();
-        if (session is null)
-        {
-            NavigationManager.NavigateTo("/", true);
-            return;
-        }
-
-        var displayName = string.IsNullOrWhiteSpace(session.DisplayName) ? session.Username : session.DisplayName;
-        UserBadgeText = string.IsNullOrWhiteSpace(session.TenantName)
-            ? displayName
-            : $"{displayName} ({session.TenantName})";
-
-        NavigationSnapshot = await NavigationCatalogService.BuildSnapshotAsync(session);
-        CurrentModuleTitle = NavigationSnapshot.SelectedModule is null
-            ? "Workspace"
-            : NavigationSnapshot.Modules.FirstOrDefault(m => m.Key == NavigationSnapshot.SelectedModule)?.Name ?? "Workspace";
-
-        EnforceFormAuthorization(NavigationSnapshot);
-        StateHasChanged();
-    }
-
-    private void EnforceFormAuthorization(NavigationSnapshot snapshot)
-    {
-        var currentPath = "/" + NavigationManager.ToBaseRelativePath(NavigationManager.Uri).Split('?', '#')[0].Trim('/');
-        if (currentPath == "//" || currentPath == "/")
-        {
-            currentPath = "/";
-        }
-
-        var safePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "/",
-            "/module-landing",
-            "/Home"
-        };
-
-        if (safePaths.Contains(currentPath))
-        {
-            return;
-        }
-
-        if (!snapshot.AllowedPaths.Contains(currentPath))
-        {
-            NavigationManager.NavigateTo(snapshot.AllowedPaths.FirstOrDefault() ?? "/Home", true);
-        }
-    }
 
     private void SidebarToggleClick() => sidebarExpanded = !sidebarExpanded;
-
-    private async Task ProfileMenuClick(RadzenProfileMenuItem args)
-    {
-        if (args.Value?.ToString() == "Logout")
-        {
-            await UserSessionService.ClearSessionAsync();
-            NavigationManager.NavigateTo("/", true);
-        }
-    }
 
     private void NavigateToModuleLanding() => NavigationManager.NavigateTo("/module-landing", true);
 }
