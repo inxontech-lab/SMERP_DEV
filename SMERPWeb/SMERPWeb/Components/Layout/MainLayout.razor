@@ -1,3 +1,4 @@
+﻿@rendermode InteractiveServer
 @inherits LayoutComponentBase
 
 
@@ -9,7 +10,7 @@
 
 <RadzenLayout >
     <RadzenHeader class="app-topbar">
-        <SMERPWeb.Components.Pages.SharedComponent.MainLayoutHeader/>
+        <SMERPWeb.Components.Pages.SharedComponent.MainLayoutHeader OnSidebarToggle="@SidebarToggleClick" />
     </RadzenHeader>
 
     <RadzenBody>
