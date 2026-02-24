@@ -7,8 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Components\Pages\CommonComponents\**" />
+    <Content Remove="Components\Pages\CommonComponents\**" />
+    <EmbeddedResource Remove="Components\Pages\CommonComponents\**" />
+    <None Remove="Components\Pages\CommonComponents\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Components\Layout\PlainLayoutHeader.razor" />
-    <Content Remove="Components\Pages\CommonComponents\PlainLayoutHeader.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Pages\CommonComponents\" />
     <Folder Include="Services\InventoryServices\" />
   </ItemGroup>
 
