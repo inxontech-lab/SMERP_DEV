@@ -30,11 +30,12 @@
     </RadzenColumn>
 </RadzenRow>
 @code {
+    [Parameter] public EventCallback OnSidebarToggle { get; set; }
+
     [Inject] protected IUserSessionService UserSessionService { get; set; } = default!;
     [Inject] protected INavigationCatalogService NavigationCatalogService { get; set; } = default!;
     [Inject] protected NavigationManager NavigationManager { get; set; } = default!;
 
-    private bool sidebarExpanded = true;
     private string? UserBadgeText { get; set; }
     private NavigationSnapshot? NavigationSnapshot { get; set; }
     private string CurrentModuleTitle { get; set; } = "Workspace";
@@ -67,7 +68,7 @@
         StateHasChanged();
     }
 
-    private void SidebarToggleClick() => sidebarExpanded = !sidebarExpanded;
+    private Task SidebarToggleClick() => OnSidebarToggle.InvokeAsync();
 
     private void EnforceFormAuthorization(NavigationSnapshot snapshot)
     {
