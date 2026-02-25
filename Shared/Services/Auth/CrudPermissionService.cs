@@ -1,7 +1,7 @@
 using System.Globalization;
-using SMERPWeb.Services.SaasServices;
+using Shared.Services.SaasServices;
 
-namespace SMERPWeb.Services.Auth;
+namespace Shared.Services.Auth;
 
 public interface ICrudPermissionService
 {

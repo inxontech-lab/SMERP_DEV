@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
-using SMERPWeb.Services.Auth;
-using SMERPWeb.Services.SaasServices;
+using Shared.Services.Auth;
+using Shared.Services.SaasServices;
 
 namespace SMERPWeb.Components.Pages.CommonForms;
 

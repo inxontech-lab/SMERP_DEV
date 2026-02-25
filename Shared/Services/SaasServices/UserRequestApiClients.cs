@@ -2,7 +2,7 @@ using System.Net.Http.Json;
 using Domain.SaasDBModels;
 using Domain.SaasReqDTO;
 
-namespace SMERPWeb.Services.SaasServices;
+namespace Shared.Services.SaasServices;
 
 public interface IUserRequestApiClient
 {

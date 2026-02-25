@@ -1,7 +1,7 @@
 using Microsoft.JSInterop;
-using SMERPWeb.Services.Interop;
+using Shared.Services.Interop;
 
-namespace SMERPWeb.Services.Auth;
+namespace Shared.Services.Auth;
 
 public interface IUserSessionService
 {

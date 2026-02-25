@@ -1,6 +1,6 @@
 using Microsoft.JSInterop;
 
-namespace SMERPWeb.Services.Interop;
+namespace Shared.Services.Interop;
 
 internal static class JsInteropGuard
 {

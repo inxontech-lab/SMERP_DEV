@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http;
 
-namespace SMERPWeb.Services.Auth;
+namespace Shared.Services.Auth;
 
 public sealed class CrudPermissionHandler(
     ICrudPermissionService crudPermissionService,

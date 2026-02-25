@@ -1,6 +1,6 @@
 using Domain.SaasReqDTO;
 
-namespace SMERPWeb.Models.User;
+namespace Shared.Models.User;
 
 public class UserFormModel
 {

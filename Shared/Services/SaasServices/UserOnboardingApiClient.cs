@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using Domain.SaasReqDTO;
 
-namespace SMERPWeb.Services.SaasServices;
+namespace Shared.Services.SaasServices;
 
 public interface IUserOnboardingApiClient
 {

@@ -2,7 +2,7 @@ using System.Net.Http.Json;
 using Domain.InvReqDTO;
 using Domain.SaasDBModels;
 
-namespace SMERPWeb.Services.InventoryServices;
+namespace Shared.Services.InventoryServices;
 
 public interface ISupplierApiClient
 {

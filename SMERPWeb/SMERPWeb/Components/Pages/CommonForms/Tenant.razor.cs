@@ -2,7 +2,7 @@ using Radzen;
 using Domain.SaasDBModels;
 using Domain.SaasReqDTO;
 using Microsoft.AspNetCore.Components;
-using SMERPWeb.Services.SaasServices;
+using Shared.Services.SaasServices;
 
 namespace SMERPWeb.Components.Pages.CommonForms;
 

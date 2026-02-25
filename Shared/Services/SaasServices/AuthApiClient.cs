@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 
-namespace SMERPWeb.Services.SaasServices;
+namespace Shared.Services.SaasServices;
 
 public interface IAuthApiClient
 {

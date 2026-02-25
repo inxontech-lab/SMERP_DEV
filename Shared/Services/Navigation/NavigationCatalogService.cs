@@ -1,9 +1,9 @@
 using Microsoft.JSInterop;
-using SMERPWeb.Services.Auth;
-using SMERPWeb.Services.Interop;
-using SMERPWeb.Services.SaasServices;
+using Shared.Services.Auth;
+using Shared.Services.Interop;
+using Shared.Services.SaasServices;
 
-namespace SMERPWeb.Services.Navigation;
+namespace Shared.Services.Navigation;
 
 public sealed record ModuleCardDefinition(string Key, string Name, string Icon, string Description, string DefaultPath);
 public sealed record MenuGroupDefinition(string GroupName, IReadOnlyList<MenuItemDefinition> Items);
