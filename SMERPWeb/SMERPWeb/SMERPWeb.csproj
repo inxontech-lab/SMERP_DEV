@@ -19,13 +19,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\Shared.csproj" />
     <ProjectReference Include="..\SMERPWeb.Client\SMERPWeb.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.23" />
     <PackageReference Include="Radzen.Blazor" Version="9.0.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\InventoryServices\" />
   </ItemGroup>
 
   <ItemGroup>
