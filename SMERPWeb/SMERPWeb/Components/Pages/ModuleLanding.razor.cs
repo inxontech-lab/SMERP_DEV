@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
-using SMERPWeb.Services.Auth;
-using SMERPWeb.Services.Navigation;
+using Shared.Services.Auth;
+using Shared.Services.Navigation;
 
 namespace SMERPWeb.Components.Pages;
 

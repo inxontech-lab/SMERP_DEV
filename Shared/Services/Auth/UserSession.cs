@@ -1,4 +1,4 @@
-namespace SMERPWeb.Services.Auth;
+namespace Shared.Services.Auth;
 
 public sealed record UserSession(
     long UserId,

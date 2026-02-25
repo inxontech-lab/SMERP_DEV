@@ -1,10 +1,10 @@
 using Radzen;
 using SMERPWeb.Client.Pages;
-using SMERPWeb.Services.Auth;
+using Shared.Services.Auth;
 using SMERPWeb.Components;
-using SMERPWeb.Services.SaasServices;
-using SMERPWeb.Services.Navigation;
-using SMERPWeb.Services.InventoryServices;
+using Shared.Services.SaasServices;
+using Shared.Services.Navigation;
+using Shared.Services.InventoryServices;
 
 var builder = WebApplication.CreateBuilder(args);
 

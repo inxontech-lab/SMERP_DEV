@@ -1,9 +1,9 @@
 using Domain.InvReqDTO;
 using Domain.SaasDBModels;
-using SMERPWeb.Services.Auth;
-using SMERPWeb.Services.SaasServices;
+using Shared.Services.Auth;
+using Shared.Services.SaasServices;
 
-namespace SMERPWeb.Services.InventoryServices;
+namespace Shared.Services.InventoryServices;
 
 public interface ISupplierManagementService
 {

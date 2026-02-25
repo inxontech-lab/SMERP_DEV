@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using Domain.SaasDBModels;
 
-namespace SMERPWeb.Services.SaasServices;
+namespace Shared.Services.SaasServices;
 
 public interface ISaasCrudApiClient<TEntity, in TKey> where TEntity : class
 {

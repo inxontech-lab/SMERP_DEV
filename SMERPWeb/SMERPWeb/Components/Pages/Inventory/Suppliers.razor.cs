@@ -1,8 +1,8 @@
 using Domain.InvReqDTO;
 using Microsoft.AspNetCore.Components;
 using Radzen;
-using SMERPWeb.Services.Auth;
-using SMERPWeb.Services.InventoryServices;
+using Shared.Services.Auth;
+using Shared.Services.InventoryServices;
 
 namespace SMERPWeb.Components.Pages.Inventory;
 
