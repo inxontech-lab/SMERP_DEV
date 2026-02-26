@@ -16,6 +16,8 @@ public partial class ItemUomConversions : ComponentBase
 
     protected List<InvItemUomconversion> ItemUomConversionsList { get; set; } = [];
     protected List<Tenant> Tenants { get; set; } = [];
+    protected List<InvItem> Items { get; set; } = [];
+    protected List<InvUom> Uoms { get; set; } = [];
     protected bool CanCreateItemUomConversion { get; set; }
     protected bool CanEditItemUomConversion { get; set; }
     protected bool CanDeleteItemUomConversion { get; set; }
@@ -90,7 +92,9 @@ public partial class ItemUomConversions : ComponentBase
         {
             [nameof(ItemUomConversionDialog.EditingConversion)] = editingConversion,
             [nameof(ItemUomConversionDialog.ViewerTenantId)] = ViewerTenantId,
-            [nameof(ItemUomConversionDialog.Tenants)] = Tenants
+            [nameof(ItemUomConversionDialog.Tenants)] = Tenants,
+            [nameof(ItemUomConversionDialog.Items)] = Items,
+            [nameof(ItemUomConversionDialog.Uoms)] = Uoms
         }, new DialogOptions { Width = "900px", Draggable = true, Resizable = true, CloseDialogOnEsc = true });
 
         if (result is not CreateInvItemUomconversionRequest request)
@@ -153,6 +157,8 @@ public partial class ItemUomConversions : ComponentBase
         CanDeleteItemUomConversion = permissions.CanDelete;
 
         Tenants = await ItemUomConversionManagementService.GetTenantsAsync(ViewerTenantId);
+        Items = await ItemUomConversionManagementService.GetItemsAsync(ViewerTenantId);
+        Uoms = await ItemUomConversionManagementService.GetUomsAsync(ViewerTenantId);
         await LoadItemUomConversionsAsync();
     }
 

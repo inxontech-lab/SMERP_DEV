@@ -61,6 +61,7 @@ builder.Services.AddScoped<ISupplierManagementService, SupplierManagementService
 AddSaasClient<IWarehouseApiClient, WarehouseApiClient>();
 builder.Services.AddScoped<IWarehouseManagementService, WarehouseManagementService>();
 AddSaasClient<IInvUomApiClient, InvUomApiClient>();
+AddSaasClient<IInvItemApiClient, InvItemApiClient>();
 builder.Services.AddScoped<IUomManagementService, UomManagementService>();
 AddSaasClient<IItemUomConversionApiClient, ItemUomConversionApiClient>();
 builder.Services.AddScoped<IItemUomConversionManagementService, ItemUomConversionManagementService>();
