@@ -55,6 +55,12 @@ public partial class SmerpContext : DbContext
 
     public virtual DbSet<PosTerminal> PosTerminals { get; set; }
 
+    public virtual DbSet<Product> Products { get; set; }
+
+    public virtual DbSet<ProductPrice> ProductPrices { get; set; }
+
+    public virtual DbSet<ProductUom> ProductUoms { get; set; }
+
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
@@ -74,6 +80,10 @@ public partial class SmerpContext : DbContext
     public virtual DbSet<UserBranch> UserBranches { get; set; }
 
     public virtual DbSet<UserRole> UserRoles { get; set; }
+
+    public virtual DbSet<VwInvItemStock> VwInvItemStocks { get; set; }
+
+    public virtual DbSet<VwInvLowStock> VwInvLowStocks { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -281,7 +291,7 @@ public partial class SmerpContext : DbContext
 
         modelBuilder.Entity<InvItem>(entity =>
         {
-            entity.ToTable("InvItem", "inventory");
+            entity.ToTable("InvItem", "inventory", tb => tb.HasTrigger("TR_InvItem_Audit"));
 
             entity.HasIndex(e => new { e.TenantId, e.Barcode }, "UQ_InvItem_Tenant_Barcode").IsUnique();
 
@@ -513,7 +523,7 @@ public partial class SmerpContext : DbContext
 
         modelBuilder.Entity<InvSupplier>(entity =>
         {
-            entity.ToTable("InvSupplier", "inventory");
+            entity.ToTable("InvSupplier", "inventory", tb => tb.HasTrigger("TR_InvSupplier_Audit"));
 
             entity.HasIndex(e => new { e.TenantId, e.Code }, "UQ_InvSupplier_Tenant_Code").IsUnique();
 
@@ -695,6 +705,75 @@ public partial class SmerpContext : DbContext
                 .HasConstraintName("FK_PosTerminals_Branches");
         });
 
+        modelBuilder.Entity<Product>(entity =>
+        {
+            entity.HasIndex(e => new { e.TenantId, e.Barcode }, "IX_Products_Tenant_Barcode").HasFilter("([Barcode] IS NOT NULL)");
+
+            entity.HasIndex(e => new { e.TenantId, e.Name }, "IX_Products_Tenant_Name");
+
+            entity.HasIndex(e => new { e.TenantId, e.Sku }, "UQ_Products_Sku").IsUnique();
+
+            entity.Property(e => e.Barcode).HasMaxLength(50);
+            entity.Property(e => e.CreatedAt)
+                .HasPrecision(0)
+                .HasDefaultValueSql("(sysdatetime())");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.Name).HasMaxLength(200);
+            entity.Property(e => e.Sku).HasMaxLength(50);
+
+            entity.HasOne(d => d.BaseUom).WithMany(p => p.Products)
+                .HasForeignKey(d => d.BaseUomId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Products_Uoms");
+        });
+
+        modelBuilder.Entity<ProductPrice>(entity =>
+        {
+            entity.HasIndex(e => new { e.TenantId, e.ProductId }, "UQ_ProductPrices").IsUnique();
+
+            entity.Property(e => e.SellPrice).HasColumnType("decimal(18, 3)");
+
+            entity.HasOne(d => d.DefaultSellUom).WithMany(p => p.ProductPrices)
+                .HasForeignKey(d => d.DefaultSellUomId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductPrices_Uoms");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductPrices)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductPrices_Products");
+
+            entity.HasOne(d => d.TaxCode).WithMany(p => p.ProductPrices)
+                .HasForeignKey(d => d.TaxCodeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductPrices_TaxCodes");
+        });
+
+        modelBuilder.Entity<ProductUom>(entity =>
+        {
+            entity.HasIndex(e => new { e.TenantId, e.ProductId }, "IX_ProductUoms_Tenant_Product");
+
+            entity.HasIndex(e => new { e.TenantId, e.ProductId, e.UomId }, "UQ_ProductUoms").IsUnique();
+
+            entity.Property(e => e.FactorToBase).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.IsPurchasable).HasDefaultValue(true);
+            entity.Property(e => e.IsSellable).HasDefaultValue(true);
+            entity.Property(e => e.MaxDecimals).HasDefaultValue((byte)3);
+            entity.Property(e => e.QtyStep)
+                .HasDefaultValue(1m)
+                .HasColumnType("decimal(18, 6)");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductUoms)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductUoms_Products");
+
+            entity.HasOne(d => d.Uom).WithMany(p => p.ProductUoms)
+                .HasForeignKey(d => d.UomId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProductUoms_Uoms");
+        });
+
         modelBuilder.Entity<RefreshToken>(entity =>
         {
             entity.HasIndex(e => new { e.TenantId, e.UserId }, "IX_RefreshTokens_Tenant_User");
@@ -862,6 +941,41 @@ public partial class SmerpContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserRoles_Users");
+        });
+
+        modelBuilder.Entity<VwInvItemStock>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vw_InvItemStock", "inventory");
+
+            entity.Property(e => e.AvgCost).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.BatchNo).HasMaxLength(80);
+            entity.Property(e => e.BranchCode).HasMaxLength(20);
+            entity.Property(e => e.BranchName).HasMaxLength(200);
+            entity.Property(e => e.ItemCode).HasMaxLength(50);
+            entity.Property(e => e.ItemName).HasMaxLength(250);
+            entity.Property(e => e.ItemNameAr).HasMaxLength(250);
+            entity.Property(e => e.QtyAvailable).HasColumnType("decimal(19, 6)");
+            entity.Property(e => e.QtyOnHand).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.QtyReserved).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.StockValue).HasColumnType("decimal(37, 12)");
+            entity.Property(e => e.WarehouseCode).HasMaxLength(30);
+            entity.Property(e => e.WarehouseName).HasMaxLength(200);
+            entity.Property(e => e.WarehouseNameAr).HasMaxLength(200);
+        });
+
+        modelBuilder.Entity<VwInvLowStock>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vw_InvLowStock", "inventory");
+
+            entity.Property(e => e.AvailableQty).HasColumnType("decimal(38, 6)");
+            entity.Property(e => e.ItemCode).HasMaxLength(50);
+            entity.Property(e => e.ItemName).HasMaxLength(250);
+            entity.Property(e => e.ItemNameAr).HasMaxLength(250);
+            entity.Property(e => e.ReorderLevel).HasColumnType("decimal(18, 6)");
         });
 
         OnModelCreatingPartial(modelBuilder);
