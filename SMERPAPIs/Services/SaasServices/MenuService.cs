@@ -29,7 +29,6 @@ public class MenuService(SmerpContext context) : IMenuService
     private static readonly IReadOnlyList<NavigationMenuItemDto> MenuCatalog =
     [
         new("Home", "/Home", "home", "admin", "Administration", "Home", ["dashboard", "home", "view"]),
-        new("WASM", "/wasm-sample", "home", "admin", "Administration", "Home", ["dashboard", "home", "view"]),
         new("Tenant", "/Tenant", "business", "admin", "Administration", "Organization", ["tenant"]),
         new("Tenant Setting", "/TenantSetting", "settings", "admin", "Administration", "Organization", ["tenant_setting", "tenantsetting", "setting"]),
         new("Branch", "/Branch", "account_tree", "admin", "Administration", "Organization", ["branch"]),

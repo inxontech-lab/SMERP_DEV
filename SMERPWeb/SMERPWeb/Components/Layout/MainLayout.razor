@@ -8,7 +8,7 @@
 
 <RadzenComponents />
 
-<RadzenLayout @rendermode="InteractiveServer">
+<RadzenLayout>
     <RadzenHeader class="app-topbar">
         <SMERPWeb.Components.Pages.SharedComponent.MainLayoutHeader OnSidebarToggle="@SidebarToggleClick" />
     </RadzenHeader>
@@ -17,9 +17,11 @@
         @Body
     </RadzenBody>
 
+
     <RadzenSidebar Expanded="@sidebarExpanded">
-       <SMERPWeb.Components.Pages.SharedComponent.SideBarComponent />
+        <SMERPWeb.Components.Pages.SharedComponent.SideBarComponent />
     </RadzenSidebar>
+
 </RadzenLayout>
 
 @code {

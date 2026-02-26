@@ -2,36 +2,40 @@
 @using Shared.Services.Auth
 @using Shared.Services.Navigation
 
-<RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0" class="topbar-row">
-    <RadzenColumn Size="8" SizeMD="8" SizeLG="8">
-        <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Gap="0.75rem" class="topbar-brand-wrap">
-            <RadzenSidebarToggle Click="@SidebarToggleClick" class="topbar-toggle"></RadzenSidebarToggle>
-            <RadzenStack AlignItems="AlignItems.Start" Gap="0" class="topbar-brand-text">
-                @*  <img src="images/inxon-logo.png" alt="Inxon logo" class="topbar-logo" /> *@
-                <RadzenText Text="@CurrentModuleTitle" class="app-subtitle" Style="font-size:large;" />
+
+    <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0" class="topbar-row">
+        <RadzenColumn Size="8" SizeMD="8" SizeLG="8">
+            <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Gap="0.75rem" class="topbar-brand-wrap">
+                <RadzenSidebarToggle Click="@SidebarToggleClick" class="topbar-toggle"></RadzenSidebarToggle>
+                <RadzenStack AlignItems="AlignItems.Start" Gap="0" class="topbar-brand-text">
+                    @*  <img src="images/inxon-logo.png" alt="Inxon logo" class="topbar-logo" /> *@
+                    <RadzenText Text="@CurrentModuleTitle" class="app-subtitle" Style="font-size:large;" />
+                </RadzenStack>
             </RadzenStack>
-        </RadzenStack>
-    </RadzenColumn>
-    <RadzenColumn Size="4" SizeMD="4" SizeLG="4">
-        <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0.6rem" class="topbar-actions">
-            <RadzenButton Text="Modules" Icon="apps" Size="ButtonSize.Small" Variant="Variant.Outlined" Click="@NavigateToModuleLanding" />
-            @if (!string.IsNullOrWhiteSpace(UserBadgeText))
-            {
-                <RadzenText Text="@UserBadgeText" class="app-user-badge" />
-            }
-            <RadzenProfileMenu Click="@ProfileMenuClick" class="topbar-profile-menu">
-                <ChildContent>
-                    <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
-                </ChildContent>
-                <Template>
-                </Template>
-            </RadzenProfileMenu>
-        </RadzenStack>
-    </RadzenColumn>
-</RadzenRow>
+        </RadzenColumn>
+        <RadzenColumn Size="4" SizeMD="4" SizeLG="4">
+            <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Gap="0.6rem" class="topbar-actions">
+                <RadzenButton Text="Modules" Icon="apps" Size="ButtonSize.Small" Variant="Variant.Outlined" Click="@NavigateToModuleLanding" />
+                @if (!string.IsNullOrWhiteSpace(UserBadgeText))
+                {
+                    <RadzenText Text="@UserBadgeText" class="app-user-badge" />
+                }
+                <RadzenProfileMenu Click="@ProfileMenuClick" class="topbar-profile-menu">
+                    <ChildContent>
+                        <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
+                    </ChildContent>
+                    <Template>
+                    </Template>
+                </RadzenProfileMenu>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+
+
+
 @code {
     [Parameter] public EventCallback OnSidebarToggle { get; set; }
-
+    private bool sidebarExpanded = true;
     [Inject] protected IUserSessionService UserSessionService { get; set; } = default!;
     [Inject] protected INavigationCatalogService NavigationCatalogService { get; set; } = default!;
     [Inject] protected NavigationManager NavigationManager { get; set; } = default!;
@@ -69,6 +73,7 @@
     }
 
     private Task SidebarToggleClick() => OnSidebarToggle.InvokeAsync();
+    //private void SidebarToggleClick() => sidebarExpanded = !sidebarExpanded;
 
     private void EnforceFormAuthorization(NavigationSnapshot snapshot)
     {
