@@ -99,6 +99,10 @@ p {
 }
 
 /* === Compact input sizing across the UI === */
+:root {
+    --rz-input-height: 2.1rem;
+}
+
 .rz-textbox,
 .rz-dropdown,
 .rz-multiselect,
@@ -106,10 +110,16 @@ p {
 .rz-datepicker,
 .rz-timepicker,
 .rz-inputtext,
+.rz-dropdown-label,
+.rz-multiselect-label,
+.rz-spinner input,
+.rz-datepicker input,
+.rz-timepicker input,
 input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="number"],
 select {
-    min-height: 2.1rem;
+    height: 2.1rem !important;
+    min-height: 2.1rem !important;
 }
