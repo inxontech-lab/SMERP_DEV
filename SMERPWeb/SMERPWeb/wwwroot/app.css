@@ -97,3 +97,19 @@ p {
     margin: 0 0 12px 0;
     line-height: 1.6;
 }
+
+/* === Compact input sizing across the UI === */
+.rz-textbox,
+.rz-dropdown,
+.rz-multiselect,
+.rz-spinner,
+.rz-datepicker,
+.rz-timepicker,
+.rz-inputtext,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select {
+    min-height: 2.1rem;
+}
