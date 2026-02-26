@@ -13,12 +13,6 @@
                 </div>
 
                 <div>
-                    <RadzenLabel Text="Branch *" Component="BranchId" />
-                    <RadzenDropDown Name="BranchId" TValue="int" Data="FilteredBranches" TextProperty="Name" ValueProperty="Id" @bind-Value="FormModel.BranchId" Style="width:100%;" />
-                    <RadzenRequiredValidator Component="BranchId" Text="Branch is required" Popup="false" />
-                </div>
-
-                <div>
                     <RadzenLabel Text="Code *" Component="Code" />
                     <RadzenTextBox Name="Code" @bind-Value="FormModel.Code" Style="width:100%;" />
                     <RadzenRequiredValidator Component="Code" Text="Code is required" Popup="false" />

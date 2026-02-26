@@ -10,7 +10,6 @@ public interface IWarehouseManagementService
     Task<int> GetViewerTenantIdAsync(CancellationToken cancellationToken = default);
     Task<List<InvWarehouse>> GetWarehousesAsync(int viewerTenantId, CancellationToken cancellationToken = default);
     Task<List<Tenant>> GetTenantsAsync(int viewerTenantId, CancellationToken cancellationToken = default);
-    Task<List<Branch>> GetBranchesAsync(int viewerTenantId, CancellationToken cancellationToken = default);
     Task<InvWarehouse> CreateAsync(CreateInvWarehouseRequest request, int viewerTenantId, CancellationToken cancellationToken = default);
     Task<bool> UpdateAsync(int id, UpdateInvWarehouseRequest request, int viewerTenantId, CancellationToken cancellationToken = default);
     Task<bool> DeleteAsync(int id, int viewerTenantId, CancellationToken cancellationToken = default);
@@ -19,8 +18,7 @@ public interface IWarehouseManagementService
 public class WarehouseManagementService(
     IUserSessionService userSessionService,
     IWarehouseApiClient warehouseApiClient,
-    ITenantManagementApiClient tenantManagementApiClient,
-    IBranchManagementApiClient branchManagementApiClient) : IWarehouseManagementService
+    ITenantManagementApiClient tenantManagementApiClient) : IWarehouseManagementService
 {
     public async Task<int> GetViewerTenantIdAsync(CancellationToken cancellationToken = default)
     {
@@ -44,11 +42,5 @@ public class WarehouseManagementService(
     {
         var tenants = await tenantManagementApiClient.GetAllAsync(cancellationToken);
         return viewerTenantId <= 1 ? tenants : tenants.Where(t => t.Id == viewerTenantId).ToList();
-    }
-
-    public async Task<List<Branch>> GetBranchesAsync(int viewerTenantId, CancellationToken cancellationToken = default)
-    {
-        var branches = await branchManagementApiClient.GetAllAsync(cancellationToken);
-        return viewerTenantId <= 1 ? branches : branches.Where(branch => branch.TenantId == viewerTenantId).ToList();
     }
 }

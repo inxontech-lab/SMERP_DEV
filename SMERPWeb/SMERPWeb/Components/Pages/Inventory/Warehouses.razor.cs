@@ -16,7 +16,6 @@ public partial class Warehouses : ComponentBase
 
     protected List<InvWarehouse> WarehousesList { get; set; } = [];
     protected List<Tenant> Tenants { get; set; } = [];
-    protected List<Branch> Branches { get; set; } = [];
     protected bool CanCreateWarehouse { get; set; }
     protected bool CanEditWarehouse { get; set; }
     protected bool CanDeleteWarehouse { get; set; }
@@ -29,8 +28,7 @@ public partial class Warehouses : ComponentBase
             ? WarehousesList
             : WarehousesList.Where(warehouse =>
                 Contains(warehouse.Code, SearchText) ||
-                Contains(warehouse.Name, SearchText) ||
-                Contains(GetBranchName(warehouse.BranchId), SearchText));
+                Contains(warehouse.Name, SearchText));
 
     protected override async Task OnInitializedAsync() => await LoadAsync();
 
@@ -60,16 +58,13 @@ public partial class Warehouses : ComponentBase
 
     protected string GetTenantName(int tenantId) => Tenants.FirstOrDefault(tenant => tenant.Id == tenantId)?.Name ?? "Unknown Tenant";
 
-    protected string GetBranchName(int branchId) => Branches.FirstOrDefault(branch => branch.Id == branchId)?.Name ?? "Unknown Branch";
-
     private async Task OpenDialogAsync(InvWarehouse? editingWarehouse)
     {
         var result = await DialogService.OpenAsync<WarehouseDialog>(editingWarehouse is null ? "Create Warehouse" : "Edit Warehouse", new Dictionary<string, object>
         {
             [nameof(WarehouseDialog.EditingWarehouse)] = editingWarehouse,
             [nameof(WarehouseDialog.ViewerTenantId)] = ViewerTenantId,
-            [nameof(WarehouseDialog.Tenants)] = Tenants,
-            [nameof(WarehouseDialog.Branches)] = Branches
+            [nameof(WarehouseDialog.Tenants)] = Tenants
         }, new DialogOptions { Width = "900px", Draggable = true, Resizable = true, CloseDialogOnEsc = true });
 
         if (result is not CreateInvWarehouseRequest request)
@@ -117,7 +112,6 @@ public partial class Warehouses : ComponentBase
         {
             Id = id,
             TenantId = request.TenantId,
-            BranchId = request.BranchId,
             Code = request.Code,
             Name = request.Name,
             NameAr = request.NameAr,
@@ -135,7 +129,6 @@ public partial class Warehouses : ComponentBase
         CanDeleteWarehouse = permissions.CanDelete;
 
         Tenants = await WarehouseManagementService.GetTenantsAsync(ViewerTenantId);
-        Branches = await WarehouseManagementService.GetBranchesAsync(ViewerTenantId);
         await LoadWarehousesAsync();
     }
 

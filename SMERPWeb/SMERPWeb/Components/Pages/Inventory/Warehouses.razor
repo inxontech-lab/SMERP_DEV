@@ -13,7 +13,7 @@
 
     <RadzenRow class="rz-mb-3">
         <RadzenColumn Size="12" SizeMD="6">
-            <RadzenTextBox @bind-Value="SearchText" Name="SearchWarehouses" Placeholder="Search by code / name / branch" Style="width:100%;" />
+            <RadzenTextBox @bind-Value="SearchText" Name="SearchWarehouses" Placeholder="Search by code / name" Style="width:100%;" />
         </RadzenColumn>
     </RadzenRow>
 
@@ -22,9 +22,6 @@
             <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvWarehouse" Property="Id" Title="ID" Width="90px" />
             <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvWarehouse" Title="Tenant" Width="180px">
                 <Template Context="warehouse">@GetTenantName(warehouse.TenantId)</Template>
-            </RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvWarehouse" Title="Branch" Width="180px">
-                <Template Context="warehouse">@GetBranchName(warehouse.BranchId)</Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvWarehouse" Property="Code" Title="Code" />
             <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvWarehouse" Property="Name" Title="Name" />

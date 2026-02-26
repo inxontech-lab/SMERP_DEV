@@ -10,16 +10,10 @@ public partial class WarehouseDialog : ComponentBase
     [Parameter] public InvWarehouse? EditingWarehouse { get; set; }
     [Parameter] public int ViewerTenantId { get; set; }
     [Parameter] public List<Tenant> Tenants { get; set; } = [];
-    [Parameter] public List<Branch> Branches { get; set; } = [];
 
     [Inject] private DialogService DialogService { get; set; } = default!;
 
     protected CreateInvWarehouseRequest FormModel { get; set; } = new();
-
-    protected IEnumerable<Branch> FilteredBranches =>
-        ViewerTenantId > 1
-            ? Branches.Where(branch => branch.TenantId == ViewerTenantId)
-            : Branches.Where(branch => branch.TenantId == FormModel.TenantId);
 
     protected override void OnInitialized()
     {
@@ -32,7 +26,6 @@ public partial class WarehouseDialog : ComponentBase
             : new CreateInvWarehouseRequest
             {
                 TenantId = EditingWarehouse.TenantId,
-                BranchId = EditingWarehouse.BranchId,
                 Code = EditingWarehouse.Code,
                 Name = EditingWarehouse.Name,
                 NameAr = EditingWarehouse.NameAr,
@@ -49,7 +42,7 @@ public partial class WarehouseDialog : ComponentBase
             FormModel.TenantId = ViewerTenantId;
         }
 
-        if (FormModel.TenantId <= 0 || FormModel.BranchId <= 0)
+        if (FormModel.TenantId <= 0)
         {
             return;
         }
