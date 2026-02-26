@@ -147,7 +147,7 @@ public partial class ItemUomConversions : ComponentBase
     private async Task LoadAsync()
     {
         ViewerTenantId = await ItemUomConversionManagementService.GetViewerTenantIdAsync();
-        var permissions = await CrudPermissionService.GetPermissionsAsync("item_uom_conversion");
+        var permissions = await CrudPermissionService.GetPermissionsAsync("uom_conversion");
         CanCreateItemUomConversion = permissions.CanCreate;
         CanEditItemUomConversion = permissions.CanEdit;
         CanDeleteItemUomConversion = permissions.CanDelete;
