@@ -20,4 +20,6 @@ public partial class TaxCode
     public bool IsExempt { get; set; }
 
     public bool IsActive { get; set; }
+
+    public virtual ICollection<ProductPrice> ProductPrices { get; set; } = new List<ProductPrice>();
 }

@@ -9,8 +9,6 @@ public partial class InvWarehouse
 
     public int TenantId { get; set; }
 
-    public int BranchId { get; set; }
-
     public string Code { get; set; } = null!;
 
     public string Name { get; set; } = null!;
@@ -30,8 +28,6 @@ public partial class InvWarehouse
     public DateTime? ModifiedAt { get; set; }
 
     public string? ModifiedBy { get; set; }
-
-    public virtual Branch Branch { get; set; } = null!;
 
     public virtual ICollection<InvAdjustmentHeader> InvAdjustmentHeaders { get; set; } = new List<InvAdjustmentHeader>();
 

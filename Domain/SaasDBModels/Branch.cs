@@ -29,8 +29,6 @@ public partial class Branch
 
     public virtual ICollection<InvTransferHeader> InvTransferHeaderToBranches { get; set; } = new List<InvTransferHeader>();
 
-    public virtual ICollection<InvWarehouse> InvWarehouses { get; set; } = new List<InvWarehouse>();
-
     public virtual ICollection<PosTerminal> PosTerminals { get; set; } = new List<PosTerminal>();
 
     public virtual Tenant Tenant { get; set; } = null!;
