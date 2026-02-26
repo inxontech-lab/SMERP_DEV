@@ -1,0 +1,50 @@
+@using Domain.InvReqDTO
+@using Domain.SaasDBModels
+@using Radzen
+
+<RadzenTemplateForm TItem="CreateInvItemUomconversionRequest" Data="FormModel" Submit="@HandleSubmit">
+    <RadzenRow Gap="1rem">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Gap="0.75rem">
+                <div>
+                    <RadzenLabel Text="Tenant *" Component="TenantId" />
+                    <RadzenDropDown Name="TenantId" TValue="int" Data="Tenants" TextProperty="Name" ValueProperty="Id" @bind-Value="FormModel.TenantId" Style="width:100%;" Disabled="@(ViewerTenantId > 1)" />
+                    <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
+                </div>
+
+                <div>
+                    <RadzenLabel Text="Item ID *" Component="ItemId" />
+                    <RadzenNumeric Name="ItemId" TValue="int" @bind-Value="FormModel.ItemId" Style="width:100%;" Min="1" />
+                    <RadzenRequiredValidator Component="ItemId" Text="Item ID is required" Popup="false" />
+                </div>
+
+                <div>
+                    <RadzenLabel Text="From UOM ID *" Component="FromUomid" />
+                    <RadzenNumeric Name="FromUomid" TValue="int" @bind-Value="FormModel.FromUomid" Style="width:100%;" Min="1" />
+                    <RadzenRequiredValidator Component="FromUomid" Text="From UOM ID is required" Popup="false" />
+                </div>
+            </RadzenStack>
+        </RadzenColumn>
+
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Gap="0.75rem">
+                <div>
+                    <RadzenLabel Text="To UOM ID *" Component="ToUomid" />
+                    <RadzenNumeric Name="ToUomid" TValue="int" @bind-Value="FormModel.ToUomid" Style="width:100%;" Min="1" />
+                    <RadzenRequiredValidator Component="ToUomid" Text="To UOM ID is required" Popup="false" />
+                </div>
+
+                <div>
+                    <RadzenLabel Text="Factor *" Component="Factor" />
+                    <RadzenNumeric Name="Factor" TValue="decimal" @bind-Value="FormModel.Factor" Style="width:100%;" Min="0.000001M" Step="0.000001M" />
+                    <RadzenRequiredValidator Component="Factor" Text="Factor is required" Popup="false" />
+                </div>
+
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" JustifyContent="JustifyContent.Start">
+                    <RadzenButton Text="Save" Icon="save" ButtonType="ButtonType.Submit" />
+                    <RadzenButton Text="Cancel" Icon="close" ButtonStyle="ButtonStyle.Light" Click="Cancel" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenTemplateForm>

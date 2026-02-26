@@ -1,0 +1,40 @@
+@page "/ItemUomConversions"
+
+<PageTitle>Item UOM Conversion Management</PageTitle>
+
+<RadzenCard>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
+        <RadzenText Text="Item UOM Conversions" TextStyle="TextStyle.H5" />
+        <RadzenButton Text="New Conversion" Icon="add_circle" Click="OpenCreateDialogAsync" ButtonStyle="ButtonStyle.Primary" Disabled="@(!CanCreateItemUomConversion)" />
+    </RadzenStack>
+
+    <RadzenRow class="rz-mb-3">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenTextBox @bind-Value="SearchText" Name="SearchItemUomConversions" Placeholder="Search by item, UOM, or factor" Style="width:100%;" />
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenDataGrid Data="FilteredItemUomConversions" TItem="Domain.SaasDBModels.InvItemUomconversion" AllowPaging="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" PageSize="10" EmptyText="No item UOM conversions found.">
+        <Columns>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemUomconversion" Property="Id" Title="ID" Width="90px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemUomconversion" Title="Tenant" Width="200px">
+                <Template Context="row">@GetTenantName(row.TenantId)</Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemUomconversion" Property="ItemId" Title="Item ID" Width="100px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemUomconversion" Property="FromUomid" Title="From UOM ID" Width="120px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemUomconversion" Property="ToUomid" Title="To UOM ID" Width="120px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemUomconversion" Property="Factor" Title="Factor" Width="120px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemUomconversion" Title="Actions" Width="150px" Filterable="false" Sortable="false">
+                <Template Context="row">
+                    <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => OpenEditDialogAsync(row))" class="rz-mr-2" Disabled="@(!CanEditItemUomConversion)" />
+                    <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(row.Id))" Disabled="@(!CanDeleteItemUomConversion)" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
+}
