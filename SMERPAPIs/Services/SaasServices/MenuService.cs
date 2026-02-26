@@ -37,7 +37,8 @@ public class MenuService(SmerpContext context) : IMenuService
         new("User", "/User", "account_circle", "admin", "Administration", "Security", ["user"]),
         new("POS Terminal", "/PosTerminal", "point_of_sale", "admin", "Administration", "Operations", ["pos", "terminal"]),
         new("Supplier", "/Suppliers", "point_of_sale", "inventory", "Master Setup", "Supplier", ["supplier"]),
-        new("Warehouse", "/Warehouses", "warehouse", "inventory", "Master Setup", "Warehouse", ["warehouse"])
+        new("Warehouse", "/Warehouses", "warehouse", "inventory", "Master Setup", "Warehouse", ["warehouse"]),
+        new("UOM", "/Uoms", "warehouse", "inventory", "Master Setup", "UOM", ["uom"])
     ];
 
     public async Task<NavigationMenuSnapshotDto> GetNavigationMenuAsync(int tenantId, long userId, string? moduleKey, CancellationToken cancellationToken = default)
