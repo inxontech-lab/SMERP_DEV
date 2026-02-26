@@ -1,0 +1,41 @@
+@page "/Uoms"
+
+<PageTitle>UOM Management</PageTitle>
+
+<RadzenCard>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
+        <RadzenText Text="UOMs" TextStyle="TextStyle.H5" />
+        <RadzenButton Text="New UOM" Icon="add_circle" Click="OpenCreateDialogAsync" ButtonStyle="ButtonStyle.Primary" Disabled="@(!CanCreateUom)" />
+    </RadzenStack>
+
+    <RadzenRow class="rz-mb-3">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenTextBox @bind-Value="SearchText" Name="SearchUoms" Placeholder="Search by code / name" Style="width:100%;" />
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenDataGrid Data="FilteredUoms" TItem="Domain.SaasDBModels.InvUom" AllowPaging="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" PageSize="10" EmptyText="No UOMs found.">
+        <Columns>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvUom" Property="Id" Title="ID" Width="90px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvUom" Title="Tenant" Width="200px">
+                <Template Context="uom">@GetTenantName(uom.TenantId)</Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvUom" Property="Code" Title="Code" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvUom" Property="Name" Title="Name" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvUom" Property="NameAr" Title="Name (Arabic)" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvUom" Property="IsBase" Title="Base" Width="100px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvUom" Property="IsActive" Title="Active" Width="100px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvUom" Title="Actions" Width="150px" Filterable="false" Sortable="false">
+                <Template Context="uom">
+                    <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => OpenEditDialogAsync(uom))" class="rz-mr-2" Disabled="@(!CanEditUom)" />
+                    <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(uom.Id))" Disabled="@(!CanDeleteUom)" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
+}

@@ -60,6 +60,8 @@ AddSaasClient<ISupplierApiClient, SupplierApiClient>();
 builder.Services.AddScoped<ISupplierManagementService, SupplierManagementService>();
 AddSaasClient<IWarehouseApiClient, WarehouseApiClient>();
 builder.Services.AddScoped<IWarehouseManagementService, WarehouseManagementService>();
+AddSaasClient<IInvUomApiClient, InvUomApiClient>();
+builder.Services.AddScoped<IUomManagementService, UomManagementService>();
 builder.Services.AddHttpClient<IAuthApiClient, AuthApiClient>(ConfigureSaasApiClient);
 builder.Services.AddScoped<IUserSessionService, UserSessionService>();
 builder.Services.AddScoped<INavigationCatalogService, NavigationCatalogService>();
