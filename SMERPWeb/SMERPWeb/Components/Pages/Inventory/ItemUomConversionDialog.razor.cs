@@ -10,10 +10,14 @@ public partial class ItemUomConversionDialog : ComponentBase
     [Parameter] public InvItemUomconversion? EditingConversion { get; set; }
     [Parameter] public int ViewerTenantId { get; set; }
     [Parameter] public List<Tenant> Tenants { get; set; } = [];
+    [Parameter] public List<InvItem> Items { get; set; } = [];
+    [Parameter] public List<InvUom> Uoms { get; set; } = [];
 
     [Inject] private DialogService DialogService { get; set; } = default!;
 
     protected CreateInvItemUomconversionRequest FormModel { get; set; } = new();
+    protected IEnumerable<LookupOption> ItemOptions => Items.Select(item => new LookupOption(item.Id, $"{item.Code} - {item.Name}"));
+    protected IEnumerable<LookupOption> UomOptions => Uoms.Select(uom => new LookupOption(uom.Id, $"{uom.Code} - {uom.Name}"));
 
     protected override void OnInitialized()
     {
@@ -49,4 +53,6 @@ public partial class ItemUomConversionDialog : ComponentBase
     }
 
     protected void Cancel() => DialogService.Close();
+
+    protected sealed record LookupOption(int Id, string DisplayName);
 }

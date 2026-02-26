@@ -13,15 +13,15 @@
                 </div>
 
                 <div>
-                    <RadzenLabel Text="Item ID *" Component="ItemId" />
-                    <RadzenNumeric Name="ItemId" TValue="int" @bind-Value="FormModel.ItemId" Style="width:100%;" Min="1" />
-                    <RadzenRequiredValidator Component="ItemId" Text="Item ID is required" Popup="false" />
+                    <RadzenLabel Text="Item *" Component="ItemId" />
+                    <RadzenDropDown Name="ItemId" TValue="int" Data="ItemOptions" TextProperty="DisplayName" ValueProperty="Id" @bind-Value="FormModel.ItemId" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                    <RadzenRequiredValidator Component="ItemId" Text="Item is required" Popup="false" />
                 </div>
 
                 <div>
-                    <RadzenLabel Text="From UOM ID *" Component="FromUomid" />
-                    <RadzenNumeric Name="FromUomid" TValue="int" @bind-Value="FormModel.FromUomid" Style="width:100%;" Min="1" />
-                    <RadzenRequiredValidator Component="FromUomid" Text="From UOM ID is required" Popup="false" />
+                    <RadzenLabel Text="From UOM *" Component="FromUomid" />
+                    <RadzenDropDown Name="FromUomid" TValue="int" Data="UomOptions" TextProperty="DisplayName" ValueProperty="Id" @bind-Value="FormModel.FromUomid" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                    <RadzenRequiredValidator Component="FromUomid" Text="From UOM is required" Popup="false" />
                 </div>
             </RadzenStack>
         </RadzenColumn>
@@ -29,9 +29,9 @@
         <RadzenColumn Size="12" SizeMD="6">
             <RadzenStack Gap="0.75rem">
                 <div>
-                    <RadzenLabel Text="To UOM ID *" Component="ToUomid" />
-                    <RadzenNumeric Name="ToUomid" TValue="int" @bind-Value="FormModel.ToUomid" Style="width:100%;" Min="1" />
-                    <RadzenRequiredValidator Component="ToUomid" Text="To UOM ID is required" Popup="false" />
+                    <RadzenLabel Text="To UOM *" Component="ToUomid" />
+                    <RadzenDropDown Name="ToUomid" TValue="int" Data="UomOptions" TextProperty="DisplayName" ValueProperty="Id" @bind-Value="FormModel.ToUomid" Style="width:100%;" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" />
+                    <RadzenRequiredValidator Component="ToUomid" Text="To UOM is required" Popup="false" />
                 </div>
 
                 <div>
