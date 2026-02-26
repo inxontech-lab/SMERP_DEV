@@ -651,7 +651,7 @@ public partial class SmerpContext : DbContext
         {
             entity.ToTable("InvWarehouse", "inventory");
 
-            entity.HasIndex(e => new { e.TenantId, e.BranchId, e.Code }, "UQ_InvWarehouse_Tenant_Branch_Code").IsUnique();
+            entity.HasIndex(e => new { e.TenantId, e.Code }, "UQ_InvWarehouse_Tenant_Code").IsUnique();
 
             entity.Property(e => e.Address).HasMaxLength(300);
             entity.Property(e => e.Code).HasMaxLength(30);
@@ -665,10 +665,6 @@ public partial class SmerpContext : DbContext
             entity.Property(e => e.Name).HasMaxLength(200);
             entity.Property(e => e.NameAr).HasMaxLength(200);
 
-            entity.HasOne(d => d.Branch).WithMany(p => p.InvWarehouses)
-                .HasForeignKey(d => d.BranchId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_InvWarehouse_Branches");
 
             entity.HasOne(d => d.Tenant).WithMany(p => p.InvWarehouses)
                 .HasForeignKey(d => d.TenantId)

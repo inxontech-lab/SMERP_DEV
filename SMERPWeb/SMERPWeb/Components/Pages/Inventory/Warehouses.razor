@@ -1,0 +1,53 @@
+@page "/Warehouses"
+
+<PageTitle>Warehouses Management</PageTitle>
+
+<RadzenCard>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
+        <RadzenText Text="Warehouses" TextStyle="TextStyle.H5" />
+        @if (CanCreateWarehouse)
+        {
+            <RadzenButton Text="New Warehouse" Icon="add_circle" Click="OpenCreateDialogAsync" ButtonStyle="ButtonStyle.Primary" />
+        }
+    </RadzenStack>
+
+    <RadzenRow class="rz-mb-3">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenTextBox @bind-Value="SearchText" Name="SearchWarehouses" Placeholder="Search by code / name" Style="width:100%;" />
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenDataGrid Data="FilteredWarehouses" TItem="Domain.SaasDBModels.InvWarehouse" AllowPaging="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" PageSize="10" EmptyText="No warehouses found.">
+        <Columns>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvWarehouse" Property="Id" Title="ID" Width="90px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvWarehouse" Title="Tenant" Width="180px">
+                <Template Context="warehouse">@GetTenantName(warehouse.TenantId)</Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvWarehouse" Property="Code" Title="Code" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvWarehouse" Property="Name" Title="Name" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvWarehouse" Property="NameAr" Title="Name (Arabic)" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvWarehouse" Property="IsDefault" Title="Default" Width="100px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvWarehouse" Property="IsActive" Title="Active" Width="100px" />
+            @if (CanEditWarehouse || CanDeleteWarehouse)
+            {
+                <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvWarehouse" Title="Actions" Width="150px" Filterable="false" Sortable="false">
+                    <Template Context="warehouse">
+                        @if (CanEditWarehouse)
+                        {
+                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => OpenEditDialogAsync(warehouse))" class="rz-mr-2" />
+                        }
+                        @if (CanDeleteWarehouse)
+                        {
+                            <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(warehouse.Id))" />
+                        }
+                    </Template>
+                </RadzenDataGridColumn>
+            }
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
+}

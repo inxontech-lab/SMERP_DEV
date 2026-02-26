@@ -25,7 +25,6 @@ public class InvWarehouseService(SmerpContext context) : IInvWarehouseService
         var entity = new InvWarehouse
         {
             TenantId = request.TenantId,
-            BranchId = request.BranchId,
             Code = request.Code,
             Name = request.Name,
             NameAr = request.NameAr,
@@ -47,7 +46,6 @@ public class InvWarehouseService(SmerpContext context) : IInvWarehouseService
 
         TenantAccessGuard.EnsureAccess(viewerTenantId, request.TenantId, "inventory warehouses");
         entity.TenantId = request.TenantId;
-        entity.BranchId = request.BranchId;
         entity.Code = request.Code;
         entity.Name = request.Name;
         entity.NameAr = request.NameAr;
