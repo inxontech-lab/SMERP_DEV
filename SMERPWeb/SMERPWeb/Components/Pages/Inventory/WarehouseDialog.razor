@@ -2,7 +2,7 @@
 @using Domain.SaasDBModels
 @using Radzen
 
-<RadzenTemplateForm Data="FormModel" Submit="HandleSubmit">
+<RadzenTemplateForm TItem="CreateInvWarehouseRequest" Data="FormModel" Submit="@HandleSubmit">
     <RadzenRow Gap="1rem">
         <RadzenColumn Size="12" SizeMD="6">
             <RadzenStack Gap="0.75rem">
