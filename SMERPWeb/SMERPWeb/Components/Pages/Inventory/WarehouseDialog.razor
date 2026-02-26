@@ -1,0 +1,64 @@
+@using Domain.InvReqDTO
+@using Domain.SaasDBModels
+@using Radzen
+
+<RadzenTemplateForm Data="FormModel" Submit="HandleSubmit">
+    <RadzenRow Gap="1rem">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Gap="0.75rem">
+                <div>
+                    <RadzenLabel Text="Tenant *" Component="TenantId" />
+                    <RadzenDropDown Name="TenantId" TValue="int" Data="Tenants" TextProperty="Name" ValueProperty="Id" @bind-Value="FormModel.TenantId" Style="width:100%;" Disabled="@(ViewerTenantId > 1)" />
+                    <RadzenRequiredValidator Component="TenantId" Text="Tenant is required" Popup="false" />
+                </div>
+
+                <div>
+                    <RadzenLabel Text="Branch *" Component="BranchId" />
+                    <RadzenDropDown Name="BranchId" TValue="int" Data="FilteredBranches" TextProperty="Name" ValueProperty="Id" @bind-Value="FormModel.BranchId" Style="width:100%;" />
+                    <RadzenRequiredValidator Component="BranchId" Text="Branch is required" Popup="false" />
+                </div>
+
+                <div>
+                    <RadzenLabel Text="Code *" Component="Code" />
+                    <RadzenTextBox Name="Code" @bind-Value="FormModel.Code" Style="width:100%;" />
+                    <RadzenRequiredValidator Component="Code" Text="Code is required" Popup="false" />
+                </div>
+
+                <div>
+                    <RadzenLabel Text="Name *" Component="Name" />
+                    <RadzenTextBox Name="Name" @bind-Value="FormModel.Name" Style="width:100%;" />
+                    <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="false" />
+                </div>
+
+                <div>
+                    <RadzenLabel Text="Name (Arabic)" Component="NameAr" />
+                    <RadzenTextBox Name="NameAr" @bind-Value="FormModel.NameAr" Style="width:100%;" />
+                </div>
+            </RadzenStack>
+        </RadzenColumn>
+
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Gap="0.75rem">
+                <div>
+                    <RadzenLabel Text="Address" Component="Address" />
+                    <RadzenTextArea Name="Address" @bind-Value="FormModel.Address" Style="width:100%;" Rows="3" />
+                </div>
+
+                <div class="rz-d-flex rz-align-items-center">
+                    <RadzenCheckBox TValue="bool" Name="IsDefault" @bind-Value="FormModel.IsDefault" />
+                    <RadzenLabel Text="Default Warehouse" class="rz-ml-2" />
+                </div>
+
+                <div class="rz-d-flex rz-align-items-center">
+                    <RadzenCheckBox TValue="bool" Name="IsActive" @bind-Value="FormModel.IsActive" />
+                    <RadzenLabel Text="Active" class="rz-ml-2" />
+                </div>
+
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" JustifyContent="JustifyContent.Start">
+                    <RadzenButton Text="Save" Icon="save" ButtonType="ButtonType.Submit" />
+                    <RadzenButton Text="Cancel" Icon="close" ButtonStyle="ButtonStyle.Light" Click="Cancel" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenTemplateForm>
