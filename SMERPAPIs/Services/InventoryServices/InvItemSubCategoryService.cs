@@ -22,6 +22,8 @@ public class InvItemSubCategoryService(SmerpContext context) : IInvItemSubCatego
     public async Task<InvItemSubCategory> CreateAsync(CreateInvItemSubCategoryRequest request, int viewerTenantId, CancellationToken cancellationToken = default)
     {
         TenantAccessGuard.EnsureAccess(viewerTenantId, request.TenantId, "inventory item sub-categories");
+        await EnsureCategoryIsAccessibleAsync(request.CategoryId, request.TenantId, viewerTenantId, cancellationToken);
+
         var entity = new InvItemSubCategory
         {
             TenantId = request.TenantId,
@@ -44,6 +46,8 @@ public class InvItemSubCategoryService(SmerpContext context) : IInvItemSubCatego
         if (entity is null || !TenantAccessGuard.CanAccess(viewerTenantId, entity.TenantId)) return false;
 
         TenantAccessGuard.EnsureAccess(viewerTenantId, request.TenantId, "inventory item sub-categories");
+        await EnsureCategoryIsAccessibleAsync(request.CategoryId, request.TenantId, viewerTenantId, cancellationToken);
+
         entity.TenantId = request.TenantId;
         entity.CategoryId = request.CategoryId;
         entity.Code = request.Code;
@@ -65,5 +69,20 @@ public class InvItemSubCategoryService(SmerpContext context) : IInvItemSubCatego
         context.InvItemSubCategories.Remove(entity);
         await context.SaveChangesAsync(cancellationToken);
         return true;
+    }
+
+    private async Task EnsureCategoryIsAccessibleAsync(int categoryId, int requestTenantId, int viewerTenantId, CancellationToken cancellationToken)
+    {
+        var category = await context.InvItemCategories
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == categoryId, cancellationToken)
+            ?? throw new InvalidOperationException("Selected category was not found.");
+
+        if (category.TenantId != requestTenantId)
+        {
+            throw new InvalidOperationException("Selected category does not belong to the selected tenant.");
+        }
+
+        TenantAccessGuard.EnsureAccess(viewerTenantId, category.TenantId, "inventory item categories");
     }
 }
