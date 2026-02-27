@@ -40,7 +40,9 @@ public class MenuService(SmerpContext context) : IMenuService
         new("Supplier", "/Suppliers", "point_of_sale", "inventory", "Master Setup", "Supplier", ["supplier"]),
         new("Warehouse", "/Warehouses", "warehouse", "inventory", "Master Setup", "Warehouse", ["warehouse"]),
         new("UOM", "/Uoms", "warehouse", "inventory", "Master Setup", "Item Setup", ["uom"]),
-        new("Item UOM Conversion", "/ItemUomConversions", "swap_horiz", "inventory", "Master Setup", "Item Setup", ["item_uom_conversion", "uom_conversion", "uom", "item"])
+        new("Item UOM Conversion", "/ItemUomConversions", "swap_horiz", "inventory", "Master Setup", "Item Setup", ["item_uom_conversion", "uom_conversion", "uom", "item"]),
+        new("Item Category", "/ItemCategories", "warehouse", "inventory", "Master Setup", "Item Setup", ["item_category"]),
+        new("Item Sub Category", "/ItemSubCategories", "warehouse", "inventory", "Master Setup", "Item Setup", ["item_subcategory"]),
     ];
 
     public async Task<NavigationMenuSnapshotDto> GetNavigationMenuAsync(int tenantId, long userId, string? moduleKey, CancellationToken cancellationToken = default)

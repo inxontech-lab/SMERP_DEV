@@ -151,7 +151,7 @@ public partial class ItemSubCategories : ComponentBase
     private async Task LoadAsync()
     {
         ViewerTenantId = await ItemSubCategoryManagementService.GetViewerTenantIdAsync();
-        var permissions = await CrudPermissionService.GetPermissionsAsync("item_sub_category");
+        var permissions = await CrudPermissionService.GetPermissionsAsync("item_subcategory");
         CanCreateItemSubCategory = permissions.CanCreate;
         CanEditItemSubCategory = permissions.CanEdit;
         CanDeleteItemSubCategory = permissions.CanDelete;
