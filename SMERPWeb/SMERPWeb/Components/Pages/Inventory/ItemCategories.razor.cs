@@ -90,7 +90,7 @@ public partial class ItemCategories : ComponentBase
             [nameof(ItemCategoryDialog.EditingItemCategory)] = editingItemCategory,
             [nameof(ItemCategoryDialog.ViewerTenantId)] = ViewerTenantId,
             [nameof(ItemCategoryDialog.Tenants)] = Tenants
-        }, new DialogOptions { Width = "800px", Draggable = true, Resizable = true, CloseDialogOnEsc = true });
+        }, new DialogOptions { Width = "400px", Draggable = true, Resizable = true, CloseDialogOnEsc = true });
 
         if (result is not CreateInvItemCategoryRequest request)
         {
