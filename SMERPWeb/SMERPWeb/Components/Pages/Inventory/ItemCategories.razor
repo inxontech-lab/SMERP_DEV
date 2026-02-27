@@ -1,0 +1,40 @@
+@page "/ItemCategories"
+
+<PageTitle>Item Categories Management</PageTitle>
+
+<RadzenCard>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
+        <RadzenText Text="Item Categories" TextStyle="TextStyle.H5" />
+        <RadzenButton Text="New Category" Icon="add_circle" Click="OpenCreateDialogAsync" ButtonStyle="ButtonStyle.Primary" Disabled="@(!CanCreateItemCategory)" />
+    </RadzenStack>
+
+    <RadzenRow class="rz-mb-3">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenTextBox @bind-Value="SearchText" Name="SearchItemCategories" Placeholder="Search by code / name" Style="width:100%;" />
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenDataGrid Data="FilteredItemCategories" TItem="Domain.SaasDBModels.InvItemCategory" AllowPaging="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" PageSize="10" EmptyText="No item categories found.">
+        <Columns>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemCategory" Property="Id" Title="ID" Width="90px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemCategory" Title="Tenant" Width="200px">
+                <Template Context="itemCategory">@GetTenantName(itemCategory.TenantId)</Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemCategory" Property="Code" Title="Code" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemCategory" Property="Name" Title="Name" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemCategory" Property="NameAr" Title="Name (Arabic)" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemCategory" Property="IsActive" Title="Active" Width="100px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemCategory" Title="Actions" Width="150px" Filterable="false" Sortable="false">
+                <Template Context="itemCategory">
+                    <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => OpenEditDialogAsync(itemCategory))" class="rz-mr-2" Disabled="@(!CanEditItemCategory)" />
+                    <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(itemCategory.Id))" Disabled="@(!CanDeleteItemCategory)" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
+}

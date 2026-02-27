@@ -1,0 +1,43 @@
+@page "/ItemSubCategories"
+
+<PageTitle>Item Sub Categories Management</PageTitle>
+
+<RadzenCard>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" class="rz-mb-3">
+        <RadzenText Text="Item Sub Categories" TextStyle="TextStyle.H5" />
+        <RadzenButton Text="New Sub Category" Icon="add_circle" Click="OpenCreateDialogAsync" ButtonStyle="ButtonStyle.Primary" Disabled="@(!CanCreateItemSubCategory)" />
+    </RadzenStack>
+
+    <RadzenRow class="rz-mb-3">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenTextBox @bind-Value="SearchText" Name="SearchItemSubCategories" Placeholder="Search by code / name" Style="width:100%;" />
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenDataGrid Data="FilteredItemSubCategories" TItem="Domain.SaasDBModels.InvItemSubCategory" AllowPaging="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" PageSize="10" EmptyText="No item sub categories found.">
+        <Columns>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemSubCategory" Property="Id" Title="ID" Width="90px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemSubCategory" Title="Tenant" Width="170px">
+                <Template Context="itemSubCategory">@GetTenantName(itemSubCategory.TenantId)</Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemSubCategory" Title="Category" Width="220px">
+                <Template Context="itemSubCategory">@GetCategoryName(itemSubCategory.CategoryId)</Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemSubCategory" Property="Code" Title="Code" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemSubCategory" Property="Name" Title="Name" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemSubCategory" Property="NameAr" Title="Name (Arabic)" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemSubCategory" Property="IsActive" Title="Active" Width="100px" />
+            <RadzenDataGridColumn TItem="Domain.SaasDBModels.InvItemSubCategory" Title="Actions" Width="150px" Filterable="false" Sortable="false">
+                <Template Context="itemSubCategory">
+                    <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(() => OpenEditDialogAsync(itemSubCategory))" class="rz-mr-2" Disabled="@(!CanEditItemSubCategory)" />
+                    <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(() => DeleteAsync(itemSubCategory.Id))" Disabled="@(!CanDeleteItemSubCategory)" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</RadzenCard>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <RadzenAlert AlertStyle="AlertStyle.Danger" class="rz-mt-3">@ErrorMessage</RadzenAlert>
+}
