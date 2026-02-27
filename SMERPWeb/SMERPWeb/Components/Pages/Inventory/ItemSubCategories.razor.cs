@@ -94,7 +94,7 @@ public partial class ItemSubCategories : ComponentBase
             [nameof(ItemSubCategoryDialog.ViewerTenantId)] = ViewerTenantId,
             [nameof(ItemSubCategoryDialog.Tenants)] = Tenants,
             [nameof(ItemSubCategoryDialog.ItemCategories)] = ItemCategories
-        }, new DialogOptions { Width = "900px", Draggable = true, Resizable = true, CloseDialogOnEsc = true });
+        }, new DialogOptions { Width = "450px", Draggable = true, Resizable = true, CloseDialogOnEsc = true });
 
         if (result is not CreateInvItemSubCategoryRequest request)
         {
