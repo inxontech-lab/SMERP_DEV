@@ -36,9 +36,10 @@ public class MenuService(SmerpContext context) : IMenuService
         new("Role Permission", "/RolePermission", "lock_open", "admin", "Administration", "Security", ["role_permission", "permission"]),
         new("User", "/User", "account_circle", "admin", "Administration", "Security", ["user"]),
         new("POS Terminal", "/PosTerminal", "point_of_sale", "admin", "Administration", "Operations", ["pos", "terminal"]),
+
         new("Supplier", "/Suppliers", "point_of_sale", "inventory", "Master Setup", "Supplier", ["supplier"]),
         new("Warehouse", "/Warehouses", "warehouse", "inventory", "Master Setup", "Warehouse", ["warehouse"]),
-        new("UOM", "/Uoms", "warehouse", "inventory", "Master Setup", "UOM", ["uom"]),
+        new("UOM", "/Uoms", "warehouse", "inventory", "Master Setup", "Item Setup", ["uom"]),
         new("Item UOM Conversion", "/ItemUomConversions", "swap_horiz", "inventory", "Master Setup", "Item Setup", ["item_uom_conversion", "uom_conversion", "uom", "item"])
     ];
 
